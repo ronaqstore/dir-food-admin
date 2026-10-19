@@ -90,9 +90,7 @@ export function BaseLoginForm({
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton className='w-full'>
-              {t('auth.signIn')}
-            </form.SubmitButton>
+            <form.SubmitButton className='w-full'>{t('auth.signIn')}</form.SubmitButton>
           </form.AppForm>
 
           {footer}

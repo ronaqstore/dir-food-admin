@@ -79,9 +79,7 @@ export function RegisterForm() {
         <CardTitle className='text-2xl font-bold tracking-tight'>
           {t('auth.registerTitle')}
         </CardTitle>
-        <CardDescription>
-          {t('auth.registerHint')}
-        </CardDescription>
+        <CardDescription>{t('auth.registerHint')}</CardDescription>
       </CardHeader>
 
       <CardContent>

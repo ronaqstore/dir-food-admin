@@ -19,4 +19,3 @@ export function formatDate(
 export function formatLabel(value: string): string {
   return value.replaceAll('_', ' ').toLowerCase();
 }
-

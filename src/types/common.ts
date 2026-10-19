@@ -281,4 +281,3 @@ export interface RowAction {
 export interface RowActionsMenuProps {
   actions: RowAction[];
 }
-

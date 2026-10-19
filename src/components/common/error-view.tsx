@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n/use-t';
 import type { AppErrorProps } from '@/types/pages';
 
+import { t as staticT } from '@/i18n/static-t';
+
 function isChunkLoadError(error: Error): boolean {
   return (
     error.name === 'ChunkLoadError' ||
@@ -14,9 +16,11 @@ function isChunkLoadError(error: Error): boolean {
   );
 }
 
-export function ErrorView({ error, reset }: AppErrorProps) {
-  const t = useT();
+interface ErrorContentProps extends AppErrorProps {
+  t: (key: string) => string;
+}
 
+function ErrorViewContent({ error, reset, t }: ErrorContentProps) {
   useEffect(() => {
     Sentry.captureException(error);
     if (isChunkLoadError(error)) {
@@ -51,4 +55,24 @@ export function ErrorView({ error, reset }: AppErrorProps) {
       </div>
     </div>
   );
+}
+
+function LocalizedErrorView({ error, reset }: AppErrorProps) {
+  const t = useT();
+  return <ErrorViewContent error={error} reset={reset} t={(key) => t(key as never)} />;
+}
+
+function StaticErrorView({ error, reset }: AppErrorProps) {
+  return <ErrorViewContent error={error} reset={reset} t={staticT} />;
+}
+
+export function ErrorView({
+  error,
+  reset,
+  staticFallback = false
+}: AppErrorProps & { staticFallback?: boolean }) {
+  if (staticFallback) {
+    return <StaticErrorView error={error} reset={reset} />;
+  }
+  return <LocalizedErrorView error={error} reset={reset} />;
 }

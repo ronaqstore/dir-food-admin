@@ -24,9 +24,7 @@ export default async function RegisterPage() {
         <p className='text-muted-foreground text-sm font-medium tracking-wide uppercase'>
           {APP_NAME}
         </p>
-        <h1 className='mt-1 text-2xl sm:text-3xl font-semibold tracking-tight'>
-          {t('register')}
-        </h1>
+        <h1 className='mt-1 text-2xl sm:text-3xl font-semibold tracking-tight'>{t('register')}</h1>
       </div>
       <div className='relative z-10 w-full max-w-lg'>
         <Suspense fallback={<div className='bg-muted h-96 animate-pulse rounded-xl' />}>

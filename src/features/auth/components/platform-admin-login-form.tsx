@@ -37,9 +37,7 @@ export function PlatformAdminLoginForm() {
       onSubmit={handleLogin}
       footer={
         <div className='space-y-2 text-center text-xs leading-relaxed'>
-          <p className='text-muted-foreground'>
-            {t('auth.platformAdminNotice')}
-          </p>
+          <p className='text-muted-foreground'>{t('auth.platformAdminNotice')}</p>
           <p className='text-muted-foreground'>
             <Link
               href='/login'

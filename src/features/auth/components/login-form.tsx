@@ -34,9 +34,12 @@ export function LoginForm() {
 
     const session = await getSession();
     const role = session?.user?.role;
-    const home = role === 'PLATFORM_ADMIN' ? PLATFORM_ADMIN_DEFAULT_REDIRECT : OWNER_DEFAULT_REDIRECT;
+    const home =
+      role === 'PLATFORM_ADMIN' ? PLATFORM_ADMIN_DEFAULT_REDIRECT : OWNER_DEFAULT_REDIRECT;
     const target =
-      callbackUrl && callbackUrl.startsWith('/') && isRoleAuthorizedForDashboardPath(role, callbackUrl)
+      callbackUrl &&
+      callbackUrl.startsWith('/') &&
+      isRoleAuthorizedForDashboardPath(role, callbackUrl)
         ? delocalize(callbackUrl)
         : home;
 

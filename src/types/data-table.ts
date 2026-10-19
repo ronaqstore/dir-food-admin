@@ -91,4 +91,3 @@ export interface Paginated<T> {
 }
 
 export * from '@/components/data-table/types';
-

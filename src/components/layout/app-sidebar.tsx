@@ -94,9 +94,7 @@ export function AppSidebar() {
           </div>
           <div className='flex flex-col truncate leading-tight'>
             <span className='font-semibold text-sm truncate text-sidebar-foreground'>
-              {isPlatformAdmin
-                ? 'Dir Food Admin'
-                : user?.restaurantName || 'Dir Food'}
+              {isPlatformAdmin ? 'Dir Food Admin' : user?.restaurantName || 'Dir Food'}
             </span>
             <span className='text-[11px] text-muted-foreground truncate'>
               {isPlatformAdmin ? t('auth.platformAdminTitle') : t('nav.restaurantOwner')}
@@ -126,7 +124,11 @@ export function AppSidebar() {
                       render={<Link href={item.href} />}
                       isActive={isActive}
                       tooltip={item.title}
-                      className={isActive ? 'font-medium bg-sidebar-accent text-sidebar-accent-foreground' : ''}
+                      className={
+                        isActive
+                          ? 'font-medium bg-sidebar-accent text-sidebar-accent-foreground'
+                          : ''
+                      }
                     >
                       <IconComponent className='h-4 w-4 shrink-0' />
                       <span className='truncate'>{item.title}</span>

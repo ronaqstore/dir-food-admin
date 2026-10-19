@@ -128,9 +128,7 @@ export function OwnerOverview() {
       {/* Quick Action Shortcuts */}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
-          <CardTitle className='text-base font-semibold'>
-            {t('dashboard.quickActions')}
-          </CardTitle>
+          <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
           <CardDescription className='text-xs'>
             Common restaurant tasks and quick shortcuts
           </CardDescription>
@@ -171,9 +169,7 @@ export function OwnerOverview() {
       {/* Recent Orders Preview */}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
-          <CardTitle className='text-base font-semibold'>
-            {t('dashboard.recentOrders')}
-          </CardTitle>
+          <CardTitle className='text-base font-semibold'>{t('dashboard.recentOrders')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className='flex flex-col items-center justify-center py-10 text-center text-muted-foreground'>
@@ -182,7 +178,8 @@ export function OwnerOverview() {
             </div>
             <p className='text-sm font-medium'>{t('dashboard.noRecentOrders')}</p>
             <p className='text-xs text-muted-foreground mt-1 max-w-sm'>
-              When customers place food orders through WhatsApp or the online storefront, they will be listed here instantly.
+              When customers place food orders through WhatsApp or the online storefront, they will
+              be listed here instantly.
             </p>
           </div>
         </CardContent>

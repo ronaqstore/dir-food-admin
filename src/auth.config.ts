@@ -8,18 +8,13 @@ import type {
   SessionUserShape
 } from '@/types/auth';
 import { apiRequest } from '@/lib/api/client';
-import type {
-  AuthLoginResponse,
-  PlatformAdminLoginResponse
-} from '@/lib/api/types';
+import type { AuthLoginResponse, PlatformAdminLoginResponse } from '@/lib/api/types';
 
 function decodeJwtExp(token: string): number | undefined {
   try {
     const payload = token.split('.')[1];
     if (!payload) return undefined;
-    const decoded = JSON.parse(
-      Buffer.from(payload, 'base64url').toString('utf8')
-    );
+    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
     return typeof decoded.exp === 'number' ? decoded.exp * 1000 : undefined;
   } catch {
     return undefined;
@@ -48,15 +43,10 @@ export const authConfig = {
       async authorize(rawCredentials) {
         const credentials = rawCredentials as AuthorizeCredentials | undefined;
         const rawIdentifier =
-          typeof credentials?.identifier === 'string'
-            ? credentials.identifier.trim()
-            : '';
-        const password =
-          typeof credentials?.password === 'string' ? credentials.password : '';
+          typeof credentials?.identifier === 'string' ? credentials.identifier.trim() : '';
+        const password = typeof credentials?.password === 'string' ? credentials.password : '';
         const loginType =
-          typeof credentials?.loginType === 'string'
-            ? credentials.loginType
-            : 'owner';
+          typeof credentials?.loginType === 'string' ? credentials.loginType : 'owner';
 
         if (!rawIdentifier || !password) {
           return null;
@@ -150,16 +140,11 @@ export const authConfig = {
         typedToken.picture = authenticatedUser.avatarUrl;
         if (authenticatedUser.accessToken) {
           typedToken.accessToken = authenticatedUser.accessToken;
-          typedToken.accessTokenExpiresAt = decodeJwtExp(
-            authenticatedUser.accessToken
-          );
+          typedToken.accessTokenExpiresAt = decodeJwtExp(authenticatedUser.accessToken);
         }
       }
 
-      if (
-        typedToken.accessTokenExpiresAt &&
-        Date.now() >= typedToken.accessTokenExpiresAt
-      ) {
+      if (typedToken.accessTokenExpiresAt && Date.now() >= typedToken.accessTokenExpiresAt) {
         delete typedToken.accessToken;
       }
 
@@ -179,9 +164,7 @@ export const authConfig = {
         sessionUser.restaurantStatus = typedToken.restaurantStatus ?? null;
         sessionUser.subscriptionStatus = typedToken.subscriptionStatus ?? null;
         sessionUser.avatarUrl =
-          typeof typedToken.picture === 'string'
-            ? typedToken.picture
-            : undefined;
+          typeof typedToken.picture === 'string' ? typedToken.picture : undefined;
       }
 
       if (typeof typedToken.accessToken === 'string') {

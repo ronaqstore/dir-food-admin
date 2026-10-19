@@ -27,7 +27,10 @@ export function PlatformOverview() {
           </p>
         </div>
         <div className='flex items-center gap-2'>
-          <Badge variant='outline' className='border-primary/40 bg-primary/10 text-primary font-medium'>
+          <Badge
+            variant='outline'
+            className='border-primary/40 bg-primary/10 text-primary font-medium'
+          >
             Super Admin
           </Badge>
         </div>
@@ -105,9 +108,7 @@ export function PlatformOverview() {
       {/* Quick Actions */}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
-          <CardTitle className='text-base font-semibold'>
-            {t('dashboard.quickActions')}
-          </CardTitle>
+          <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
           <CardDescription className='text-xs'>
             Management shortcuts for platform administration
           </CardDescription>
@@ -157,7 +158,10 @@ export function PlatformOverview() {
                 New self-registered restaurants awaiting activation
               </CardDescription>
             </div>
-            <Badge variant='outline' className='border-amber-500/50 text-amber-600 dark:text-amber-400'>
+            <Badge
+              variant='outline'
+              className='border-amber-500/50 text-amber-600 dark:text-amber-400'
+            >
               1 Pending
             </Badge>
           </div>
@@ -168,7 +172,10 @@ export function PlatformOverview() {
               <div className='space-y-1'>
                 <div className='flex items-center gap-2'>
                   <span className='font-semibold text-sm'>Hotel Al-Noor</span>
-                  <Badge variant='outline' className='text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/30'>
+                  <Badge
+                    variant='outline'
+                    className='text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/30'
+                  >
                     Pending Approval
                   </Badge>
                 </div>

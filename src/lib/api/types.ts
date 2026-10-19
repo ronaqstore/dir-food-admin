@@ -53,7 +53,6 @@ export type RestaurantStatus = 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED
 export type ManualAvailabilityStatus = 'AUTO' | 'CLOSED' | 'TEMP_UNAVAILABLE';
 export type UserRole = 'RESTAURANT_OWNER' | 'PLATFORM_ADMIN';
 
-
 export interface AuthLoginResponse {
   accessToken: string;
   tokenType?: string;

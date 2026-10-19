@@ -44,7 +44,9 @@ export function SetupPasswordForm() {
           token,
           password: value.password
         });
-        toast.success(t('auth.passwordSetupSuccess') ?? 'Password set successfully! Please log in.');
+        toast.success(
+          t('auth.passwordSetupSuccess') ?? 'Password set successfully! Please log in.'
+        );
         router.push('/login');
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to set password';
@@ -68,7 +70,8 @@ export function SetupPasswordForm() {
           <Alert variant='destructive'>
             <Icons.warning className='h-4 w-4' />
             <AlertDescription>
-              {t('auth.missingToken') ?? 'No setup token provided. Please use the link sent to you by the platform administrator.'}
+              {t('auth.missingToken') ??
+                'No setup token provided. Please use the link sent to you by the platform administrator.'}
             </AlertDescription>
           </Alert>
           <div className='text-center'>
@@ -96,7 +99,8 @@ export function SetupPasswordForm() {
           {t('auth.setupPasswordTitle') ?? 'Set Up Password'}
         </CardTitle>
         <CardDescription>
-          {t('auth.setupPasswordDesc') ?? 'Choose a secure password for your restaurant owner account.'}
+          {t('auth.setupPasswordDesc') ??
+            'Choose a secure password for your restaurant owner account.'}
         </CardDescription>
       </CardHeader>
       <CardContent>

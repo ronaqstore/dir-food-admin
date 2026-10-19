@@ -67,9 +67,7 @@ export function UserNav() {
             <p className='text-xs leading-none text-muted-foreground'>
               {user.phoneNumber || user.email}
             </p>
-            <p className='text-[11px] font-medium text-primary pt-0.5'>
-              {roleLabel}
-            </p>
+            <p className='text-[11px] font-medium text-primary pt-0.5'>{roleLabel}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -88,10 +86,7 @@ export function UserNav() {
           {!isPlatformAdmin ? (
             <DropdownMenuItem
               render={
-                <Link
-                  href='/dashboard/settings'
-                  className='flex cursor-pointer items-center'
-                />
+                <Link href='/dashboard/settings' className='flex cursor-pointer items-center' />
               }
             >
               <Icons.settings className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />

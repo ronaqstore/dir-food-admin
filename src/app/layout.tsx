@@ -91,7 +91,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       data-appearance-density={densityToApply}
       data-appearance-digits={digitsToApply}
     >
-      <head suppressHydrationWarning>
+      <head suppressHydrationWarning />
+      <body
+        suppressHydrationWarning
+        className={cn(
+          'bg-background overflow-x-hidden overscroll-none font-sans antialiased',
+          fontVariables
+        )}
+      >
         <script
           id='theme-and-extension-attribute-bootstrap'
           suppressHydrationWarning
@@ -100,7 +107,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               try {
                 var ACCENTS = ${JSON.stringify(ACCENT_OKLCH)};
                 var RADIUS = ${JSON.stringify(RADIUS_REM)};
-                var rawApp = localStorage.getItem('dukaan-appearance:v2');
+                var rawApp = localStorage.getItem('dirfood-appearance:v2') || localStorage.getItem('dukaan-appearance:v2');
                 var parsedApp = rawApp ? JSON.parse(rawApp) : null;
                 var appState = (parsedApp && parsedApp.state) ? parsedApp.state : null;
                 var docEl = document.documentElement;
@@ -135,14 +142,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             `
           }}
         />
-      </head>
-      <body
-        suppressHydrationWarning
-        className={cn(
-          'bg-background overflow-x-hidden overscroll-none font-sans antialiased',
-          fontVariables
-        )}
-      >
         <NextTopLoader color='var(--primary)' showSpinner={false} />
         <NuqsAdapter>
           <ThemeProvider

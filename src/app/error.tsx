@@ -5,5 +5,5 @@ import type { AppErrorProps } from '@/types/pages';
 export type { AppErrorProps };
 
 export default function AppError({ error, reset }: AppErrorProps) {
-  return <ErrorView error={error} reset={reset} />;
+  return <ErrorView error={error} reset={reset} staticFallback />;
 }

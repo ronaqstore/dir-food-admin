@@ -6,7 +6,8 @@ import { APP_NAME } from '@/config/site';
 
 export const metadata: Metadata = {
   title: `Platform Admin Sign In | ${APP_NAME}`,
-  description: 'Sign in to the Dir Food platform admin panel to manage restaurants and subscriptions.'
+  description:
+    'Sign in to the Dir Food platform admin panel to manage restaurants and subscriptions.'
 };
 
 export default async function PlatformAdminLoginPage() {

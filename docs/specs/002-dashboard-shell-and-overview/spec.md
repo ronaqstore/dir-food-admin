@@ -60,3 +60,4 @@
 - [ ] Platform admin navigates to `/dashboard/platform` and sees platform statistics and pending restaurant approvals.
 - [ ] Root `/dashboard` cleanly redirects to the role-appropriate dashboard.
 - [ ] `npm run typecheck` and `npm run lint` pass with 0 errors.
+
