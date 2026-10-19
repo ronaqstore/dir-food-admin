@@ -8,42 +8,18 @@ import { useAppForm } from '@/lib/form';
 import { FieldGroup } from '@/components/ui/field';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { createRegisterSchema, type RegisterFormValues } from '../schemas/register.schema';
 import { registerRestaurant } from '../api/auth.service';
 import { normalizePhone } from '@/lib/auth/phone';
-
-const POPULAR_CUISINES = [
-  'Shinwari & Karahi',
-  'BBQ & Grill',
-  'Fast Food & Pizza',
-  'Chapli Kabab',
-  'Biryani & Pulao',
-  'Traditional Desi',
-  'Chinese'
-];
 
 export function RegisterForm() {
   const t = useTranslations();
   const router = useRouter();
 
   const [error, setError] = useState<string | null>(null);
-  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
 
   const registerSchema = createRegisterSchema(t);
-
-  const toggleCuisine = (cuisine: string) => {
-    setSelectedCuisines((prev) => {
-      if (prev.includes(cuisine)) {
-        return prev.filter((c) => c !== cuisine);
-      }
-      if (prev.length >= 5) {
-        return prev;
-      }
-      return [...prev, cuisine];
-    });
-  };
 
   const form = useAppForm({
     defaultValues: {
@@ -68,8 +44,7 @@ export function RegisterForm() {
           whatsappNumber: value.whatsappNumber?.trim()
             ? normalizePhone(value.whatsappNumber)
             : undefined,
-          description: value.description?.trim() || undefined,
-          cuisines: selectedCuisines.length > 0 ? selectedCuisines : undefined
+          description: value.description?.trim() || undefined
         };
 
         await registerRestaurant(payload);
@@ -197,32 +172,6 @@ export function RegisterForm() {
                 />
               )}
             />
-
-            {/* Popular Cuisines Selector */}
-            <div className='space-y-2'>
-              <label className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                {t('auth.cuisines')}
-              </label>
-              <div className='flex flex-wrap gap-1.5'>
-                {POPULAR_CUISINES.map((cuisine) => {
-                  const isSelected = selectedCuisines.includes(cuisine);
-                  return (
-                    <Badge
-                      key={cuisine}
-                      variant={isSelected ? 'default' : 'outline'}
-                      className='cursor-pointer select-none transition-colors'
-                      onClick={() => toggleCuisine(cuisine)}
-                    >
-                      {isSelected ? '✓ ' : '+ '}
-                      {cuisine}
-                    </Badge>
-                  );
-                })}
-              </div>
-              <p className='text-xs text-muted-foreground'>
-                {t('auth.cuisinesHint')}
-              </p>
-            </div>
           </FieldGroup>
 
           <form.AppForm>
