@@ -56,11 +56,13 @@ export type UserRole = 'RESTAURANT_OWNER' | 'PLATFORM_ADMIN';
 
 export interface AuthLoginResponse {
   accessToken: string;
+  tokenType?: string;
+  expiresIn?: string;
   user: {
     id: string;
     name: string;
     phone: string;
-    role: string;
+    role: UserRole;
   };
   restaurantId: string;
   restaurant: {
@@ -68,17 +70,20 @@ export interface AuthLoginResponse {
     name: string;
     slug: string;
     status: RestaurantStatus;
-    subscriptionEndsAt: string | null;
+    subscriptionStatus?: 'VALID' | 'EXPIRED';
+    subscriptionEndsAt?: string | null;
   };
 }
 
 export interface PlatformAdminLoginResponse {
   accessToken: string;
+  tokenType?: string;
+  expiresIn?: string;
   admin: {
     id: string;
     name: string;
-    phone: string;
-    role: string;
+    email: string;
+    role: UserRole;
   };
 }
 

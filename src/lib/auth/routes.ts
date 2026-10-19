@@ -15,7 +15,7 @@ const OWNER_ALLOWED_PREFIXES = [
 export function getDefaultRedirectForRole(
   role?: AuthAccountRole | null
 ): string {
-  if (role === 'SUPER_ADMIN') {
+  if (role === 'PLATFORM_ADMIN') {
     return PLATFORM_ADMIN_DEFAULT_REDIRECT;
   }
 
@@ -43,11 +43,11 @@ export function isRoleAuthorizedForDashboardPath(
   role: AuthAccountRole | null | undefined,
   pathname: string
 ): boolean {
-  if (role === 'SUPER_ADMIN') {
+  if (role === 'PLATFORM_ADMIN') {
     return pathname === '/dashboard' || isPlatformDashboardPath(pathname);
   }
 
-  if (role === 'OWNER' || role === 'STAFF') {
+  if (role === 'RESTAURANT_OWNER') {
     return (
       !isPlatformDashboardPath(pathname) &&
       isOwnerAllowedDashboardPath(pathname)
@@ -56,6 +56,7 @@ export function isRoleAuthorizedForDashboardPath(
 
   return false;
 }
+
 export function delocalize(pathname: string): string {
   const segments = pathname.split('/');
   if (segments[1] === 'ur' || segments[1] === 'ps' || segments[1] === 'en') {

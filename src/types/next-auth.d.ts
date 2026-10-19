@@ -1,19 +1,20 @@
 import type { DefaultSession } from 'next-auth';
 import type { AuthAccountRole } from '@/lib/auth/accounts';
+import type { RestaurantStatus } from '@/lib/api/types';
 
 declare module 'next-auth' {
   interface User {
     id: string;
     name?: string | null;
-    role: AuthAccountRole;
+    email?: string | null;
     phoneNumber?: string;
-    orgId?: string;
-    orgName?: string;
-    shopId?: string | null;
-    shopName?: string | null;
-    restaurantStatus?: string;
+    role: AuthAccountRole;
+    restaurantId: string | null;
+    restaurantName: string | null;
+    restaurantSlug?: string | null;
+    restaurantStatus?: RestaurantStatus | null;
+    subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
     accessToken: string;
-    subscriptionEndsAt?: string | null;
   }
 
   interface Session {
@@ -22,13 +23,12 @@ declare module 'next-auth' {
       id: string;
       role: AuthAccountRole;
       phoneNumber?: string;
-      orgId: string;
-      orgName: string;
-      shopId?: string | null;
-      shopName?: string | null;
+      restaurantId: string | null;
+      restaurantName: string | null;
+      restaurantSlug?: string | null;
+      restaurantStatus?: RestaurantStatus | null;
+      subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
       avatarUrl?: string;
-      restaurantStatus?: string;
-      subscriptionEndsAt?: string | null;
     } & DefaultSession['user'];
   }
 }
@@ -37,12 +37,12 @@ declare module 'next-auth/jwt' {
   interface JWT {
     role: AuthAccountRole;
     phoneNumber?: string;
-    orgId: string;
-    orgName: string;
-    shopId?: string | null;
-    shopName?: string | null;
-    restaurantStatus?: string;
+    email?: string;
+    restaurantId?: string | null;
+    restaurantName?: string | null;
+    restaurantSlug?: string | null;
+    restaurantStatus?: RestaurantStatus | null;
+    subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
     accessToken: string;
-    subscriptionEndsAt?: string | null;
   }
 }

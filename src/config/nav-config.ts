@@ -68,7 +68,7 @@ export const navGroups: NavGroup[] = [
 ];
 
 export function getNavGroupsForRole(role?: string): NavGroup[] {
-  if (role === 'SUPER_ADMIN') {
+  if (role === 'PLATFORM_ADMIN') {
     return platformNavGroups;
   }
   return navGroups;

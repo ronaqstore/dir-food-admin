@@ -1,6 +1,17 @@
-import type { NextAuthConfig } from 'next-auth';
-import type { AuthAccountRole } from '@/lib/auth/accounts';
-import type { JwtTokenShape, SessionUserShape } from '@/types/auth';
+import { NextAuthConfig } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { normalizePhone, isValidPkMobile } from '@/lib/auth/phone';
+import type {
+  AuthorizeCredentials,
+  AuthenticatedUser,
+  JwtTokenShape,
+  SessionUserShape
+} from '@/types/auth';
+import { apiRequest } from '@/lib/api/client';
+import type {
+  AuthLoginResponse,
+  PlatformAdminLoginResponse
+} from '@/lib/api/types';
 
 function decodeJwtExp(token: string): number | undefined {
   try {
@@ -16,31 +27,132 @@ function decodeJwtExp(token: string): number | undefined {
 }
 
 export const authConfig = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        identifier: {
+          label: 'Mobile Number or Email',
+          type: 'text',
+          placeholder: '03001234567'
+        },
+        password: {
+          label: 'Password',
+          type: 'password'
+        },
+        loginType: {
+          label: 'Login Type',
+          type: 'text'
+        }
+      },
+      async authorize(rawCredentials) {
+        const credentials = rawCredentials as AuthorizeCredentials | undefined;
+        const rawIdentifier =
+          typeof credentials?.identifier === 'string'
+            ? credentials.identifier.trim()
+            : '';
+        const password =
+          typeof credentials?.password === 'string' ? credentials.password : '';
+        const loginType =
+          typeof credentials?.loginType === 'string'
+            ? credentials.loginType
+            : 'owner';
+
+        if (!rawIdentifier || !password) {
+          return null;
+        }
+
+        try {
+          // 1. Platform Admin Login (Email + Password)
+          if (loginType === 'platform-admin' || rawIdentifier.includes('@')) {
+            const response = await apiRequest<PlatformAdminLoginResponse>(
+              '/auth/platform-admin/login',
+              {
+                method: 'POST',
+                body: JSON.stringify({
+                  email: rawIdentifier.toLowerCase(),
+                  password
+                })
+              }
+            );
+
+            return {
+              id: response.admin.id,
+              name: response.admin.name,
+              email: response.admin.email,
+              phoneNumber: '',
+              role: 'PLATFORM_ADMIN' as const,
+              restaurantId: null,
+              restaurantName: 'Dir Food Platform',
+              restaurantSlug: null,
+              restaurantStatus: null,
+              subscriptionStatus: null,
+              accessToken: response.accessToken
+            };
+          }
+
+          // 2. Restaurant Owner Login (Pakistani Mobile Number + Password)
+          const normalized = normalizePhone(rawIdentifier);
+          if (!isValidPkMobile(normalized)) {
+            return null;
+          }
+
+          const response = await apiRequest<AuthLoginResponse>('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({
+              phone: normalized,
+              password
+            })
+          });
+
+          return {
+            id: response.user.id,
+            name: response.user.name,
+            email: '',
+            phoneNumber: response.user.phone,
+            role: 'RESTAURANT_OWNER' as const,
+            restaurantId: response.restaurantId,
+            restaurantName: response.restaurant.name,
+            restaurantSlug: response.restaurant.slug,
+            restaurantStatus: response.restaurant.status,
+            subscriptionStatus: response.restaurant.subscriptionStatus,
+            accessToken: response.accessToken
+          };
+        } catch {
+          return null;
+        }
+      }
+    })
+  ],
   pages: {
     signIn: '/auth/sign-in'
   },
-  providers: [],
   session: {
     strategy: 'jwt'
   },
-  trustHost: true,
   callbacks: {
     async jwt({ token, user }) {
       const typedToken = token as JwtTokenShape;
 
       if (user) {
-        typedToken.sub = user.id;
-        typedToken.role = user.role;
-        typedToken.phoneNumber = user.phoneNumber;
-        typedToken.orgId = user.orgId;
-        typedToken.orgName = user.orgName;
-        typedToken.shopId = user.shopId ?? user.orgId;
-        typedToken.shopName = user.shopName ?? user.orgName;
-        typedToken.restaurantStatus = user.restaurantStatus;
-        typedToken.subscriptionEndsAt = user.subscriptionEndsAt;
-        if (user.accessToken) {
-          typedToken.accessToken = user.accessToken;
-          typedToken.accessTokenExpiresAt = decodeJwtExp(user.accessToken);
+        const authenticatedUser = user as unknown as AuthenticatedUser & {
+          accessToken?: string;
+        };
+        typedToken.sub = authenticatedUser.id;
+        typedToken.role = authenticatedUser.role;
+        typedToken.phoneNumber = authenticatedUser.phoneNumber;
+        typedToken.email = authenticatedUser.email;
+        typedToken.restaurantId = authenticatedUser.restaurantId;
+        typedToken.restaurantName = authenticatedUser.restaurantName;
+        typedToken.restaurantSlug = authenticatedUser.restaurantSlug;
+        typedToken.restaurantStatus = authenticatedUser.restaurantStatus;
+        typedToken.subscriptionStatus = authenticatedUser.subscriptionStatus;
+        typedToken.picture = authenticatedUser.avatarUrl;
+        if (authenticatedUser.accessToken) {
+          typedToken.accessToken = authenticatedUser.accessToken;
+          typedToken.accessTokenExpiresAt = decodeJwtExp(
+            authenticatedUser.accessToken
+          );
         }
       }
 
@@ -53,27 +165,23 @@ export const authConfig = {
 
       return typedToken;
     },
-
     async session({ session, token }) {
       const typedToken = token as JwtTokenShape;
 
       if (session.user) {
         const sessionUser = session.user as SessionUserShape;
         sessionUser.id = typedToken.sub ?? '';
-        sessionUser.role = (typedToken.role as AuthAccountRole) ?? 'OWNER';
+        sessionUser.role = typedToken.role ?? 'RESTAURANT_OWNER';
         sessionUser.phoneNumber = typedToken.phoneNumber ?? '';
-        sessionUser.orgId = typedToken.orgId ?? '';
-        sessionUser.orgName = typedToken.orgName ?? '';
-        sessionUser.shopId =
-          (typedToken.shopId as string | null | undefined) ?? null;
-        sessionUser.shopName =
-          (typedToken.shopName as string | null | undefined) ?? null;
+        sessionUser.restaurantId = typedToken.restaurantId ?? null;
+        sessionUser.restaurantName = typedToken.restaurantName ?? null;
+        sessionUser.restaurantSlug = typedToken.restaurantSlug ?? null;
+        sessionUser.restaurantStatus = typedToken.restaurantStatus ?? null;
+        sessionUser.subscriptionStatus = typedToken.subscriptionStatus ?? null;
         sessionUser.avatarUrl =
           typeof typedToken.picture === 'string'
             ? typedToken.picture
             : undefined;
-        sessionUser.restaurantStatus = typedToken.restaurantStatus;
-        sessionUser.subscriptionEndsAt = typedToken.subscriptionEndsAt ?? null;
       }
 
       if (typeof typedToken.accessToken === 'string') {
@@ -81,19 +189,6 @@ export const authConfig = {
       }
 
       return session;
-    },
-
-    authorized({ auth, request }) {
-      const { pathname } = request.nextUrl;
-      const isLoggedIn = !!auth?.user;
-      const isDashboard =
-        pathname.startsWith('/dashboard') ||
-        /\/(en|ur|ps)\/dashboard/.test(pathname);
-      const isAuthApi = pathname.startsWith('/api/auth');
-
-      if (isAuthApi) return true;
-      if (isDashboard) return isLoggedIn;
-      return true;
     }
   }
 } satisfies NextAuthConfig;

@@ -1,4 +1,6 @@
-export type AuthAccountRole = 'OWNER' | 'STAFF' | 'SUPER_ADMIN';
+import type { RestaurantStatus, UserRole } from '@/lib/api/types';
+
+export type AuthAccountRole = UserRole; // 'RESTAURANT_OWNER' | 'PLATFORM_ADMIN'
 
 export interface AuthAccount {
   id: string;
@@ -6,9 +8,10 @@ export interface AuthAccount {
   email: string;
   phoneNumber: string;
   role: AuthAccountRole;
-  orgId: string;
-  orgName: string;
+  restaurantId: string | null;
+  restaurantName: string | null;
+  restaurantSlug?: string | null;
+  restaurantStatus?: RestaurantStatus | null;
+  subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
   avatarUrl?: string;
-  restaurantStatus?: string;
-  subscriptionEndsAt?: string | null;
 }

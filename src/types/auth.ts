@@ -1,55 +1,46 @@
 import type { AuthAccount, AuthAccountRole } from '@/lib/auth/accounts';
+import type { RestaurantStatus } from '@/lib/api/types';
 import type { Session } from 'next-auth';
 import type { NextRequest } from 'next/server';
 
+export type SessionRole = AuthAccountRole;
+
 export interface AuthorizeCredentials {
-  phone?: string;
   identifier?: string;
   password?: string;
-  isPlatformAdmin?: string | boolean;
-  loginType?: string;
-}
-
-export interface LoginResult {
-  id: string;
-  name: string;
-  phoneNumber: string;
-  role: AuthAccountRole;
-  orgId: string;
-  orgName: string;
-  shopId: string | null;
-  shopName: string | null;
-  restaurantStatus?: string;
-  accessToken: string;
-  subscriptionEndsAt: string | null;
+  loginType?: 'owner' | 'platform-admin';
 }
 
 export type AuthenticatedUser = AuthAccount;
-export type SessionRole = AuthAccountRole;
 
 export interface JwtTokenShape {
   sub?: string;
   role?: AuthAccountRole;
   phoneNumber?: string;
-  orgId?: string;
-  orgName?: string;
+  email?: string;
+  restaurantId?: string | null;
+  restaurantName?: string | null;
+  restaurantSlug?: string | null;
+  restaurantStatus?: RestaurantStatus | null;
+  subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
   picture?: string;
   accessToken?: string;
   accessTokenExpiresAt?: number;
-  restaurantStatus?: string;
-  subscriptionEndsAt?: string | null;
   [key: string]: unknown;
 }
 
 export type SessionUserShape = NonNullable<Session['user']> & {
-  id?: string;
-  role?: AuthAccountRole;
+  id: string;
+  name: string;
+  role: AuthAccountRole;
   phoneNumber?: string;
-  orgId?: string;
-  orgName?: string;
+  email?: string;
+  restaurantId: string | null;
+  restaurantName: string | null;
+  restaurantSlug?: string | null;
+  restaurantStatus?: RestaurantStatus | null;
+  subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
   avatarUrl?: string;
-  restaurantStatus?: string;
-  subscriptionEndsAt?: string | null;
 };
 
 export type AuthenticatedNextRequest = NextRequest & {
