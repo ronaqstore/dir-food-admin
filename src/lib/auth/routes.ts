@@ -11,7 +11,6 @@ const OWNER_ALLOWED_PREFIXES = [
   '/dashboard/orders',
   '/dashboard/menu',
   '/dashboard/categories',
-  '/dashboard/tables',
   '/dashboard/delivery',
   '/dashboard/requests',
   '/dashboard/settings'

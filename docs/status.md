@@ -74,6 +74,21 @@
   - `npm run lint`: Passed (0 warnings, 0 errors)
   - `npm run test`: Passed (6/6 tests passing)
 
+## 2026-10-19 — Spec 006: Platform Admin Restaurant Management & Approvals
+- **Spec:** `docs/specs/006-platform-admin-restaurants/` (Status: Done)
+- **Features Implemented:**
+  - Platform restaurants portal (`/dashboard/platform/restaurants`): Overview of registered stores across Lower Dir with status filtering and live search.
+  - Summary KPI cards: Total registered restaurants, pending applications, active stores, and suspended accounts.
+  - Admin-assisted onboarding modal (`CreateRestaurantDialog`): Create restaurant and owner record, and generate a single-use password setup link for WhatsApp dispatch.
+  - Review & Approval modal (`ReviewApprovalDialog`): Inspect readiness checklist (WhatsApp number, weekly hours, menu items, delivery areas) before granting 1-click live approval with 30-day free trial.
+  - Subscription extension modal (`ExtendSubscriptionDialog`): Presets (+30d, +60d, +90d, +365d) and custom days after receiving manual cash payments.
+  - Status change modal (`StatusChangeDialog`): Mandatory audit reason prompt for suspending or deactivating restaurants.
+  - Next.js API route handlers in `src/app/api/admin/restaurants/`.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors)
+  - `npm run test`: Passed (6/6 tests passing)
+
 ---
 
 ## Postponed / Backlog Features (To do at the end)

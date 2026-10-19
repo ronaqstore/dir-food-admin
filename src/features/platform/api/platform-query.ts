@@ -1,0 +1,103 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { appFetch } from '@/lib/api/app-fetch';
+import type {
+  CreateRestaurantInput,
+  CreateRestaurantResponse,
+  ExtendSubscriptionInput,
+  PaginatedRestaurantsResponse,
+  PlatformRestaurant,
+  PlatformRestaurantDetail,
+  QueryRestaurantsFilter,
+  UpdateRestaurantStatusInput
+} from '../types';
+
+export const PLATFORM_RESTAURANTS_QUERY_KEY = ['platform-restaurants'] as const;
+
+export function usePlatformRestaurants(filter?: QueryRestaurantsFilter) {
+  const params = new URLSearchParams();
+  if (filter?.page) params.set('page', String(filter.page));
+  if (filter?.limit) params.set('limit', String(filter.limit));
+  if (filter?.q) params.set('q', filter.q);
+  if (filter?.status && filter.status !== 'ALL') {
+    params.set('status', filter.status);
+  }
+
+  const qs = params.toString() ? `?${params.toString()}` : '';
+
+  return useQuery({
+    queryKey: [
+      ...PLATFORM_RESTAURANTS_QUERY_KEY,
+      filter?.page,
+      filter?.limit,
+      filter?.q,
+      filter?.status
+    ],
+    queryFn: () => appFetch<PaginatedRestaurantsResponse>(`/api/admin/restaurants${qs}`)
+  });
+}
+
+export function usePlatformRestaurantDetail(id: string | null) {
+  return useQuery({
+    queryKey: ['platform-restaurant-detail', id],
+    queryFn: () => appFetch<PlatformRestaurantDetail>(`/api/admin/restaurants/${id}`),
+    enabled: !!id
+  });
+}
+
+export function useCreatePlatformRestaurant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateRestaurantInput) =>
+      appFetch<CreateRestaurantResponse>('/api/admin/restaurants', {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: PLATFORM_RESTAURANTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['platform-overview'] });
+    }
+  });
+}
+
+export function useUpdatePlatformRestaurantStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: UpdateRestaurantStatusInput }) =>
+      appFetch<PlatformRestaurant>(`/api/admin/restaurants/${id}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: PLATFORM_RESTAURANTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['platform-restaurant-detail', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['platform-overview'] });
+    }
+  });
+}
+
+export function useExtendPlatformSubscription() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: ExtendSubscriptionInput }) =>
+      appFetch<PlatformRestaurant>(`/api/admin/restaurants/${id}/subscription/extend`, {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: PLATFORM_RESTAURANTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['platform-restaurant-detail', variables.id] });
+    }
+  });
+}
+
+export function useIssueSetupLink() {
+  return useMutation({
+    mutationFn: (id: string) =>
+      appFetch<{ setupLink: string }>(`/api/admin/restaurants/${id}/setup-link`, {
+        method: 'POST'
+      })
+  });
+}
