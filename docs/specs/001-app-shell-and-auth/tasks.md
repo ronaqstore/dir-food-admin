@@ -27,10 +27,10 @@ Rules:
 ---
 
 ### Batch 3: One-Time Password Setup Screen
-- [ ] Task 3.1: Create password setup schema and API service in `src/features/auth/schemas/setup-password.schema.ts` and `src/features/auth/api/`.
-- [ ] Task 3.2: Implement password setup form component in `src/features/auth/components/setup-password-form.tsx`.
-- [ ] Task 3.3: Create setup password page at `src/app/[locale]/(auth)/setup-password/page.tsx` and root redirect `/auth/setup-password`.
-- [ ] Task 3.4: Verify loop passes (`tsc`, `oxlint`).
+- [x] Task 3.1: Create password setup schema and API service in `src/features/auth/schemas/setup-password.schema.ts` and `src/features/auth/api/auth.service.ts`.
+- [x] Task 3.2: Implement password setup form component in `src/features/auth/components/setup-password-form.tsx`.
+- [x] Task 3.3: Create setup password page at `src/app/[locale]/setup-password/page.tsx` and root redirect `/setup-password`.
+- [x] Task 3.4: Verify loop passes (`tsc`, `oxlint`).
 
 ---
 
