@@ -49,11 +49,6 @@ export function AppSidebar() {
       icon: Icons.tag
     },
     {
-      title: t('nav.tables'),
-      href: '/dashboard/tables',
-      icon: Icons.building
-    },
-    {
       title: t('nav.settings'),
       href: '/dashboard/settings',
       icon: Icons.settings

@@ -74,4 +74,13 @@
   - `npm run lint`: Passed (0 warnings, 0 errors)
   - `npm run test`: Passed (6/6 tests passing)
 
+---
+
+## Postponed / Backlog Features (To do at the end)
+- **Menu QR Code & Counter Flyer Generator**:
+  - A dedicated page for restaurant owners to preview a scannable QR code for their public storefront menu (`dirfood.pk/r/:slug`).
+  - Ability to copy public link, download high-res PNG QR code, and print an A4 counter / table standee flyer with restaurant branding.
+  - Pure frontend implementation (zero backend changes needed).
+
+
 
