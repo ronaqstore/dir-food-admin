@@ -217,6 +217,7 @@ export interface ProxyOptions {
   forwardFormData?: boolean;
   body?: unknown;
   statusOnSuccess?: number;
+  rawResponse?: boolean;
   transformResponse?: (data: unknown) => unknown;
   transformError?: (
     error: unknown,

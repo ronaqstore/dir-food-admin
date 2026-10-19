@@ -9,6 +9,7 @@ import {
   IconBold,
   IconBox,
   IconBrandTwitter,
+  IconBrandWhatsapp,
   IconBrightness,
   IconBuildingStore,
   IconCalendar,
@@ -227,5 +228,6 @@ export const Icons = {
   slash: IconSlash,
   calendar: IconCalendar,
   galleryVerticalEnd: IconStack2,
-  moreHorizontal: IconDots
+  moreHorizontal: IconDots,
+  whatsapp: IconBrandWhatsapp
 };

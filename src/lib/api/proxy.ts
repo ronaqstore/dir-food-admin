@@ -107,7 +107,10 @@ export async function proxyToBackend(
   }
 
   const unwrapped =
-    responseBody && typeof responseBody === 'object' && 'data' in responseBody
+    !options?.rawResponse &&
+    responseBody &&
+    typeof responseBody === 'object' &&
+    'data' in responseBody
       ? responseBody.data
       : responseBody;
 
