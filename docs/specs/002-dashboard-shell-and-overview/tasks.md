@@ -20,10 +20,10 @@ Rules:
 ---
 
 ### Batch 2: Restaurant Owner Dashboard Overview (`/dashboard/overview`)
-- [ ] Task 2.1: Create owner dashboard overview component (`src/features/dashboard/components/owner-overview.tsx`) with KPI cards (Today's Orders, Sales in Rs, Pending, Completed) and quick action shortcuts.
-- [ ] Task 2.2: Implement `/dashboard/overview` page at `src/app/[locale]/dashboard/overview/page.tsx`.
-- [ ] Task 2.3: Implement `/dashboard` root index page at `src/app/[locale]/dashboard/page.tsx` redirecting to role default.
-- [ ] Task 2.4: Verify loop passes (`tsc`, `oxlint`).
+- [x] Task 2.1: Create owner dashboard overview component (`src/features/dashboard/components/owner-overview.tsx`) with KPI cards (Today's Orders, Sales in Rs, Pending, Completed) and quick action shortcuts.
+- [x] Task 2.2: Implement `/dashboard/overview` page at `src/app/[locale]/dashboard/overview/page.tsx`.
+- [x] Task 2.3: Implement `/dashboard` root index page at `src/app/[locale]/dashboard/page.tsx` redirecting to role default.
+- [x] Task 2.4: Verify loop passes (`tsc`, `oxlint`).
 
 ---
 
