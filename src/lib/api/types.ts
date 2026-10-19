@@ -209,3 +209,17 @@ export interface RestaurantStatsDTO {
     requestedQuantity: number;
   }>;
 }
+
+export interface ProxyOptions {
+  method?: string;
+  allowedParams?: string[];
+  paramAliases?: Record<string, string>;
+  forwardFormData?: boolean;
+  body?: unknown;
+  statusOnSuccess?: number;
+  transformResponse?: (data: unknown) => unknown;
+  transformError?: (
+    error: unknown,
+    status: number
+  ) => { handled: boolean; data?: unknown; status?: number } | undefined;
+}

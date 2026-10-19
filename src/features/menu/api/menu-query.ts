@@ -1,0 +1,112 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { appFetch } from '@/lib/api/app-fetch';
+import type {
+  MenuItemDTO,
+  CreateMenuItemInput,
+  UpdateMenuItemInput,
+  ReplaceVariantsInput,
+  MenuItemsFilter
+} from '../types';
+
+export const MENU_ITEMS_QUERY_KEY = ['menu-items'] as const;
+
+export function useMenuItems(filter?: MenuItemsFilter) {
+  const params = new URLSearchParams();
+  if (filter?.categoryId) params.set('categoryId', filter.categoryId);
+  if (filter?.page) params.set('page', String(filter.page));
+  if (filter?.limit) params.set('limit', String(filter.limit));
+
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+
+  return useQuery({
+    queryKey: [...MENU_ITEMS_QUERY_KEY, filter?.categoryId ?? 'all', filter?.page ?? 1],
+    queryFn: () => appFetch<MenuItemDTO[]>(`/api/items${queryStr}`)
+  });
+}
+
+export function useCreateMenuItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateMenuItemInput) =>
+      appFetch<MenuItemDTO>('/api/items', {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['menu-categories'] });
+    }
+  });
+}
+
+export function useUpdateMenuItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: UpdateMenuItemInput }) =>
+      appFetch<MenuItemDTO>(`/api/items/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['menu-categories'] });
+    }
+  });
+}
+
+export function useReplaceVariants() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: ReplaceVariantsInput }) =>
+      appFetch<MenuItemDTO>(`/api/items/${id}/variants`, {
+        method: 'PUT',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+    }
+  });
+}
+
+export function useUploadItemImage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, file }: { id: string; file: File }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch(`/api/items/${id}/image`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const error = await res.json().catch(() => null);
+        throw new Error(error?.message || 'Failed to upload photo');
+      }
+
+      return res.json() as Promise<MenuItemDTO>;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+    }
+  });
+}
+
+export function useDeleteItemImage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) =>
+      appFetch<MenuItemDTO>(`/api/items/${id}/image`, {
+        method: 'DELETE'
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+    }
+  });
+}
