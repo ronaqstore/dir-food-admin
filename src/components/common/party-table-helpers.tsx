@@ -9,7 +9,7 @@ import {
   type QuickFilterChip
 } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
-import { formatPkr } from '@/lib/dukaan/numbers';
+import { formatPkr } from '@/lib/money';
 import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
 import type { BasePartyRecord, PartyDetailLabels } from '@/types/party';

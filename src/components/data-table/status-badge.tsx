@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { formatLabel } from '@/lib/dukaan/numbers';
+import { formatLabel } from '@/lib/format';
 
 export type { StatusTone, StatusBadgeProps } from './types';
 import type { StatusTone, StatusBadgeProps } from './types';

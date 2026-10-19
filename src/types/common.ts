@@ -267,3 +267,18 @@ export interface DateFieldShellProps {
   displayText: ReactNode;
   children: ReactNode;
 }
+
+export interface RowAction {
+  label: string;
+  href?: string;
+  onClick?: () => void;
+  icon?: React.ComponentType<{ className?: string }>;
+  variant?: 'default' | 'destructive';
+  className?: string;
+  disabled?: boolean;
+}
+
+export interface RowActionsMenuProps {
+  actions: RowAction[];
+}
+

@@ -23,7 +23,7 @@ export function FileUploadField({
       </FieldLabel>
       <FileUploader
         value={field.state.value}
-        onValueChange={(files) =>
+        onValueChange={(files: React.SetStateAction<File[]>) =>
           field.handleChange(typeof files === 'function' ? files(field.state.value ?? []) : files)
         }
         maxSize={maxSize}

@@ -3,7 +3,7 @@
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState, useQueryStates } from 'nuqs';
 import { useMemo } from 'react';
 import { getSortingStateParser } from '@/lib/parsers';
-import type { ListFilters } from '@/lib/dukaan';
+import type { ListFilters } from '@/types/data-table';
 
 export const DUKAAN_DEFAULT_PAGE_SIZE = 20;
 

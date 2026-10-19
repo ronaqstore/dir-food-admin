@@ -2,7 +2,8 @@
 
 import type * as React from 'react';
 import type { Column, ColumnDef, Table } from '@tanstack/react-table';
-import { formatLabel, formatPkr } from '@/lib/dukaan/numbers';
+import { formatLabel } from '@/lib/format';
+import { formatPkr } from '@/lib/money';
 import { StatusBadge } from './status-badge';
 import { resolveMobileSlots } from './resolve-mobile-item';
 import type {

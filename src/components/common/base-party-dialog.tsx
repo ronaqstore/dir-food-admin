@@ -14,7 +14,7 @@ import { FieldGroup } from '@/components/ui/field';
 import { Icons } from '@/components/icons';
 import { useT } from '@/i18n/use-t';
 import { useAppForm } from '@/lib/form';
-import { fromPaisa, toPaisa } from '@/lib/dukaan/numbers';
+import { fromPaisa, toPaisa } from '@/lib/money';
 import { DialogCancelButton, DialogPrimaryButton } from '@/components/common/dialog-actions';
 import type { BasePartyDialogProps, BasePartyDialogBodyProps, BasePartyFormState } from '@/types';
 

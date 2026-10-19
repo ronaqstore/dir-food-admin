@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { SessionRole } from '@/lib/dukaan/session';
+import type { SessionRole } from '@/types/auth';
 import type { InfobarContent } from '@/components/ui/infobar';
 
 export interface BreadcrumbItem {

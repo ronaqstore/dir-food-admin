@@ -25,6 +25,7 @@ export interface LoginResult {
 }
 
 export type AuthenticatedUser = AuthAccount;
+export type SessionRole = AuthAccountRole;
 
 export interface JwtTokenShape {
   sub?: string;
