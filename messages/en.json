@@ -173,7 +173,16 @@
     "accountMenu": "Account menu",
     "signOut": "Sign out",
     "signingOut": "Signing out…",
-    "createNewShop": "Create New Shop"
+    "createNewShop": "Create New Shop",
+    "restaurantOwner": "Restaurant Owner",
+    "orders": "Orders",
+    "liveOrders": "Live Orders",
+    "menuItems": "Menu Items",
+    "menuCategories": "Categories",
+    "tables": "Tables & QR",
+    "restaurants": "Restaurants",
+    "settings": "Settings",
+    "platformOverview": "Platform Overview"
   },
   "common": {
     "somethingWentWrong": "Something went wrong",

@@ -173,7 +173,16 @@
     "accountMenu": "د حساب مینو",
     "signOut": "وتل",
     "signingOut": "وتل کیږي…",
-    "createNewShop": "نوی دوکان جوړ کړئ"
+    "createNewShop": "نوی دوکان جوړ کړئ",
+    "restaurantOwner": "د رستورانت مالک",
+    "orders": "فرمایشونه",
+    "liveOrders": "ژوندي فرمایشونه",
+    "menuItems": "د خوړو توکي",
+    "menuCategories": "د خوړو کټګورۍ",
+    "tables": "میزونه او QR",
+    "restaurants": "رستورانتونه",
+    "settings": "تنظیمات",
+    "platformOverview": "د پلیټ فارم لنډیز"
   },
   "common": {
     "somethingWentWrong": "څه ستونزه رامنځته شوه",

@@ -5,8 +5,10 @@ export const PLATFORM_ADMIN_DEFAULT_REDIRECT = '/dashboard/platform';
 
 const OWNER_ALLOWED_PREFIXES = [
   '/dashboard/overview',
+  '/dashboard/orders',
   '/dashboard/menu',
   '/dashboard/categories',
+  '/dashboard/tables',
   '/dashboard/delivery',
   '/dashboard/requests',
   '/dashboard/settings'

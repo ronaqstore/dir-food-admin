@@ -173,7 +173,16 @@
     "accountMenu": "اکاؤنٹ مینو",
     "signOut": "سائن آؤٹ",
     "signingOut": "سائن آؤٹ ہو رہا ہے…",
-    "createNewShop": "نیا دکان بنائیں"
+    "createNewShop": "نیا دکان بنائیں",
+    "restaurantOwner": "ریستوران کا مالک",
+    "orders": "آرڈرز",
+    "liveOrders": "لائیو آرڈرز",
+    "menuItems": "کھانوں کے آئٹمز",
+    "menuCategories": "کھانوں کے زمرے",
+    "tables": "ٹیبلز اور کیو آر",
+    "restaurants": "ریستورانز",
+    "settings": "ترتیبات",
+    "platformOverview": "پلیٹ فارم جائزہ"
   },
   "common": {
     "somethingWentWrong": "کچھ غلط ہو گیا",
