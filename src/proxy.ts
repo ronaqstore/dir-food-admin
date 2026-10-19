@@ -2,24 +2,30 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import {
   getDefaultRedirectForRole,
-  isRoleAuthorizedForDashboardPath
+  isRoleAuthorizedForDashboardPath,
+  delocalize
 } from '@/lib/auth/routes';
 import type { AuthenticatedNextRequest } from '@/types/auth';
 
 const PUBLIC_AUTH_ROUTES = [
   '/auth/sign-in',
   '/auth/sign-up',
-  '/auth/setup-password'
+  '/auth/setup-password',
+  '/login',
+  '/platform-admin/login',
+  '/setup-password'
 ];
 
 function isPublicAuthRoute(pathname: string): boolean {
+  const pure = delocalize(pathname);
   return PUBLIC_AUTH_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) => pure === route || pure.startsWith(`${route}/`)
   );
 }
 
 function isProtectedRoute(pathname: string): boolean {
-  return pathname === '/dashboard' || pathname.startsWith('/dashboard/');
+  const pure = delocalize(pathname);
+  return pure === '/dashboard' || pure.startsWith('/dashboard/');
 }
 
 const handleAuth = auth((req: AuthenticatedNextRequest) => {
@@ -34,7 +40,7 @@ const handleAuth = auth((req: AuthenticatedNextRequest) => {
   }
 
   if (isProtectedRoute(pathname) && !isAuthenticated) {
-    const signInUrl = new URL('/auth/sign-in', req.url);
+    const signInUrl = new URL('/login', req.url);
     const callbackUrl = `${pathname}${search}`;
     signInUrl.searchParams.set('callbackUrl', callbackUrl);
     return NextResponse.redirect(signInUrl);

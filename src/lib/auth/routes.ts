@@ -64,3 +64,9 @@ export function delocalize(pathname: string): string {
   }
   return pathname;
 }
+
+export function localize(path: string, locale?: string): string {
+  const pure = delocalize(path);
+  const targetLocale = locale || 'en';
+  return `/${targetLocale}${pure === '/' ? '' : pure}`;
+}
