@@ -1,6 +1,6 @@
 # Spec: [001] App Shell & Authentication Screens
 
-- **Status:** In Review
+- **Status:** Done
 - **Author:** AI + Usman
 - **Date:** 2026-10-19
 - **Target Module:** `src/app/`, `src/components/layout/`, `src/features/auth/`

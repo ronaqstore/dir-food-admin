@@ -35,5 +35,5 @@ Rules:
 ---
 
 ### Batch 4: Verification & Close Out
-- [ ] Task 4.1: Run full verification (`npm run typecheck`, `npm run lint`, `npm run test`).
-- [ ] Task 4.2: Update `docs/status.md` and mark spec as Done.
+- [x] Task 4.1: Run full verification (`npm run typecheck`, `npm run lint`, `npm run test`).
+- [x] Task 4.2: Update `docs/status.md` and mark spec as Done.
