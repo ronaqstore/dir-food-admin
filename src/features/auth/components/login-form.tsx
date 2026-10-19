@@ -54,6 +54,15 @@ export function LoginForm() {
       footer={
         <div className='space-y-2 text-center text-xs leading-relaxed'>
           <p className='text-muted-foreground'>
+            {t('auth.dontHaveAccountPrompt')}{' '}
+            <Link
+              href='/register'
+              className='text-foreground font-medium underline-offset-4 hover:underline'
+            >
+              {t('auth.registerLink')}
+            </Link>
+          </p>
+          <p className='text-muted-foreground'>
             {t('auth.platformAdminPrompt')}{' '}
             <Link
               href='/platform-admin/login'

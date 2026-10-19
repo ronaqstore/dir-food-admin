@@ -13,7 +13,8 @@ const PUBLIC_AUTH_ROUTES = [
   '/auth/setup-password',
   '/login',
   '/platform-admin/login',
-  '/setup-password'
+  '/setup-password',
+  '/register'
 ];
 
 function isPublicAuthRoute(pathname: string): boolean {

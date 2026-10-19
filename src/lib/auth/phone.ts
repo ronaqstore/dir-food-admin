@@ -5,7 +5,9 @@ export function normalizePhone(phone: string): string {
 
   let digits = phone.replace(/\D/g, '');
 
-  if (digits.startsWith('92') && digits.length >= 12) {
+  if (digits.startsWith('0092')) {
+    digits = `0${digits.slice(4)}`;
+  } else if (digits.startsWith('92') && digits.length >= 12) {
     digits = `0${digits.slice(2)}`;
   }
 

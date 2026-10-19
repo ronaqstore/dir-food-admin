@@ -37,3 +37,15 @@ Rules:
 ### Batch 4: Verification & Close Out
 - [x] Task 4.1: Run full verification (`npm run typecheck`, `npm run lint`, `npm run test`).
 - [x] Task 4.2: Update `docs/status.md` and mark spec as Done.
+
+---
+
+### Batch 5: Restaurant Owner Registration & Branding Purge
+- [x] Task 5.1: Purge all leftover "Ronaq Store" and "Dukaan Pro" strings across `messages/en.json`, `messages/ur.json`, and `messages/ps.json`.
+- [x] Task 5.2: Create Zod validation schema in `src/features/auth/schemas/register.schema.ts`.
+- [x] Task 5.3: Add `registerRestaurant` API function in `src/features/auth/api/auth.service.ts` connecting to `POST /auth/register`.
+- [x] Task 5.4: Create `RegisterForm` component in `src/features/auth/components/register-form.tsx` with cuisine selector and phone validation.
+- [x] Task 5.5: Create localized page at `src/app/[locale]/register/page.tsx` and root redirect `src/app/register/page.tsx`.
+- [x] Task 5.6: Add registration route to `src/proxy.ts` and register link to `src/features/auth/components/login-form.tsx`.
+- [x] Task 5.7: Verify loop passes (`tsc`, `oxlint`, `vitest`).
+
