@@ -3,9 +3,10 @@ import { authConfig } from './auth.config';
 
 export const {
   auth,
-  handlers: { GET, POST },
+  handlers,
   signIn,
   signOut
 } = NextAuth(authConfig);
 
+export const { GET, POST } = handlers;
 export default auth;
