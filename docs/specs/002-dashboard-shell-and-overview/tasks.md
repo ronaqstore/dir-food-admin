@@ -28,12 +28,12 @@ Rules:
 ---
 
 ### Batch 3: Platform Admin Dashboard Overview (`/dashboard/platform`)
-- [ ] Task 3.1: Create platform admin overview component (`src/features/dashboard/components/platform-overview.tsx`) with cross-tenant KPI cards and pending restaurant approvals list.
-- [ ] Task 3.2: Implement `/dashboard/platform` page at `src/app/[locale]/dashboard/platform/page.tsx`.
-- [ ] Task 3.3: Verify loop passes (`tsc`, `oxlint`).
+- [x] Task 3.1: Create platform admin overview component (`src/features/dashboard/components/platform-overview.tsx`) with cross-tenant KPI cards and pending restaurant approvals list.
+- [x] Task 3.2: Implement `/dashboard/platform` page at `src/app/[locale]/dashboard/platform/page.tsx`.
+- [x] Task 3.3: Verify loop passes (`tsc`, `oxlint`).
 
 ---
 
 ### Batch 4: Verification, Quality Gates & Close Out
-- [ ] Task 4.1: Run full verification (`npm run typecheck`, `npm run lint`, `npm run test`).
-- [ ] Task 4.2: Update `docs/status.md` and mark spec as Done.
+- [x] Task 4.1: Run full verification (`npm run typecheck`, `npm run lint`, `npm run test`).
+- [x] Task 4.2: Update `docs/status.md` and mark spec as Done.
