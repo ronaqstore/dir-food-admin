@@ -61,15 +61,17 @@ export function UserNav() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end'>
-        <DropdownMenuLabel className='font-normal'>
-          <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-semibold leading-none text-foreground'>{user.name}</p>
-            <p className='text-xs leading-none text-muted-foreground'>
-              {user.phoneNumber || user.email}
-            </p>
-            <p className='text-[11px] font-medium text-primary pt-0.5'>{roleLabel}</p>
-          </div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className='font-normal'>
+            <div className='flex flex-col space-y-1'>
+              <p className='text-sm font-semibold leading-none text-foreground'>{user.name}</p>
+              <p className='text-xs leading-none text-muted-foreground'>
+                {user.phoneNumber || user.email}
+              </p>
+              <p className='text-[11px] font-medium text-primary pt-0.5'>{roleLabel}</p>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
@@ -95,13 +97,15 @@ export function UserNav() {
           ) : null}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={handleSignOut}
-          className='cursor-pointer text-destructive focus:text-destructive'
-        >
-          <Icons.logout className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />
-          <span>{t('auth.signOut')}</span>
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            className='cursor-pointer text-destructive focus:text-destructive'
+          >
+            <Icons.logout className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />
+            <span>{t('auth.signOut')}</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
