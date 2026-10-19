@@ -19,10 +19,10 @@ Rules:
 ---
 
 ### Batch 2: Authentication Feature & Sign-In Screens (Owner & Platform Admin)
-- [ ] Task 2.1: Create auth schemas and types in `src/features/auth/schemas/sign-in.schema.ts`.
-- [ ] Task 2.2: Implement Restaurant Owner login form in `src/features/auth/components/login-form.tsx` and page at `src/app/[locale]/login/page.tsx`.
-- [ ] Task 2.3: Implement Platform Admin / Super Admin login form in `src/features/auth/components/platform-admin-login-form.tsx` and page at `src/app/[locale]/platform-admin/login/page.tsx`.
-- [ ] Task 2.4: Verify loop passes (`tsc`, `oxlint`).
+- [x] Task 2.1: Create auth schemas and types in `src/features/auth/schemas/sign-in.schema.ts` and `login.schema.ts`.
+- [x] Task 2.2: Implement Restaurant Owner login form in `src/features/auth/components/login-form.tsx` and page at `src/app/[locale]/login/page.tsx`.
+- [x] Task 2.3: Implement Platform Admin / Super Admin login form in `src/features/auth/components/platform-admin-login-form.tsx` and page at `src/app/[locale]/platform-admin/login/page.tsx`.
+- [x] Task 2.4: Verify loop passes (`tsc`, `oxlint`).
 
 ---
 

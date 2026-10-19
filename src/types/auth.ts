@@ -56,3 +56,21 @@ export interface SignInSearchParams {
   callbackUrl?: string;
   error?: string;
 }
+
+export interface LoginValues {
+  phone: string;
+  password: string;
+}
+
+export interface BaseLoginFormProps {
+  title: string;
+  description: string;
+  minPasswordLength?: number;
+  onSubmit: (values: LoginValues) => Promise<string | null>;
+  footer?: React.ReactNode;
+}
+
+export interface SetupPasswordValues {
+  password: string;
+  confirmPassword: string;
+}
