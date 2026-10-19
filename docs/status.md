@@ -89,6 +89,21 @@
   - `npm run lint`: Passed (0 warnings, 0 errors)
   - `npm run test`: Passed (6/6 tests passing)
 
+## 2026-10-19 — Spec 007: Platform Subscriptions & Master Delivery Areas
+- **Spec:** `docs/specs/007-platform-subscriptions-and-areas/` (Status: Done)
+- **Features Implemented:**
+  - Platform Subscriptions hub (`/dashboard/platform/subscriptions`): Real-time overview of active terms, expiring accounts, lapsed subscriptions, and 30-day trials.
+  - Subscriptions KPI cards: Active Subscriptions, Expiring in 7 Days, Expired Accounts, and Free Trial Stores.
+  - Filter by term status (`ALL`, `ACTIVE`, `EXPIRING`, `EXPIRED`, `TRIAL`) and search by store/owner.
+  - Days remaining countdown badges with rapid offline cash renewal via `ExtendSubscriptionDialog`.
+  - Master Delivery Areas hub (`/dashboard/platform/settings`): Standard Timergara and Lower Dir geographical coverage zones.
+  - Master Area dialog (`MasterAreaDialog`): Create and edit standard zones with sort order, active switch, and auto-slug generation.
+  - Next.js API route handlers in `src/app/api/admin/areas/`.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors)
+  - `npm run test`: Passed (6/6 tests passing)
+
 ---
 
 ## Postponed / Backlog Features (To do at the end)

@@ -4,6 +4,9 @@ import type {
   CreateRestaurantInput,
   CreateRestaurantResponse,
   ExtendSubscriptionInput,
+  MasterArea,
+  CreateAreaInput,
+  UpdateAreaInput,
   PaginatedRestaurantsResponse,
   PlatformRestaurant,
   PlatformRestaurantDetail,
@@ -99,5 +102,44 @@ export function useIssueSetupLink() {
       appFetch<{ setupLink: string }>(`/api/admin/restaurants/${id}/setup-link`, {
         method: 'POST'
       })
+  });
+}
+
+export const MASTER_AREAS_QUERY_KEY = ['master-areas'] as const;
+
+export function useMasterAreas() {
+  return useQuery({
+    queryKey: MASTER_AREAS_QUERY_KEY,
+    queryFn: () => appFetch<MasterArea[]>('/api/admin/areas')
+  });
+}
+
+export function useCreateMasterArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateAreaInput) =>
+      appFetch<MasterArea>('/api/admin/areas', {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
+  });
+}
+
+export function useUpdateMasterArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: UpdateAreaInput }) =>
+      appFetch<MasterArea>(`/api/admin/areas/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
   });
 }

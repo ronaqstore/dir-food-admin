@@ -111,3 +111,28 @@ export interface PaginatedRestaurantsResponse {
     totalPages: number;
   };
 }
+
+export interface MasterArea {
+  id: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  activeRestaurantsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateAreaInput {
+  name: string;
+  slug?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}
+
+export interface UpdateAreaInput {
+  name?: string;
+  slug?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}
