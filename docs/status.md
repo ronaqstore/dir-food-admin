@@ -37,3 +37,41 @@
   - `npm run lint`: Passed (0 warnings, 0 errors)
   - `npm run test`: Passed (6/6 tests passing)
 
+## 2026-10-19 — Spec 003: Menu & Catalog Management
+- **Spec:** `docs/specs/003-menu-and-catalog-management/` (Status: Done)
+- **Features Implemented:**
+  - Categories management (`/dashboard/categories`): List, create modal, rename modal, active switch, and reorder display order (`PUT /order`).
+  - Menu Items management (`/dashboard/menu`): Category filter tabs, search bar, item cards, single price vs portions/variants (Half/Full), image upload & delete, and real-time availability toggle (`isAvailable`).
+  - Next.js API route handlers in `src/app/api/categories/` and `src/app/api/items/`.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors)
+  - `npm run test`: Passed (6/6 tests passing)
+
+## 2026-10-19 — Spec 004: Restaurant Profile, Operating Hours & Delivery Areas
+- **Spec:** `docs/specs/004-restaurant-profile-hours-and-delivery-areas/` (Status: Done)
+- **Features Implemented:**
+  - Settings hub (`/dashboard/settings`): Profile, Hours, and Delivery Areas tabs.
+  - Store Profile (`ProfileTab`): Logo & cover photo upload, store info, WhatsApp orders number, minimum order amount in PKR, store availability override (`AUTO`, `CLOSED`, `TEMP_UNAVAILABLE`), and launch readiness checklist with self-serve 30-day trial publishing.
+  - Operating Hours (`HoursTab`): 7-day schedule with open/close time pickers (`HH:mm`) and closed day toggles.
+  - Delivery Areas (`DeliveryAreasTab`): Timergara neighborhoods coverage switch and delivery fee in PKR.
+  - Next.js API route handlers in `src/app/api/restaurant/`.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors)
+  - `npm run test`: Passed (6/6 tests passing)
+
+## 2026-10-19 — Spec 005: Orders & Order Intents (WhatsApp Flow)
+- **Spec:** `docs/specs/005-orders-and-whatsapp-intents/` (Status: Done)
+- **Features Implemented:**
+  - Orders hub (`/dashboard/orders`): Real-time polling list of incoming customer order requests.
+  - Summary Metric Cards: Total Requests (30d), WhatsApp Chats Opened, Handoff Conversion Rate.
+  - Filter & Search: Search by reference code or customer, filter by status (`WHATSAPP_HANDOFF_READY`, `WHATSAPP_OPENED`).
+  - Order Details Dialog: Full dish item snapshot breakdown with quantities, unit prices, line totals, delivery address and landmark in Timergara, subtotal, delivery fee status, and direct "Chat on WhatsApp" handoff button.
+  - Next.js API route handlers in `src/app/api/orders/`.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors)
+  - `npm run test`: Passed (6/6 tests passing)
+
+
