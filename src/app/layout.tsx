@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import type { RootLayoutProps } from '@/types';
 export type { RootLayoutProps };
 import { getLocale, setRequestLocale } from 'next-intl/server';
@@ -99,8 +100,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontVariables
         )}
       >
-        <script
+        <Script
           id='theme-and-extension-attribute-bootstrap'
+          strategy='beforeInteractive'
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `

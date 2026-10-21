@@ -97,7 +97,7 @@ export function ReviewApprovalDialog({
               <div className='divide-y rounded-lg border bg-muted/20'>
                 {/* 1. WhatsApp */}
                 <div className='flex items-center justify-between p-2.5'>
-                  <span className='text-xs text-foreground'>WhatsApp Orders Number</span>
+                  <span className='text-xs text-foreground'>{t('prereqWhatsapp')}</span>
                   {restaurant.whatsappNumber ? (
                     <Badge
                       variant='secondary'
@@ -107,46 +107,46 @@ export function ReviewApprovalDialog({
                       {restaurant.whatsappNumber}
                     </Badge>
                   ) : (
-                    <Badge variant='destructive'>Missing</Badge>
+                    <Badge variant='destructive'>{t('prereqMissing')}</Badge>
                   )}
                 </div>
 
                 {/* 2. Hours */}
                 <div className='flex items-center justify-between p-2.5'>
-                  <span className='text-xs text-foreground'>Weekly Operating Hours</span>
+                  <span className='text-xs text-foreground'>{t('prereqHours')}</span>
                   {restaurant.hours && restaurant.hours.length > 0 ? (
                     <Badge
                       variant='secondary'
                       className='bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     >
                       <Icons.check className='me-1 size-3' />
-                      {restaurant.hours.length} day(s) configured
+                      {t('prereqHoursConfigured', { count: restaurant.hours.length })}
                     </Badge>
                   ) : (
-                    <Badge variant='destructive'>Missing</Badge>
+                    <Badge variant='destructive'>{t('prereqMissing')}</Badge>
                   )}
                 </div>
 
                 {/* 3. Items */}
                 <div className='flex items-center justify-between p-2.5'>
-                  <span className='text-xs text-foreground'>Active Menu Items</span>
+                  <span className='text-xs text-foreground'>{t('prereqMenuItems')}</span>
                   {(restaurant['_count']?.items ?? 0) > 0 ? (
                     <Badge
                       variant='secondary'
                       className='bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     >
                       <Icons.check className='me-1 size-3' />
-                      {restaurant['_count']?.items} items
+                      {t('prereqItemsCount', { count: restaurant['_count']?.items ?? 0 })}
                     </Badge>
                   ) : (
-                    <Badge variant='destructive'>Missing</Badge>
+                    <Badge variant='destructive'>{t('prereqMissing')}</Badge>
                   )}
                 </div>
 
                 {/* 4. Delivery Areas */}
                 <div className='flex items-center justify-between p-2.5'>
                   <span className='text-xs text-foreground'>
-                    Active Delivery Areas in Lower Dir
+                    {t('prereqDeliveryAreas')}
                   </span>
                   {(restaurant['_count']?.deliveryAreas ?? 0) > 0 ? (
                     <Badge
@@ -154,10 +154,10 @@ export function ReviewApprovalDialog({
                       className='bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     >
                       <Icons.check className='me-1 size-3' />
-                      {restaurant['_count']?.deliveryAreas} areas
+                      {t('prereqAreasCount', { count: restaurant['_count']?.deliveryAreas ?? 0 })}
                     </Badge>
                   ) : (
-                    <Badge variant='destructive'>Missing</Badge>
+                    <Badge variant='destructive'>{t('prereqMissing')}</Badge>
                   )}
                 </div>
               </div>
@@ -168,7 +168,7 @@ export function ReviewApprovalDialog({
               <div className='rounded-lg border border-amber-500/40 bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'>
                 <div className='font-semibold mb-1 flex items-center gap-1.5'>
                   <Icons.warning className='size-4' />
-                  Incomplete Application
+                  {t('incompleteApplication')}
                 </div>
                 <ul className='list-disc list-inside space-y-0.5'>
                   {completeness.missingPrerequisites.map((req, idx) => (

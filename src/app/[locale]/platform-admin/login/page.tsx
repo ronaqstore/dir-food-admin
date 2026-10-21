@@ -1,29 +1,39 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { PlatformAdminLoginForm } from '@/features/auth/components/platform-admin-login-form';
+import { LocaleSwitcher } from '@/components/layout/locale-switcher';
+import { ThemeModeToggle } from '@/components/themes/theme-mode-toggle';
 import type { Metadata } from 'next';
 import { APP_NAME } from '@/config/site';
 
-export const metadata: Metadata = {
-  title: `Platform Admin Sign In | ${APP_NAME}`,
-  description:
-    'Sign in to the Dir Food platform admin panel to manage restaurants and subscriptions.'
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('auth');
+  return {
+    title: `${t('platformAdminSignInTitle')} | ${APP_NAME}`,
+    description: t('platformAdminSignInDesc')
+  };
+}
 
 export default async function PlatformAdminLoginPage() {
   const t = await getTranslations('auth');
 
   return (
-    <div className='bg-background relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-6'>
+    <div className='bg-background relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-4 sm:p-6'>
       <div
         aria-hidden
         className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.6_0.1_20_/_0.1),transparent_55%)]'
       />
-      <div className='relative z-10 mb-8 text-center'>
+      <div className='fixed top-4 end-4 z-20 flex items-center gap-2'>
+        <LocaleSwitcher />
+        <ThemeModeToggle />
+      </div>
+      <div className='relative z-10 mb-6 text-center'>
         <p className='text-muted-foreground text-sm font-medium tracking-wide uppercase'>
           {APP_NAME}
         </p>
-        <h1 className='mt-1 text-3xl font-semibold tracking-tight'>{t('platformAdminTitle')}</h1>
+        <h1 className='mt-1 text-2xl sm:text-3xl font-semibold tracking-tight'>
+          {t('platformAdminTitle')}
+        </h1>
       </div>
       <div className='relative z-10 w-full max-w-md'>
         <Suspense fallback={<div className='bg-muted h-80 animate-pulse rounded-xl' />}>

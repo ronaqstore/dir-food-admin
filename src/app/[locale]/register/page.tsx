@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import { RegisterForm } from '@/features/auth/components/register-form';
+import { LocaleSwitcher } from '@/components/layout/locale-switcher';
+import { ThemeModeToggle } from '@/components/themes/theme-mode-toggle';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { APP_NAME } from '@/config/site';
@@ -20,6 +22,10 @@ export default async function RegisterPage() {
         aria-hidden
         className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.7_0.05_250_/_0.12),transparent_55%)]'
       />
+      <div className='fixed top-4 end-4 z-20 flex items-center gap-2'>
+        <LocaleSwitcher />
+        <ThemeModeToggle />
+      </div>
       <div className='relative z-10 mb-6 text-center'>
         <p className='text-muted-foreground text-sm font-medium tracking-wide uppercase'>
           {APP_NAME}

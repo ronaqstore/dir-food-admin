@@ -232,7 +232,9 @@ export function ProfileTab() {
 
       {/* 2. Visuals: Logo & Cover */}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-        <h3 className='text-base font-semibold text-foreground border-b pb-3'>Restaurant Media</h3>
+        <h3 className='text-base font-semibold text-foreground border-b pb-3'>
+          {t('restaurantSettings.mediaTitle')}
+        </h3>
 
         <div className='grid gap-6 sm:grid-cols-2'>
           {/* Logo */}
@@ -432,7 +434,9 @@ export function ProfileTab() {
 
       {/* 4. Store Profile Details */}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-        <h3 className='text-base font-semibold text-foreground border-b pb-3'>Store Details</h3>
+        <h3 className='text-base font-semibold text-foreground border-b pb-3'>
+          {t('restaurantSettings.detailsTitle')}
+        </h3>
 
         <form onSubmit={handleSaveProfile} className='space-y-4'>
           <div className='grid gap-4 sm:grid-cols-2'>

@@ -24,6 +24,56 @@ export interface ApiErrorBody {
 
 export type ApiResponseBodyError = ApiErrorBody;
 
+export function extractErrorInfo(
+  body: ApiErrorBody | null | undefined,
+  fallbackStatusText: string
+): { code: string; message: string } {
+  if (body?.error && typeof body.error === 'object') {
+    const errObj = body.error;
+    const detailList = Array.isArray(errObj.details)
+      ? errObj.details.filter((d): d is string => typeof d === 'string')
+      : [];
+    const baseMessage =
+      typeof errObj.message === 'string' && errObj.message.trim()
+        ? errObj.message.trim()
+        : fallbackStatusText || 'An error occurred';
+
+    const message =
+      detailList.length > 0 &&
+      (baseMessage === 'Validation failed' || baseMessage === 'Bad Request')
+        ? detailList.join(', ')
+        : baseMessage;
+
+    return {
+      code: typeof errObj.code === 'string' && errObj.code ? errObj.code : 'API_ERROR',
+      message: message === '[object Object]' ? fallbackStatusText || 'An error occurred' : message
+    };
+  }
+
+  if (typeof body?.error === 'string' && body.error.trim()) {
+    return {
+      code: 'API_ERROR',
+      message: body.error
+    };
+  }
+
+  const rawMessage = body?.message;
+  let message: string;
+  if (Array.isArray(rawMessage)) {
+    message = rawMessage.filter((m) => typeof m === 'string').join(', ');
+  } else if (typeof rawMessage === 'string' && rawMessage.trim()) {
+    message = rawMessage.trim();
+  } else {
+    message = fallbackStatusText || 'An error occurred';
+  }
+
+  if (message === '[object Object]') {
+    message = fallbackStatusText || 'An error occurred';
+  }
+
+  return { code: 'API_ERROR', message };
+}
+
 export class ApiError extends Error {
   status: number;
   code: string;
@@ -77,12 +127,13 @@ export interface AuthLoginResponse {
 export interface PlatformAdminLoginResponse {
   accessToken: string;
   tokenType?: string;
-  expiresIn?: string;
+  expiresIn?: string | number;
   admin: {
     id: string;
     name: string;
-    email: string;
+    phone: string;
     role: UserRole;
+    status?: string;
   };
 }
 
@@ -154,6 +205,7 @@ export interface DeliveryAreaItemDTO {
   slug: string;
   isServed: boolean;
   deliveryFee: number | null;
+  minOrderAmount: number | null;
 }
 
 export interface TimeRangeDTO {

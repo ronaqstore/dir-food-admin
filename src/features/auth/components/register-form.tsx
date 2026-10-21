@@ -12,6 +12,7 @@ import { Icons } from '@/components/icons';
 import { createRegisterSchema, type RegisterFormValues } from '../schemas/register.schema';
 import { registerRestaurant } from '../api/auth.service';
 import { normalizePhone } from '@/lib/auth/phone';
+import { RestaurantNameAvailability } from './restaurant-name-availability';
 
 export function RegisterForm() {
   const t = useTranslations();
@@ -72,93 +73,102 @@ export function RegisterForm() {
 
   return (
     <Card className='w-full max-w-lg border-border/60 shadow-sm'>
-      <CardHeader className='space-y-1 text-center'>
-        <div className='mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary'>
-          <Icons.building className='h-6 w-6' />
-        </div>
-        <CardTitle className='text-2xl font-bold tracking-tight'>
+      <CardHeader className='space-y-1'>
+        <CardTitle className='text-2xl font-semibold tracking-tight'>
           {t('auth.registerTitle')}
         </CardTitle>
         <CardDescription>{t('auth.registerHint')}</CardDescription>
       </CardHeader>
 
       <CardContent>
-        <form className='space-y-5' onSubmit={handleSubmit}>
+        <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
           {error ? (
             <Alert variant='destructive'>
-              <Icons.warning className='h-4 w-4' />
+              <Icons.warning className='size-4' />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           ) : null}
 
-          <FieldGroup className='space-y-4'>
+          <FieldGroup className='gap-4'>
             {/* Restaurant Name */}
             <form.AppField
               name='restaurantName'
               children={(field) => (
-                <field.TextField
-                  label={t('auth.restaurantName')}
-                  placeholder={t('auth.restaurantNamePlaceholder')}
-                  startIcon={Icons.building}
-                  required
-                />
+                <div className='flex flex-col gap-1.5'>
+                  <field.TextField
+                    label={t('auth.restaurantName')}
+                    placeholder={t('auth.restaurantNamePlaceholder')}
+                    startIcon={Icons.building}
+                    required
+                  />
+                  <RestaurantNameAvailability name={field.state.value} />
+                </div>
               )}
             />
 
-            {/* Owner Name */}
-            <form.AppField
-              name='ownerName'
-              children={(field) => (
-                <field.TextField
-                  label={t('auth.ownerName')}
-                  placeholder={t('auth.ownerNamePlaceholder')}
-                  startIcon={Icons.user}
-                  required
-                />
-              )}
-            />
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+              {/* Owner Name */}
+              <form.AppField
+                name='ownerName'
+                children={(field) => (
+                  <field.TextField
+                    label={t('auth.ownerName')}
+                    placeholder={t('auth.ownerNamePlaceholder')}
+                    startIcon={Icons.user}
+                    autoComplete='name'
+                    required
+                  />
+                )}
+              />
 
-            {/* Owner Mobile Phone */}
-            <form.AppField
-              name='phone'
-              children={(field) => (
-                <field.TextField
-                  label={t('auth.phone')}
-                  type='tel'
-                  placeholder='03001234567'
-                  startIcon={Icons.phone}
-                  required
-                />
-              )}
-            />
+              {/* Owner Mobile Phone */}
+              <form.AppField
+                name='phone'
+                children={(field) => (
+                  <field.TextField
+                    label={t('auth.phone')}
+                    type='tel'
+                    inputMode='numeric'
+                    autoComplete='tel'
+                    placeholder='03001234567'
+                    startIcon={Icons.phone}
+                    required
+                  />
+                )}
+              />
+            </div>
 
-            {/* Password */}
-            <form.AppField
-              name='password'
-              children={(field) => (
-                <field.TextField
-                  label={t('auth.password')}
-                  type='password'
-                  autoComplete='new-password'
-                  placeholder='••••••••'
-                  startIcon={Icons.lock}
-                  required
-                />
-              )}
-            />
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+              {/* Password */}
+              <form.AppField
+                name='password'
+                children={(field) => (
+                  <field.TextField
+                    label={t('auth.password')}
+                    type='password'
+                    autoComplete='new-password'
+                    placeholder='••••••••'
+                    startIcon={Icons.lock}
+                    required
+                  />
+                )}
+              />
 
-            {/* WhatsApp Number (Optional) */}
-            <form.AppField
-              name='whatsappNumber'
-              children={(field) => (
-                <field.TextField
-                  label={t('auth.whatsappNumber')}
-                  type='tel'
-                  placeholder='03001234567 (optional)'
-                  startIcon={Icons.chat}
-                />
-              )}
-            />
+              {/* WhatsApp Number (Optional) */}
+              <form.AppField
+                name='whatsappNumber'
+                children={(field) => (
+                  <field.TextField
+                    label={t('auth.whatsappNumber')}
+                    type='tel'
+                    inputMode='numeric'
+                    autoComplete='tel'
+                    placeholder='03001234567 (optional)'
+                    startIcon={Icons.whatsapp}
+                  />
+                )}
+              />
+            </div>
 
             {/* Short Description */}
             <form.AppField
@@ -167,18 +177,19 @@ export function RegisterForm() {
                 <field.TextField
                   label={t('auth.description')}
                   placeholder={t('auth.descriptionPlaceholder')}
+                  startIcon={Icons.post}
                 />
               )}
             />
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton className='w-full text-base font-semibold py-2.5'>
+            <form.SubmitButton size='lg' className='w-full'>
               {t('auth.registerButton')}
             </form.SubmitButton>
           </form.AppForm>
 
-          <div className='text-center text-xs text-muted-foreground space-y-1'>
+          <div className='text-center text-xs leading-relaxed text-muted-foreground'>
             <p>
               {t('auth.haveAccountPrompt')}{' '}
               <Link

@@ -70,6 +70,7 @@ import {
   IconPhoto,
   IconPizza,
   IconPlus,
+  IconQrcode,
   IconReceipt,
   IconRosetteDiscountCheck,
   IconSearch,
@@ -122,6 +123,7 @@ export const Icons = {
   search: IconSearch,
   settings: IconSettings,
   trash: IconTrash,
+  qrCode: IconQrcode,
 
   chevronDown: IconChevronDown,
   chevronLeft: IconChevronLeft,

@@ -1,40 +1,11 @@
 import {
   ApiError,
+  extractErrorInfo,
   type ApiErrorBody,
   type ApiSuccessResponse,
   type PaginatedResponse
 } from './types';
 import { API_BASE_URL } from '@/constants/api';
-
-function extractErrorInfo(
-  body: ApiErrorBody | null,
-  fallbackStatusText: string
-): { code: string; message: string } {
-  if (body?.error && typeof body.error === 'object') {
-    const errObj = body.error;
-    const detailList = Array.isArray(errObj.details)
-      ? errObj.details.filter((d): d is string => typeof d === 'string')
-      : [];
-    const baseMessage = errObj.message || fallbackStatusText || 'An error occurred';
-    const message =
-      detailList.length > 0 && baseMessage === 'Validation failed'
-        ? detailList.join(', ')
-        : baseMessage;
-    return {
-      code: errObj.code || 'API_ERROR',
-      message
-    };
-  }
-
-  const rawMessage = body?.message;
-  const message = Array.isArray(rawMessage)
-    ? rawMessage.join(', ')
-    : typeof rawMessage === 'string'
-      ? rawMessage
-      : fallbackStatusText || 'An error occurred';
-
-  return { code: 'API_ERROR', message };
-}
 
 export async function apiRequest<T>(
   path: string,

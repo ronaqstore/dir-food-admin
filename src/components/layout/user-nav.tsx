@@ -82,7 +82,7 @@ export function UserNav() {
               />
             }
           >
-            <Icons.dashboard className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />
+            <Icons.dashboard className='me-2 size-4' />
             <span>{t('nav.dashboard')}</span>
           </DropdownMenuItem>
           {!isPlatformAdmin ? (
@@ -91,7 +91,7 @@ export function UserNav() {
                 <Link href='/dashboard/settings' className='flex cursor-pointer items-center' />
               }
             >
-              <Icons.settings className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />
+              <Icons.settings className='me-2 size-4' />
               <span>{t('nav.settings')}</span>
             </DropdownMenuItem>
           ) : null}
@@ -102,7 +102,7 @@ export function UserNav() {
             onClick={handleSignOut}
             className='cursor-pointer text-destructive focus:text-destructive'
           >
-            <Icons.logout className='mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0' />
+            <Icons.logout className='me-2 size-4' />
             <span>{t('auth.signOut')}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>

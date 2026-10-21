@@ -45,7 +45,7 @@
     "no-underscore-dangle": [
       "warn",
       {
-        "allow": ["__dukaanStore", "__dukaanSeedVersion", "__SW_MANIFEST"]
+        "allow": ["__dukaanStore", "__dukaanSeedVersion", "__SW_MANIFEST", "_count"]
       }
     ],
     "no-unused-vars": "off",

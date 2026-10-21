@@ -40,7 +40,7 @@ export function OwnerOverview() {
                 : 'bg-emerald-600 hover:bg-emerald-600 text-white font-medium'
             }
           >
-            {isPending ? 'Pending Approval' : 'Active'}
+            {isPending ? t('dashboard.pendingApprovalBadge') : t('dashboard.activeBadge')}
           </Badge>
         </div>
       </div>
@@ -48,9 +48,9 @@ export function OwnerOverview() {
       {/* Pending Approval Notice */}
       {isPending ? (
         <Alert className='border-amber-500/30 bg-amber-500/5 text-foreground'>
-          <Icons.info className='h-4 w-4 text-amber-500' />
+          <Icons.info className='size-4 text-amber-500' />
           <AlertTitle className='font-semibold text-amber-600 dark:text-amber-400'>
-            Account Pending Approval
+            {t('dashboard.pendingApprovalTitle')}
           </AlertTitle>
           <AlertDescription className='text-xs sm:text-sm text-muted-foreground mt-1'>
             {t('dashboard.pendingApprovalBanner')}
@@ -72,7 +72,7 @@ export function OwnerOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>0</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Live orders today</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>{t('dashboard.todayOrdersHint')}</p>
           </CardContent>
         </Card>
 
@@ -88,7 +88,7 @@ export function OwnerOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>Rs 0</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Gross revenue today</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>{t('dashboard.todaySalesHint')}</p>
           </CardContent>
         </Card>
 
@@ -104,7 +104,7 @@ export function OwnerOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>0</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Kitchen / In preparation</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>{t('dashboard.activeOrdersHint')}</p>
           </CardContent>
         </Card>
 
@@ -120,7 +120,9 @@ export function OwnerOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>0</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Active food items</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>
+              {t('dashboard.totalMenuItemsHint')}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -129,9 +131,7 @@ export function OwnerOverview() {
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
           <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
-          <CardDescription className='text-xs'>
-            Common restaurant tasks and quick shortcuts
-          </CardDescription>
+          <CardDescription className='text-xs'>{t('dashboard.quickActionsDesc')}</CardDescription>
         </CardHeader>
         <CardContent className='flex flex-wrap gap-2.5'>
           <Button
@@ -163,6 +163,16 @@ export function OwnerOverview() {
             <Icons.chat className='h-4 w-4' />
             <span>{t('dashboard.whatsappSettings')}</span>
           </Button>
+
+          <Button
+            render={<Link href='/dashboard/settings' />}
+            variant='outline'
+            size='sm'
+            className='gap-2'
+          >
+            <Icons.qrCode className='h-4 w-4 text-primary' />
+            <span>{t('dashboard.qrCodeShortcut')}</span>
+          </Button>
         </CardContent>
       </Card>
 
@@ -178,8 +188,7 @@ export function OwnerOverview() {
             </div>
             <p className='text-sm font-medium'>{t('dashboard.noRecentOrders')}</p>
             <p className='text-xs text-muted-foreground mt-1 max-w-sm'>
-              When customers place food orders through WhatsApp or the online storefront, they will
-              be listed here instantly.
+              {t('dashboard.noRecentOrdersDesc')}
             </p>
           </div>
         </CardContent>

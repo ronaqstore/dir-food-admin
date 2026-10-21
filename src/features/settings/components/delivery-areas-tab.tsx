@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
-import { IconMapPin } from '@tabler/icons-react';
+import { IconMapPin, IconSearch } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { useDeliveryAreas, useUpdateDeliveryAreas } from '../api/restaurant-query';
 import type { DeliveryAreaItemDTO } from '../types';
@@ -19,6 +19,7 @@ interface AreaRowState {
   slug: string;
   isServed: boolean;
   feeInput: string;
+  minOrderInput: string;
 }
 
 export function DeliveryAreasTab() {
@@ -27,6 +28,13 @@ export function DeliveryAreasTab() {
   const updateAreas = useUpdateDeliveryAreas();
 
   const [rows, setRows] = React.useState<AreaRowState[]>([]);
+  const [search, setSearch] = React.useState('');
+
+  const filteredRows = React.useMemo(() => {
+    if (!search.trim()) return rows;
+    const lower = search.toLowerCase();
+    return rows.filter((r) => r.name.toLowerCase().includes(lower));
+  }, [rows, search]);
 
   React.useEffect(() => {
     if (areas && areas.length > 0) {
@@ -36,7 +44,8 @@ export function DeliveryAreasTab() {
           name: a.name,
           slug: a.slug,
           isServed: a.isServed,
-          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : ''
+          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '',
+          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : ''
         }))
       );
     }
@@ -50,12 +59,17 @@ export function DeliveryAreasTab() {
     setRows((prev) => prev.map((r) => (r.areaId === areaId ? { ...r, feeInput } : r)));
   };
 
+  const handleMinOrderChange = (areaId: string, minOrderInput: string) => {
+    setRows((prev) => prev.map((r) => (r.areaId === areaId ? { ...r, minOrderInput } : r)));
+  };
+
   const handleSave = async () => {
     const payload = rows
       .filter((r) => r.isServed)
       .map((r) => ({
         areaId: r.areaId,
-        deliveryFee: r.feeInput ? toPaisa(Number(r.feeInput)) : null
+        deliveryFee: r.feeInput ? toPaisa(Number(r.feeInput)) : null,
+        minOrderAmount: r.minOrderInput ? toPaisa(Number(r.minOrderInput)) : null
       }));
 
     try {
@@ -88,13 +102,26 @@ export function DeliveryAreasTab() {
             {t('restaurantSettings.deliveryDescription')}
           </p>
         </div>
-        <Badge variant='secondary' className='w-fit text-xs font-normal'>
-          {servedCount} of {rows.length} areas served
-        </Badge>
+        <div className='flex items-center gap-3'>
+          {rows.length > 5 && (
+            <div className='relative w-full sm:w-56'>
+              <IconSearch className='absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t('restaurantSettings.searchAreasPlaceholder')}
+                className='ps-9 h-8 text-xs'
+              />
+            </div>
+          )}
+          <Badge variant='secondary' className='w-fit text-xs font-normal whitespace-nowrap'>
+            {t('restaurantSettings.areasServedCount', { served: servedCount, total: rows.length })}
+          </Badge>
+        </div>
       </div>
 
       <div className='divide-y divide-border'>
-        {rows.map((row) => (
+        {filteredRows.map((row) => (
           <div
             key={row.areaId}
             className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between hover:bg-muted/30 transition-colors rounded-lg px-2'
@@ -119,24 +146,47 @@ export function DeliveryAreasTab() {
             </div>
 
             {row.isServed ? (
-              <div className='flex items-center gap-2 ps-11 sm:ps-0 animate-in fade-in-50'>
-                <span className='text-xs text-muted-foreground'>
-                  {t('restaurantSettings.deliveryFee')}:
-                </span>
-                <div className='relative w-36'>
-                  <span className='absolute start-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                    Rs.
+              <div className='flex flex-wrap items-center gap-4 ps-11 sm:ps-0 animate-in fade-in-50'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                    {t('restaurantSettings.deliveryFee')}:
                   </span>
-                  <Input
-                    type='number'
-                    min='0'
-                    step='1'
-                    value={row.feeInput}
-                    onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
-                    placeholder='Free / Confirm'
-                    disabled={updateAreas.isPending}
-                    className='h-8 ps-9 text-xs'
-                  />
+                  <div className='relative w-32'>
+                    <span className='absolute start-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                      Rs.
+                    </span>
+                    <Input
+                      type='number'
+                      min='0'
+                      step='1'
+                      value={row.feeInput}
+                      onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
+                      placeholder={t('restaurantSettings.feePlaceholder')}
+                      disabled={updateAreas.isPending}
+                      className='h-8 ps-9 text-xs'
+                    />
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-2'>
+                  <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                    {t('restaurantSettings.areaMinOrder')}:
+                  </span>
+                  <div className='relative w-32'>
+                    <span className='absolute start-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                      Rs.
+                    </span>
+                    <Input
+                      type='number'
+                      min='0'
+                      step='1'
+                      value={row.minOrderInput}
+                      onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
+                      placeholder={t('restaurantSettings.defaultPlaceholder')}
+                      disabled={updateAreas.isPending}
+                      className='h-8 ps-9 text-xs'
+                    />
+                  </div>
                 </div>
               </div>
             ) : null}

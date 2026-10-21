@@ -66,17 +66,17 @@ export function OrdersList() {
   };
 
   return (
-    <div className='space-y-6'>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
       {/* Page Title & Subtitle */}
-      <div>
+      <div className='shrink-0'>
         <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
           {t('title')}
         </h1>
-        <p className='text-sm text-muted-foreground mt-1'>{t('subtitle')}</p>
+        <p className='text-sm text-muted-foreground mt-0.5'>{t('subtitle')}</p>
       </div>
 
       {/* Top Metric Cards */}
-      <div className='grid gap-4 sm:grid-cols-3'>
+      <div className='grid shrink-0 gap-3 grid-cols-1 sm:grid-cols-3'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>{t('metricTotalOrders')}</CardTitle>
@@ -118,7 +118,7 @@ export function OrdersList() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+      <div className='flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <div className='relative flex-1 sm:max-w-xs'>
           <Icons.search className='absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
           <Input
@@ -170,7 +170,7 @@ export function OrdersList() {
 
       {/* Orders List / Table */}
       {isLoading ? (
-        <div className='flex flex-col items-center justify-center py-16'>
+        <div className='flex flex-1 items-center justify-center py-16'>
           <Spinner className='size-8 text-primary' />
         </div>
       ) : orders.length === 0 ? (
@@ -184,9 +184,9 @@ export function OrdersList() {
       ) : (
         <>
           {/* Desktop & Tablet Table View */}
-          <div className='hidden md:block overflow-hidden rounded-lg border bg-card shadow-xs'>
-            <Table>
-              <TableHeader className='bg-muted/40'>
+          <div className='hidden md:flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-card shadow-xs'>
+            <Table containerClassName='min-h-0 flex-1 overflow-auto overscroll-contain'>
+              <TableHeader className='sticky top-0 z-20 bg-background shadow-[0_1px_0_0_var(--border)]'>
                 <TableRow>
                   <TableHead>{t('orderRef')}</TableHead>
                   <TableHead>{t('customer')}</TableHead>
@@ -297,7 +297,7 @@ export function OrdersList() {
           </div>
 
           {/* Mobile Card List View */}
-          <div className='grid gap-3 md:hidden'>
+          <div className='grid gap-3 md:hidden min-h-0 flex-1 overflow-y-auto overscroll-y-contain'>
             {orders.map((order) => {
               const totalPkr = formatPkr(
                 Number(order.subtotal) + (order.deliveryFee ? Number(order.deliveryFee) : 0)
@@ -372,7 +372,7 @@ export function OrdersList() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className='flex items-center justify-between pt-2'>
+            <div className='shrink-0 flex items-center justify-between pt-2'>
               <div className='text-xs text-muted-foreground'>
                 {t('metricTotalOrders')}: {meta?.total}
               </div>

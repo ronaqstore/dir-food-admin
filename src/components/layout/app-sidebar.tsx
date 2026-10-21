@@ -89,7 +89,7 @@ export function AppSidebar() {
           </div>
           <div className='flex flex-col truncate leading-tight'>
             <span className='font-semibold text-sm truncate text-sidebar-foreground'>
-              {isPlatformAdmin ? 'Dir Food Admin' : user?.restaurantName || 'Dir Food'}
+              {isPlatformAdmin ? t('nav.platformAdminBrand') : user?.restaurantName || t('common.appName')}
             </span>
             <span className='text-[11px] text-muted-foreground truncate'>
               {isPlatformAdmin ? t('auth.platformAdminTitle') : t('nav.restaurantOwner')}
@@ -140,7 +140,7 @@ export function AppSidebar() {
         <div className='flex items-center justify-between text-xs text-muted-foreground px-1'>
           <span className='truncate'>{user?.name}</span>
           <Badge variant='outline' className='text-[10px] px-1.5 py-0'>
-            {isPlatformAdmin ? 'Admin' : 'Owner'}
+            {isPlatformAdmin ? t('nav.adminBadge') : t('nav.ownerBadge')}
           </Badge>
         </div>
       </SidebarFooter>

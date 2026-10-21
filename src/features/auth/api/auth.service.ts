@@ -36,6 +36,24 @@ export interface RegisterRestaurantResponse {
   };
 }
 
+export interface CheckRestaurantNameResult {
+  available: boolean;
+  baseSlug: string;
+  suggestedSlug: string;
+  collision: boolean;
+  existingRestaurant?: {
+    name: string;
+    addressText?: string | null;
+  };
+}
+
+export async function checkRestaurantName(name: string): Promise<CheckRestaurantNameResult> {
+  const query = new URLSearchParams({ name: name.trim() });
+  return apiRequest<CheckRestaurantNameResult>(`/auth/check-restaurant-name?${query.toString()}`, {
+    method: 'GET'
+  });
+}
+
 export async function setupPassword(payload: SetupPasswordPayload): Promise<SetupPasswordResponse> {
   return apiRequest<SetupPasswordResponse>('/auth/setup-password', {
     method: 'POST',

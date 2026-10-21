@@ -35,7 +35,7 @@ export function SetupPasswordForm() {
     onSubmit: async ({ value }) => {
       setError(null);
       if (!token) {
-        setError(t('auth.invalidSetupToken') ?? 'Missing or invalid setup token.');
+        setError(t('auth.invalidSetupToken'));
         return;
       }
 
@@ -44,12 +44,10 @@ export function SetupPasswordForm() {
           token,
           password: value.password
         });
-        toast.success(
-          t('auth.passwordSetupSuccess') ?? 'Password set successfully! Please log in.'
-        );
+        toast.success(t('auth.passwordSetupSuccess'));
         router.push('/login');
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to set password';
+        const message = err instanceof Error ? err.message : t('common.somethingWentWrong');
         setError(message);
       }
     }
@@ -60,26 +58,21 @@ export function SetupPasswordForm() {
       <Card className='w-full max-w-md border-border/60 shadow-sm'>
         <CardHeader className='space-y-1'>
           <CardTitle className='text-2xl font-semibold tracking-tight'>
-            {t('auth.setupPasswordTitle') ?? 'Set Up Password'}
+            {t('auth.setupPasswordTitle')}
           </CardTitle>
-          <CardDescription>
-            {t('auth.setupPasswordDesc') ?? 'Set your initial restaurant owner password.'}
-          </CardDescription>
+          <CardDescription>{t('auth.setupPasswordDesc')}</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-4'>
+        <CardContent className='flex flex-col gap-4'>
           <Alert variant='destructive'>
-            <Icons.warning className='h-4 w-4' />
-            <AlertDescription>
-              {t('auth.missingToken') ??
-                'No setup token provided. Please use the link sent to you by the platform administrator.'}
-            </AlertDescription>
+            <Icons.warning className='size-4' />
+            <AlertDescription>{t('auth.missingToken')}</AlertDescription>
           </Alert>
           <div className='text-center'>
             <Link
               href='/login'
               className='text-primary text-sm font-medium underline-offset-4 hover:underline'
             >
-              {t('auth.backToSignIn') ?? 'Back to Sign In'}
+              {t('auth.backToSignIn')}
             </Link>
           </div>
         </CardContent>
@@ -96,23 +89,20 @@ export function SetupPasswordForm() {
     <Card className='w-full max-w-md border-border/60 shadow-sm'>
       <CardHeader className='space-y-1'>
         <CardTitle className='text-2xl font-semibold tracking-tight'>
-          {t('auth.setupPasswordTitle') ?? 'Set Up Password'}
+          {t('auth.setupPasswordTitle')}
         </CardTitle>
-        <CardDescription>
-          {t('auth.setupPasswordDesc') ??
-            'Choose a secure password for your restaurant owner account.'}
-        </CardDescription>
+        <CardDescription>{t('auth.setupPasswordDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className='space-y-6' onSubmit={handleSubmit}>
+        <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
           {error ? (
             <Alert variant='destructive'>
-              <Icons.warning className='h-4 w-4' />
+              <Icons.warning className='size-4' />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           ) : null}
 
-          <FieldGroup>
+          <FieldGroup className='gap-4'>
             <form.AppField
               name='password'
               children={(field) => (
@@ -142,8 +132,8 @@ export function SetupPasswordForm() {
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton className='w-full'>
-              {t('common.save') ?? 'Set Password'}
+            <form.SubmitButton size='lg' className='w-full'>
+              {t('auth.setPasswordButton')}
             </form.SubmitButton>
           </form.AppForm>
 
@@ -152,7 +142,7 @@ export function SetupPasswordForm() {
               href='/login'
               className='text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline'
             >
-              {t('auth.backToSignIn') ?? 'Already have a password? Sign in'}
+              {t('auth.backToSignIn')}
             </Link>
           </div>
         </form>

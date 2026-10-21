@@ -2,6 +2,10 @@ import { delocalize } from '@/lib/auth/routes';
 
 const PATH_TITLE_KEYS: Record<string, string> = {
   overview: 'pages.dashboard.title',
+  orders: 'pages.orders.title',
+  menu: 'pages.menu.title',
+  settings: 'pages.settings.title',
+  restaurants: 'pages.restaurants.title',
   products: 'pages.products.title',
   product: 'pages.product.title',
   categories: 'pages.categories.title',

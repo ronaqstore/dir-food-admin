@@ -18,6 +18,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { toPaisa } from '@/lib/money';
 import { useCreatePlatformRestaurant } from '../api/platform-query';
+import { RestaurantNameAvailability } from '@/features/auth/components/restaurant-name-availability';
 import type { CreateRestaurantResponse } from '../types';
 
 interface CreateRestaurantDialogProps {
@@ -27,7 +28,6 @@ interface CreateRestaurantDialogProps {
 
 export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantDialogProps) {
   const t = useTranslations('platformRestaurants');
-  const tCommon = useTranslations();
   const createMutation = useCreatePlatformRestaurant();
 
   const [name, setName] = React.useState('');
@@ -57,7 +57,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
     e.preventDefault();
 
     if (!name.trim() || !contactPhone.trim() || !ownerName.trim() || !ownerPhone.trim()) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -85,22 +85,31 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
       setResult(res);
       toast.success(t('restaurantCreated'));
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to create restaurant';
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null && 'message' in err && typeof (err as { message: unknown }).message === 'string'
+            ? (err as { message: string }).message
+            : 'Failed to create restaurant';
       toast.error(message);
     }
-  };
-
-  const handleCopyLink = () => {
-    if (!result?.setupLink) return;
-    navigator.clipboard.writeText(result.setupLink);
-    toast.success(t('setupLinkCopied'));
   };
 
   const userPhone = result?.user.phone;
   const userName = result?.user.name;
   const restaurantName = result?.restaurant.name;
-  const setupLink = result?.setupLink;
+  const rawSetupLink = result?.setupLink;
+  const setupLink =
+    typeof rawSetupLink === 'object' && rawSetupLink !== null
+      ? (rawSetupLink as unknown as { setupUrl?: string }).setupUrl ?? ''
+      : (rawSetupLink ?? '');
+
+  const handleCopyLink = () => {
+    if (!setupLink) return;
+    navigator.clipboard.writeText(setupLink);
+    toast.success(t('setupLinkCopied'));
+  };
 
   const cleanOwnerPhone = React.useMemo(() => {
     if (!userPhone) return '';
@@ -138,7 +147,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
               <div className='flex items-center gap-2'>
                 <Input
                   readOnly
-                  value={result.setupLink}
+                  value={setupLink}
                   className='font-mono text-xs bg-background'
                 />
                 <Button size='sm' onClick={handleCopyLink} className='shrink-0 gap-1'>
@@ -155,7 +164,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   render={<a href={whatsappMessageUrl} target='_blank' rel='noopener noreferrer' />}
                 >
                   <Icons.whatsapp className='size-4' />
-                  Send via WhatsApp
+                  {t('sendViaWhatsApp')}
                 </Button>
               )}
               <Button variant='outline' onClick={() => onOpenChange(false)}>
@@ -172,23 +181,24 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
             <div className='space-y-3 text-sm'>
               <div className='font-semibold text-foreground border-b pb-1'>
-                Store Information (Timergara / Lower Dir)
+                {t('storeInfoHeader')}
               </div>
 
               <div className='space-y-1.5'>
-                <Label htmlFor='create-name'>Restaurant Name *</Label>
+                <Label htmlFor='create-name'>{t('restaurantNameLabel')}</Label>
                 <Input
                   id='create-name'
                   required
-                  placeholder='e.g. Al-Madina Shinwari Karahi'
+                  placeholder={t('restaurantNamePlaceholder')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
+                <RestaurantNameAvailability name={name} />
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-contact'>Contact Mobile *</Label>
+                  <Label htmlFor='create-contact'>{t('contactMobileLabel')}</Label>
                   <Input
                     id='create-contact'
                     required
@@ -199,7 +209,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                 </div>
 
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-wa'>WhatsApp Orders Number</Label>
+                  <Label htmlFor='create-wa'>{t('whatsappOrdersLabel')}</Label>
                   <Input
                     id='create-wa'
                     placeholder='03001234567'
@@ -210,10 +220,10 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
               </div>
 
               <div className='space-y-1.5'>
-                <Label htmlFor='create-address'>Address in Lower Dir</Label>
+                <Label htmlFor='create-address'>{t('addressLowerDirLabel')}</Label>
                 <Input
                   id='create-address'
-                  placeholder='e.g. Main Bazaar, Timergara'
+                  placeholder={t('addressLowerDirPlaceholder')}
                   value={addressText}
                   onChange={(e) => setAddressText(e.target.value)}
                 />
@@ -221,7 +231,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-cuisines'>Cuisines (comma separated)</Label>
+                  <Label htmlFor='create-cuisines'>{t('cuisinesCommaLabel')}</Label>
                   <Input
                     id='create-cuisines'
                     placeholder='Desi, Karahi, BBQ'
@@ -231,7 +241,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                 </div>
 
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-min-order'>Min Order Amount (PKR)</Label>
+                  <Label htmlFor='create-min-order'>{t('minOrderPkrLabel')}</Label>
                   <Input
                     id='create-min-order'
                     type='number'
@@ -243,23 +253,23 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
               </div>
 
               <div className='font-semibold text-foreground border-b pb-1 pt-2'>
-                Owner Account Details
+                {t('ownerAccountHeader')}
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-owner-name'>Owner Full Name *</Label>
+                  <Label htmlFor='create-owner-name'>{t('ownerFullNameLabel')}</Label>
                   <Input
                     id='create-owner-name'
                     required
-                    placeholder='e.g. Usman Khan'
+                    placeholder={t('ownerFullNamePlaceholder')}
                     value={ownerName}
                     onChange={(e) => setOwnerName(e.target.value)}
                   />
                 </div>
 
                 <div className='space-y-1.5'>
-                  <Label htmlFor='create-owner-phone'>Owner Mobile Phone *</Label>
+                  <Label htmlFor='create-owner-phone'>{t('ownerMobileLabel')}</Label>
                   <Input
                     id='create-owner-phone'
                     required
@@ -278,7 +288,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                 onClick={() => onOpenChange(false)}
                 disabled={createMutation.isPending}
               >
-                {tCommon('actions.cancel')}
+                {t('cancel')}
               </Button>
               <Button type='submit' disabled={createMutation.isPending}>
                 {createMutation.isPending && <Spinner className='me-1.5 size-4' />}

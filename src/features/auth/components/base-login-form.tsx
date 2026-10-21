@@ -51,15 +51,15 @@ export function BaseLoginForm({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className='space-y-6' onSubmit={handleSubmit}>
+        <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
           {error ? (
             <Alert variant='destructive'>
-              <Icons.warning className='h-4 w-4' />
+              <Icons.warning className='size-4' />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           ) : null}
 
-          <FieldGroup>
+          <FieldGroup className='gap-4'>
             <form.AppField
               name='phone'
               children={(field) => (
@@ -90,7 +90,9 @@ export function BaseLoginForm({
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton className='w-full'>{t('auth.signIn')}</form.SubmitButton>
+            <form.SubmitButton size='lg' className='w-full'>
+              {t('auth.signIn')}
+            </form.SubmitButton>
           </form.AppForm>
 
           {footer}

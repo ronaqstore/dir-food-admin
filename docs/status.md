@@ -106,11 +106,20 @@
 
 ---
 
-## Postponed / Backlog Features (To do at the end)
-- **Menu QR Code & Counter Flyer Generator**:
-  - A dedicated page for restaurant owners to preview a scannable QR code for their public storefront menu (`dirfood.pk/r/:slug`).
-  - Ability to copy public link, download high-res PNG QR code, and print an A4 counter / table standee flyer with restaurant branding.
-  - Pure frontend implementation (zero backend changes needed).
+## 2026-10-20 — Menu QR Code & Counter Standee Generator
+- **Feature:** Menu QR Code & Counter Flyer Generator (`src/features/settings/components/qr-code-tab.tsx`) (Status: Done)
+- **Features Implemented:**
+  - Zero-dependency, pure TypeScript ISO/IEC 18004 QR code matrix generator (`src/lib/qr/qr-code.ts`).
+  - Dedicated "Menu Link & QR" tab in Restaurant Settings (`SettingsView`).
+  - Live public storefront menu URL bar with 1-click "Copy Link" and "Share to WhatsApp" shortcuts.
+  - Printable Table Standee preview displaying restaurant brand logo, restaurant name, address in Lower Dir, and high-contrast vector QR code.
+  - 1-click "Download High-Res PNG (1024×1024)" generator using HTML5 Canvas.
+  - 1-click "Print Table Standee" formatted cleanly for dining tables and counter flyers.
+  - Quick action shortcut added to the Restaurant Owner dashboard overview (`OwnerOverview`).
+  - Full translations for English, Urdu, and Pashto.
+- **Quality Gates:**
+  - `npm run typecheck`: Passed (0 errors)
+  - `npm run lint`: Passed (0 warnings, 0 errors across 236 files)
 
 
 

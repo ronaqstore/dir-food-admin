@@ -46,6 +46,7 @@ export interface UpdateHoursInput {
 export interface DeliveryAreaUpdateItem {
   areaId: string;
   deliveryFee?: number | null; // in paisa
+  minOrderAmount?: number | null; // in paisa
 }
 
 export interface UpdateDeliveryAreasInput {

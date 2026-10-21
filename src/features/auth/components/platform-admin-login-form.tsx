@@ -36,14 +36,15 @@ export function PlatformAdminLoginForm() {
       minPasswordLength={8}
       onSubmit={handleLogin}
       footer={
-        <div className='space-y-2 text-center text-xs leading-relaxed'>
+        <div className='flex flex-col gap-2 text-center text-xs leading-relaxed'>
           <p className='text-muted-foreground'>{t('auth.platformAdminNotice')}</p>
           <p className='text-muted-foreground'>
+            {t('auth.ownerLoginPrompt')}{' '}
             <Link
               href='/login'
               className='text-foreground font-medium underline-offset-4 hover:underline'
             >
-              {t('auth.signIn')}
+              {t('auth.signInLink')}
             </Link>
           </p>
         </div>

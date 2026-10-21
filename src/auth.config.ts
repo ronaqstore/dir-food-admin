@@ -53,14 +53,19 @@ export const authConfig = {
         }
 
         try {
-          // 1. Platform Admin Login (Email + Password)
-          if (loginType === 'platform-admin' || rawIdentifier.includes('@')) {
+          // 1. Platform Admin Login (Pakistani Mobile Number + Password)
+          if (loginType === 'platform-admin') {
+            const normalized = normalizePhone(rawIdentifier);
+            if (!isValidPkMobile(normalized)) {
+              return null;
+            }
+
             const response = await apiRequest<PlatformAdminLoginResponse>(
               '/auth/platform-admin/login',
               {
                 method: 'POST',
                 body: JSON.stringify({
-                  email: rawIdentifier.toLowerCase(),
+                  phone: normalized,
                   password
                 })
               }
@@ -69,8 +74,8 @@ export const authConfig = {
             return {
               id: response.admin.id,
               name: response.admin.name,
-              email: response.admin.email,
-              phoneNumber: '',
+              email: '',
+              phoneNumber: response.admin.phone,
               role: 'PLATFORM_ADMIN' as const,
               restaurantId: null,
               restaurantName: 'Dir Food Platform',

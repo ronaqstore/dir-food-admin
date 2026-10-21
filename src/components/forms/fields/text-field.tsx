@@ -94,7 +94,7 @@ export function TextField({
         </InputGroup>
       ) : (
         <div className='relative'>
-          <Input className={className} {...sharedInputProps} />
+          <Input className={cn('h-9!', className)} {...sharedInputProps} />
           {isValidating && <Spinner className='absolute top-1/2 end-3 h-4 w-4 -translate-y-1/2' />}
         </div>
       )}

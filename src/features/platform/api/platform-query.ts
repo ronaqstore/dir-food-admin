@@ -99,7 +99,13 @@ export function useExtendPlatformSubscription() {
 export function useIssueSetupLink() {
   return useMutation({
     mutationFn: (id: string) =>
-      appFetch<{ setupLink: string }>(`/api/admin/restaurants/${id}/setup-link`, {
+      appFetch<{
+        setupLink?: string;
+        setupUrl?: string;
+        userId?: string;
+        userName?: string;
+        userPhone?: string;
+      }>(`/api/admin/restaurants/${id}/setup-link`, {
         method: 'POST'
       })
   });

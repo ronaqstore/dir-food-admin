@@ -3,14 +3,17 @@
 import * as React from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { IconBuildingStore, IconClock, IconTruckDelivery } from '@tabler/icons-react';
+import { IconBuildingStore, IconClock, IconTruckDelivery, IconQrcode } from '@tabler/icons-react';
 import { ProfileTab } from './profile-tab';
 import { HoursTab } from './hours-tab';
 import { DeliveryAreasTab } from './delivery-areas-tab';
+import { QrCodeTab } from './qr-code-tab';
 
 export function SettingsView() {
   const t = useTranslations();
-  const [activeTab, setActiveTab] = React.useState<'profile' | 'hours' | 'delivery'>('profile');
+  const [activeTab, setActiveTab] = React.useState<'profile' | 'hours' | 'delivery' | 'qrcode'>(
+    'profile'
+  );
 
   return (
     <div className='space-y-6'>
@@ -52,12 +55,23 @@ export function SettingsView() {
           <IconTruckDelivery className='size-4' />
           <span>{t('restaurantSettings.tabDelivery')}</span>
         </Button>
+
+        <Button
+          variant={activeTab === 'qrcode' ? 'default' : 'ghost'}
+          size='sm'
+          onClick={() => setActiveTab('qrcode')}
+          className='gap-2 text-xs'
+        >
+          <IconQrcode className='size-4' />
+          <span>{t('restaurantSettings.tabQrCode')}</span>
+        </Button>
       </div>
 
       {/* Tab Panels */}
       {activeTab === 'profile' ? <ProfileTab /> : null}
       {activeTab === 'hours' ? <HoursTab /> : null}
       {activeTab === 'delivery' ? <DeliveryAreasTab /> : null}
+      {activeTab === 'qrcode' ? <QrCodeTab /> : null}
     </div>
   );
 }

@@ -403,7 +403,9 @@ export function MenuItemDialog({
                   }`}
                 >
                   <p className='text-sm font-semibold'>{t('menuItems.fixedPrice')}</p>
-                  <p className='text-xs text-muted-foreground mt-0.5'>Single standard price</p>
+                  <p className='text-xs text-muted-foreground mt-0.5'>
+                    {t('menuItems.fixedPriceDesc')}
+                  </p>
                 </button>
                 <button
                   type='button'
@@ -415,7 +417,9 @@ export function MenuItemDialog({
                   }`}
                 >
                   <p className='text-sm font-semibold'>{t('menuItems.hasVariants')}</p>
-                  <p className='text-xs text-muted-foreground mt-0.5'>e.g., Half / Full</p>
+                  <p className='text-xs text-muted-foreground mt-0.5'>
+                    {t('menuItems.hasVariantsDesc')}
+                  </p>
                 </button>
               </div>
             </div>
@@ -470,7 +474,7 @@ export function MenuItemDialog({
                       <Input
                         value={v.name}
                         onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
-                        placeholder='e.g., Half / Full'
+                        placeholder={t('menuItems.variantPlaceholder')}
                         disabled={isPending}
                         className='flex-1'
                       />
@@ -484,7 +488,7 @@ export function MenuItemDialog({
                           step='1'
                           value={v.price}
                           onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
-                          placeholder='Amount'
+                          placeholder={t('menuItems.amountPlaceholder')}
                           disabled={isPending}
                           className='ps-10'
                         />
@@ -496,7 +500,7 @@ export function MenuItemDialog({
                         onClick={() => handleRemoveVariant(index)}
                         disabled={isPending || variants.length <= 1}
                         className='h-9 w-9 text-muted-foreground hover:text-destructive'
-                        aria-label='Remove variant'
+                        aria-label={t('menuItems.removeVariant')}
                       >
                         <IconTrash className='size-4' />
                       </Button>

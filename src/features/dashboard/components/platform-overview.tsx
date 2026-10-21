@@ -23,7 +23,7 @@ export function PlatformOverview() {
             {t('nav.platformOverview')}
           </h1>
           <p className='text-sm text-muted-foreground mt-0.5'>
-            Dir Food platform management and cross-restaurant overview
+            {t('dashboard.platformSubtitle')}
           </p>
         </div>
         <div className='flex items-center gap-2'>
@@ -31,7 +31,7 @@ export function PlatformOverview() {
             variant='outline'
             className='border-primary/40 bg-primary/10 text-primary font-medium'
           >
-            Super Admin
+            {t('dashboard.superAdminBadge')}
           </Badge>
         </div>
       </div>
@@ -50,7 +50,9 @@ export function PlatformOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>1</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Registered in Dir</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>
+              {t('dashboard.registeredInDir')}
+            </p>
           </CardContent>
         </Card>
 
@@ -67,7 +69,7 @@ export function PlatformOverview() {
           <CardContent>
             <div className='text-2xl font-bold'>1</div>
             <p className='text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-1'>
-              Needs review
+              {t('dashboard.needsReview')}
             </p>
           </CardContent>
         </Card>
@@ -84,7 +86,9 @@ export function PlatformOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>0</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Active billing plans</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>
+              {t('dashboard.activeBillingPlans')}
+            </p>
           </CardContent>
         </Card>
 
@@ -100,7 +104,9 @@ export function PlatformOverview() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>2</div>
-            <p className='text-[11px] text-muted-foreground mt-1'>Admins & restaurant owners</p>
+            <p className='text-[11px] text-muted-foreground mt-1'>
+              {t('dashboard.adminsAndOwners')}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -110,7 +116,7 @@ export function PlatformOverview() {
         <CardHeader className='pb-3'>
           <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
           <CardDescription className='text-xs'>
-            Management shortcuts for platform administration
+            {t('dashboard.platformQuickActionsDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent className='flex flex-wrap gap-2.5'>
@@ -155,14 +161,14 @@ export function PlatformOverview() {
                 {t('dashboard.pendingApprovalsTitle')}
               </CardTitle>
               <CardDescription className='text-xs mt-0.5'>
-                New self-registered restaurants awaiting activation
+                {t('dashboard.pendingApprovalsDesc')}
               </CardDescription>
             </div>
             <Badge
               variant='outline'
               className='border-amber-500/50 text-amber-600 dark:text-amber-400'
             >
-              1 Pending
+              {t('dashboard.pendingCountBadge', { count: 1 })}
             </Badge>
           </div>
         </CardHeader>
@@ -176,11 +182,11 @@ export function PlatformOverview() {
                     variant='outline'
                     className='text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/30'
                   >
-                    Pending Approval
+                    {t('dashboard.pendingApprovalBadge')}
                   </Badge>
                 </div>
                 <p className='text-xs text-muted-foreground'>
-                  Owner: Ahmad Khan • Mobile: 03001234567 • Timergara
+                  {t('nav.owner')}: Ahmad Khan • {t('user.phone')}: 03001234567 • Timergara
                 </p>
               </div>
               <div className='flex items-center gap-2 shrink-0'>
@@ -190,7 +196,7 @@ export function PlatformOverview() {
                   size='sm'
                   className='h-8 text-xs font-medium'
                 >
-                  <Icons.check className='h-3.5 w-3.5 mr-1 rtl:ml-1 rtl:mr-0' />
+                  <Icons.check className='me-1 size-3.5' />
                   <span>{t('dashboard.approve')}</span>
                 </Button>
                 <Button
@@ -199,7 +205,7 @@ export function PlatformOverview() {
                   size='sm'
                   className='h-8 text-xs font-medium'
                 >
-                  <span>Review Details</span>
+                  <span>{t('dashboard.reviewDetails')}</span>
                 </Button>
               </div>
             </div>

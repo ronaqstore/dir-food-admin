@@ -1,4 +1,4 @@
-import { ApiError, type ApiResponseBodyError } from '@/lib/api/types';
+import { ApiError, extractErrorInfo, type ApiResponseBodyError } from '@/lib/api/types';
 import { APP_BASE_URL } from '@/constants/api';
 
 export async function appFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -30,10 +30,12 @@ export async function appFetch<T>(path: string, init?: RequestInit): Promise<T> 
   }
 
   if (!res.ok) {
-    const rawMessage =
-      body?.message ?? body?.error ?? (text || `Request failed with status ${res.status}`);
-    const message = Array.isArray(rawMessage) ? rawMessage.join(', ') : String(rawMessage);
-    throw new ApiError(res.status, message);
+    const fallback =
+      text && !text.startsWith('{') && !text.startsWith('<')
+        ? text
+        : res.statusText || `Request failed with status ${res.status}`;
+    const { code, message } = extractErrorInfo(body, fallback);
+    throw new ApiError(res.status, message, body ?? undefined, code);
   }
 
   return (body ?? ({} as T)) as T;

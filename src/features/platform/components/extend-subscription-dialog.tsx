@@ -80,7 +80,7 @@ export function ExtendSubscriptionDialog({
         <div className='space-y-4 text-sm'>
           {currentExpiry && (
             <div className='rounded-md bg-muted/40 p-2.5 text-xs text-muted-foreground'>
-              Current Expiry:{' '}
+              {t('currentExpiryLabel')}{' '}
               <span className='font-mono font-medium text-foreground'>
                 {new Date(currentExpiry).toLocaleDateString()}
               </span>
