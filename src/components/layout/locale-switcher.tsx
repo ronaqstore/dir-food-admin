@@ -36,14 +36,14 @@ export function LocaleSwitcher() {
           <Button
             variant='ghost'
             size='sm'
-            className='flex h-9 items-center gap-1.5 px-2.5 text-xs font-medium'
+            className='flex h-9 items-center gap-1.5 px-2 text-xs font-medium sm:px-2.5'
             aria-label='Switch language'
           />
         }
       >
         <span className='text-sm'>🌐</span>
-        <span>{current?.nativeName}</span>
-        <Icons.chevronDown className='h-3.5 w-3.5 opacity-60' />
+        <span className='hidden sm:inline'>{current?.nativeName}</span>
+        <Icons.chevronDown className='hidden h-3.5 w-3.5 opacity-60 sm:inline' />
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='min-w-[120px]'>
         {LOCALES.map((locale) => (

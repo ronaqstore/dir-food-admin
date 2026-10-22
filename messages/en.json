@@ -1019,7 +1019,7 @@
     "previewColQty": "Qty",
     "previewColAmount": "Amount",
     "previewFooter": "This preview reflects your current appearance settings.",
-    "previewSampleItem": "iPhone 15"
+    "previewSampleItem": "Chicken Karahi (Full)"
   },
   "pwa": {
     "installApp": "Install app",
@@ -2413,7 +2413,22 @@
     "statusToggleSuccess": "Item availability updated",
     "emptyTitle": "No menu items found",
     "emptyDescription": "Start adding dishes and beverages to your restaurant menu",
-    "noCategoryWarning": "Please create at least one category before adding menu items"
+    "noCategoryWarning": "Please create at least one category before adding menu items",
+    "viewGrid": "Grid View",
+    "viewList": "List View",
+    "statusAll": "All",
+    "statusAvailable": "In Stock",
+    "statusSoldOut": "Sold Out",
+    "categoryJump": "Categories",
+    "clearSearch": "Clear search",
+    "dishesCount": "{count} dishes",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "noFilteredMatches": "No dishes match your search or filter",
+    "resetFilters": "Reset Filters",
+    "loadingMore": "Loading more dishes...",
+    "endOfMenu": "All dishes loaded",
+    "dishesProgress": "Showing {count} of {total} dishes"
   },
   "restaurantSettings": {
     "title": "Restaurant Settings",

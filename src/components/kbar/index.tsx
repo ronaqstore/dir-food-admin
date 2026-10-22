@@ -1,4 +1,5 @@
 'use client';
+import { useSession } from 'next-auth/react';
 import { navGroups } from '@/config/nav-config';
 import { KBarAnimator, KBarPortal, KBarPositioner, KBarProvider, KBarSearch } from 'kbar';
 import { Kbd } from '@/components/ui/kbd';
@@ -9,12 +10,14 @@ import { useFilteredNavGroups } from '@/hooks/use-nav';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useT, translateMaybe } from '@/i18n/use-t';
-import type { KBarProps, KBarComponentProps } from '@/types';
+import type { KBarProps, KBarComponentProps, SessionUserShape } from '@/types';
 export type { KBarProps };
 
 export default function KBar({ children }: KBarProps) {
+  const { data: session } = useSession();
+  const user = session?.user as SessionUserShape | undefined;
   const router = useRouter();
-  const filteredGroups = useFilteredNavGroups(navGroups);
+  const filteredGroups = useFilteredNavGroups(navGroups, user?.role);
   const t = useTranslations('kbar');
   const rootT = useT();
 

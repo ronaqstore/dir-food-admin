@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
+import { DialogDetailSkeleton } from '@/components/skeletons/dialog-skeleton';
 import {
   Table,
   TableBody,
@@ -67,9 +67,7 @@ export function OrderDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-xl'>
         {isLoading && !order ? (
-          <div className='flex flex-col items-center justify-center py-12'>
-            <Spinner className='size-8 text-primary' />
-          </div>
+          <DialogDetailSkeleton />
         ) : !order ? (
           <div className='py-8 text-center text-muted-foreground'>{t('emptyTitle')}</div>
         ) : (

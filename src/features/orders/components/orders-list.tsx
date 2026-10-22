@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
+import { OrdersListSkeleton } from '@/components/skeletons/orders-skeleton';
 import {
   Table,
   TableBody,
@@ -170,9 +170,7 @@ export function OrdersList() {
 
       {/* Orders List / Table */}
       {isLoading ? (
-        <div className='flex flex-1 items-center justify-center py-16'>
-          <Spinner className='size-8 text-primary' />
-        </div>
+        <OrdersListSkeleton />
       ) : orders.length === 0 ? (
         <Card className='py-16 text-center'>
           <CardContent className='flex flex-col items-center justify-center space-y-2'>

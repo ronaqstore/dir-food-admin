@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { OwnerOverview } from '@/features/dashboard/components/owner-overview';
+import { DashboardOverviewSkeleton } from '@/components/skeletons/dashboard-skeleton';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { APP_NAME } from '@/config/site';
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function OverviewPage() {
   return (
-    <Suspense fallback={<div className='h-96 animate-pulse rounded-xl bg-muted/60' />}>
+    <Suspense fallback={<DashboardOverviewSkeleton />}>
       <OwnerOverview />
     </Suspense>
   );

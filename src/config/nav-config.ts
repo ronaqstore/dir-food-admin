@@ -3,28 +3,41 @@ import { platformNavGroups } from './platform-nav-config';
 
 export const navGroups: NavGroup[] = [
   {
-    label: 'Restaurant',
+    label: 'nav.group.overview',
     items: [
       {
-        title: 'Overview',
+        title: 'nav.dashboard',
         url: '/dashboard/overview',
         icon: 'dashboard',
-        isActive: true,
-        shortcut: ['o', 'o'],
+        isActive: false,
+        shortcut: ['d', 'd'],
         items: []
       },
       {
-        title: 'Menu Items',
+        title: 'nav.orders',
+        url: '/dashboard/orders',
+        icon: 'receipt',
+        isActive: false,
+        shortcut: ['o', 'r'],
+        items: []
+      }
+    ]
+  },
+  {
+    label: 'nav.group.catalog',
+    items: [
+      {
+        title: 'nav.menuItems',
         url: '/dashboard/menu',
-        icon: 'product',
+        icon: 'pizza',
         isActive: false,
         shortcut: ['m', 'i'],
         items: []
       },
       {
-        title: 'Categories',
+        title: 'nav.menuCategories',
         url: '/dashboard/categories',
-        icon: 'folder',
+        icon: 'tag',
         isActive: false,
         shortcut: ['c', 't'],
         items: []
@@ -32,35 +45,22 @@ export const navGroups: NavGroup[] = [
     ]
   },
   {
-    label: 'Operations',
+    label: 'nav.group.settings',
     items: [
       {
-        title: 'Delivery Coverage',
-        url: '/dashboard/delivery',
-        icon: 'truck',
-        isActive: false,
-        shortcut: ['d', 'c'],
-        items: []
-      },
-      {
-        title: 'Area Requests',
-        url: '/dashboard/requests',
-        icon: 'post',
-        isActive: false,
-        shortcut: ['a', 'r'],
-        items: []
-      }
-    ]
-  },
-  {
-    label: 'Settings',
-    items: [
-      {
-        title: 'Restaurant Profile',
+        title: 'nav.settings',
         url: '/dashboard/settings',
         icon: 'settings',
         isActive: false,
         shortcut: ['s', 's'],
+        items: []
+      },
+      {
+        title: 'nav.appearance',
+        url: '/dashboard/settings/appearance',
+        icon: 'palette',
+        isActive: false,
+        shortcut: ['a', 'p'],
         items: []
       }
     ]

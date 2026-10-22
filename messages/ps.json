@@ -1019,7 +1019,7 @@
     "previewColQty": "اندازه",
     "previewColAmount": "مقدار",
     "previewFooter": "دا مخکتنه ستاسو د بڼې اوسني تنظیمات ښيي.",
-    "previewSampleItem": "آئی فون 15"
+    "previewSampleItem": "چکن کړاهي (بشپړ)"
   },
   "pwa": {
     "installApp": "اپ نصب کړئ",
@@ -2413,7 +2413,22 @@
     "statusToggleSuccess": "د شتون حالت تازه شو",
     "emptyTitle": "هیڅ خواړه ونه موندل شول",
     "emptyDescription": "خپل مینو کې خواړه او څښاک ورزیات کړئ",
-    "noCategoryWarning": "د خوړو ورزیاتولو مخکې لومړی یوه کټګوري جوړه کړئ"
+    "noCategoryWarning": "د خوړو ورزیاتولو مخکې لومړی یوه کټګوري جوړه کړئ",
+    "viewGrid": "د گرډ بڼه",
+    "viewList": "د لست بڼه",
+    "statusAll": "ټول",
+    "statusAvailable": "شته",
+    "statusSoldOut": "ختم شوی",
+    "categoryJump": "کټګورۍ",
+    "clearSearch": "پلټنه پاکه کړئ",
+    "dishesCount": "{count} توکي",
+    "collapse": "راټولول",
+    "expand": "خپرول",
+    "noFilteredMatches": "ستاسو د پلټنې سره سم هیڅ خواړه ونه موندل شول",
+    "resetFilters": "فلټرونه پاک کړئ",
+    "loadingMore": "نور خواړه راښکته کیږي...",
+    "endOfMenu": "ټول خواړه راښودل شوي",
+    "dishesProgress": "له {total} څخه {count} خواړه ښودل کیږي"
   },
   "restaurantSettings": {
     "title": "د هوټل تنظیمات",

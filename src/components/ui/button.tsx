@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Button as ButtonPrimitive } from '@base-ui/react/button';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -57,8 +58,16 @@ function Button({
   isLoading = false,
   disabled,
   children,
+  nativeButton,
   ...props
 }: ButtonProps) {
+  const isNonNativeRender =
+    nativeButton === undefined &&
+    React.isValidElement(props.render) &&
+    props.render.type !== 'button';
+
+  const resolvedNativeButton = nativeButton ?? (isNonNativeRender ? false : undefined);
+
   return (
     <ButtonPrimitive
       data-slot='button'
@@ -66,6 +75,7 @@ function Button({
       suppressHydrationWarning
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
+      nativeButton={resolvedNativeButton}
       className={cn(
         buttonVariants({ variant, size, className }),
         isLoading && 'relative disabled:opacity-100'

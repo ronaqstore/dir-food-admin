@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
+import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconPhoto, IconUpload, IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import {
@@ -137,11 +138,7 @@ export function ProfileTab() {
   };
 
   if (isLoading) {
-    return (
-      <div className='flex h-64 items-center justify-center'>
-        <Spinner className='size-8 text-primary' />
-      </div>
-    );
+    return <ProfileTabSkeleton />;
   }
 
   const isPending =

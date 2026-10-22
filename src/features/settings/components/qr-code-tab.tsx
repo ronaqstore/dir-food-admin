@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import { QrCodeTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import {
   IconQrcode,
   IconCopy,
@@ -23,14 +24,21 @@ export function QrCodeTab() {
   const t = useTranslations();
   const { data: profile, isLoading } = useRestaurantProfile();
   const [copied, setCopied] = React.useState(false);
+  const [logoError, setLogoError] = React.useState(false);
   const printRef = React.useRef<HTMLDivElement>(null);
 
+  React.useEffect(() => {
+    setLogoError(false);
+  }, [profile?.logoUrl]);
+
   const [storefrontBase, setStorefrontBase] = React.useState<string>(
-    () => process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3005'
+    () => (process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3005').replace(/\/+$/, '')
   );
 
   React.useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_WEB_URL && typeof window !== 'undefined') {
+    if (process.env.NEXT_PUBLIC_WEB_URL) {
+      setStorefrontBase(process.env.NEXT_PUBLIC_WEB_URL.replace(/\/+$/, ''));
+    } else if (typeof window !== 'undefined') {
       setStorefrontBase(`${window.location.protocol}//${window.location.hostname}:3005`);
     }
   }, []);
@@ -112,17 +120,15 @@ export function QrCodeTab() {
   };
 
   if (isLoading) {
-    return (
-      <div className='flex h-64 items-center justify-center'>
-        <Spinner className='size-8 text-primary' />
-      </div>
-    );
+    return <QrCodeTabSkeleton />;
   }
 
   if (!profile) return null;
 
-  const qrSvgPath = qrEncoder ? qrEncoder.toSvgPath() : '';
-  const qrViewBox = qrEncoder ? `0 0 ${qrEncoder.size} ${qrEncoder.size}` : '0 0 21 21';
+  const qrSvgPath = qrEncoder ? qrEncoder.toSvgPath(4) : '';
+  const qrViewBox = qrEncoder
+    ? `0 0 ${qrEncoder.size + 8} ${qrEncoder.size + 8}`
+    : '0 0 29 29';
 
   return (
     <div className='space-y-6'>
@@ -187,6 +193,7 @@ export function QrCodeTab() {
               <Button
                 variant='ghost'
                 size='sm'
+                nativeButton={false}
                 render={
                   <a
                     href={menuUrl}
@@ -215,13 +222,14 @@ export function QrCodeTab() {
             {/* Restaurant Branding */}
             <div className='flex flex-col items-center gap-2.5'>
               <div className='flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary font-bold overflow-hidden shadow-xs'>
-                {profile.logoUrl ? (
+                {profile.logoUrl && !logoError ? (
                   <Image
                     src={profile.logoUrl}
                     alt={profile.name}
                     width={64}
                     height={64}
                     className='size-full object-cover'
+                    onError={() => setLogoError(true)}
                   />
                 ) : (
                   <IconBuildingStore className='size-8' />
@@ -248,7 +256,9 @@ export function QrCodeTab() {
                 >
                   <path d={qrSvgPath} fill='#0f172a' />
                 </svg>
-              ) : null}
+              ) : (
+                <Spinner className='size-6 text-muted-foreground' />
+              )}
             </div>
 
             {/* Call to Action */}

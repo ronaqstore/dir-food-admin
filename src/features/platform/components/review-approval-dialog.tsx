@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
+import { DialogDetailSkeleton } from '@/components/skeletons/dialog-skeleton';
 import { Icons } from '@/components/icons';
 import {
   usePlatformRestaurantDetail,
@@ -62,9 +63,7 @@ export function ReviewApprovalDialog({
         </DialogHeader>
 
         {isLoading || !restaurant ? (
-          <div className='flex items-center justify-center py-12'>
-            <Spinner className='size-8 text-primary' />
-          </div>
+          <DialogDetailSkeleton />
         ) : (
           <div className='space-y-4 text-sm'>
             {/* Restaurant Profile Summary */}

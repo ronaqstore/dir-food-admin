@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
+import { HoursTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { useOperatingHours, useUpdateOperatingHours } from '../api/restaurant-query';
 import type { DayHoursInput } from '../types';
 
@@ -83,11 +84,7 @@ export function HoursTab() {
   };
 
   if (isLoading) {
-    return (
-      <div className='flex h-64 items-center justify-center'>
-        <Spinner className='size-8 text-primary' />
-      </div>
-    );
+    return <HoursTabSkeleton />;
   }
 
   return (

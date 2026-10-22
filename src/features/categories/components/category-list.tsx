@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Spinner } from '@/components/ui/spinner';
+import { CategoryListSkeleton } from '@/components/skeletons/categories-skeleton';
 import { Icons } from '@/components/icons';
 import {
   IconPlus,
@@ -78,11 +78,7 @@ export function CategoryList() {
   };
 
   if (isLoading) {
-    return (
-      <div className='flex h-64 items-center justify-center'>
-        <Spinner className='size-8 text-primary' />
-      </div>
-    );
+    return <CategoryListSkeleton />;
   }
 
   if (error) {
@@ -101,7 +97,7 @@ export function CategoryList() {
   const items = categories ?? [];
 
   return (
-    <div className='space-y-6'>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-12'>
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div>
           <h1 className='text-2xl font-bold tracking-tight text-foreground'>

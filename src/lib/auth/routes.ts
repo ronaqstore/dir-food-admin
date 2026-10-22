@@ -5,6 +5,7 @@ export { defaultLocale, locales, isLocale, type AppLocale };
 
 export const OWNER_DEFAULT_REDIRECT = '/dashboard/overview';
 export const PLATFORM_ADMIN_DEFAULT_REDIRECT = '/dashboard/platform';
+const APPEARANCE_PATH = '/dashboard/settings/appearance';
 
 const OWNER_ALLOWED_PREFIXES = [
   '/dashboard/overview',
@@ -55,6 +56,24 @@ export function homePathForRole(
   return localize(base, locale);
 }
 
+export function shortcutPathForRole(
+  to: string | null | undefined,
+  role: AuthAccountRole | string | undefined | null,
+  locale: AppLocale | string = defaultLocale
+): string | null {
+  if (!to || role === 'PLATFORM_ADMIN') return null;
+  switch (to) {
+    case 'orders':
+      return localize('/dashboard/orders', locale);
+    case 'menu':
+      return localize('/dashboard/menu', locale);
+    case 'settings':
+      return localize('/dashboard/settings', locale);
+    default:
+      return null;
+  }
+}
+
 export function loginPath(locale: AppLocale | string = defaultLocale): string {
   return localize('/login', locale);
 }
@@ -76,6 +95,11 @@ export function isPlatformDashboardPath(pathname: string): boolean {
   return p === '/dashboard/platform' || p.startsWith('/dashboard/platform/');
 }
 
+export function isSharedAppearancePath(pathname: string): boolean {
+  const p = delocalize(pathname);
+  return p === APPEARANCE_PATH || p.startsWith(`${APPEARANCE_PATH}/`);
+}
+
 export function isOwnerAllowedDashboardPath(pathname: string): boolean {
   const p = delocalize(pathname);
   if (p === '/dashboard') {
@@ -91,7 +115,7 @@ export function isRoleAuthorizedForDashboardPath(
 ): boolean {
   const p = delocalize(pathname);
   if (role === 'PLATFORM_ADMIN') {
-    return p === '/dashboard' || isPlatformDashboardPath(p);
+    return p === '/dashboard' || isPlatformDashboardPath(p) || isSharedAppearancePath(p);
   }
 
   if (role === 'RESTAURANT_OWNER') {
@@ -110,7 +134,7 @@ export function redirectForRole(
   if (!p.startsWith('/dashboard')) return null;
   if (!role) return null;
 
-  if (role === 'PLATFORM_ADMIN' && !isPlatformDashboardPath(p)) {
+  if (role === 'PLATFORM_ADMIN' && !isPlatformDashboardPath(p) && !isSharedAppearancePath(p)) {
     return homePathForRole(role, locale);
   }
 

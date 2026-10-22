@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
+import { DeliveryAreasTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconMapPin, IconSearch } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { useDeliveryAreas, useUpdateDeliveryAreas } from '../api/restaurant-query';
@@ -82,11 +83,7 @@ export function DeliveryAreasTab() {
   };
 
   if (isLoading) {
-    return (
-      <div className='flex h-64 items-center justify-center'>
-        <Spinner className='size-8 text-primary' />
-      </div>
-    );
+    return <DeliveryAreasTabSkeleton />;
   }
 
   const servedCount = rows.filter((r) => r.isServed).length;

@@ -1019,7 +1019,7 @@
     "previewColQty": "مقدار",
     "previewColAmount": "رقم",
     "previewFooter": "یہ پیش نظارہ آپ کی موجودہ ظاہری ترتیبات دکھاتا ہے۔",
-    "previewSampleItem": "آئی فون 15"
+    "previewSampleItem": "چکن کڑاہی (فل)"
   },
   "pwa": {
     "installApp": "ایپ انسٹال",
@@ -2413,7 +2413,22 @@
     "statusToggleSuccess": "دستیابی کی حالت تبدیل ہو گئی",
     "emptyTitle": "کوئی کھانا نہیں ملا",
     "emptyDescription": "اپنے ریسٹورنٹ کے مینو میں کھانے اور مشروبات شامل کریں",
-    "noCategoryWarning": "کھانے شامل کرنے سے پہلے کم از کم ایک کیٹیگری بنائیں"
+    "noCategoryWarning": "کھانے شامل کرنے سے پہلے کم از کم ایک کیٹیگری بنائیں",
+    "viewGrid": "گرڈ منظر",
+    "viewList": "لسٹ منظر",
+    "statusAll": "تمام",
+    "statusAvailable": "دستیاب",
+    "statusSoldOut": "ختم شدہ",
+    "categoryJump": "کیٹیگریز",
+    "clearSearch": "تلاش صاف کریں",
+    "dishesCount": "{count} کھانے",
+    "collapse": "سمیٹیں",
+    "expand": "کھولیں",
+    "noFilteredMatches": "آپ کی تلاش یا فلٹر کے مطابق کوئی کھانا نہیں ملا",
+    "resetFilters": "فلٹرز ختم کریں",
+    "loadingMore": "مزید کھانے لوڈ ہو رہے ہیں...",
+    "endOfMenu": "تمام کھانے لوڈ ہو چکے ہیں",
+    "dishesProgress": "{total} میں سے {count} کھانے دکھائے جا رہے ہیں"
   },
   "restaurantSettings": {
     "title": "ریسٹورنٹ کی ترتیبات",

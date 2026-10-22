@@ -2,18 +2,23 @@ import { NavGroup } from '@/types';
 
 export const platformNavGroups: NavGroup[] = [
   {
-    label: 'Platform Control',
+    label: 'nav.group.overview',
     items: [
       {
-        title: 'Overview',
+        title: 'nav.platformOverview',
         url: '/dashboard/platform',
         icon: 'dashboard',
-        isActive: true,
+        isActive: false,
         shortcut: ['p', 'o'],
         items: []
-      },
+      }
+    ]
+  },
+  {
+    label: 'nav.group.management',
+    items: [
       {
-        title: 'Restaurants',
+        title: 'nav.restaurants',
         url: '/dashboard/platform/restaurants',
         icon: 'building',
         isActive: false,
@@ -21,19 +26,32 @@ export const platformNavGroups: NavGroup[] = [
         items: []
       },
       {
-        title: 'Areas & Cities',
-        url: '/dashboard/platform/areas',
-        icon: 'page',
+        title: 'nav.subscriptions',
+        url: '/dashboard/platform/subscriptions',
+        icon: 'creditCard',
         isActive: false,
-        shortcut: ['p', 'a'],
+        shortcut: ['p', 's'],
         items: []
       },
       {
-        title: 'Audit Logs',
-        url: '/dashboard/platform/audit',
-        icon: 'history',
+        title: 'nav.settings',
+        url: '/dashboard/platform/settings',
+        icon: 'settings',
         isActive: false,
-        shortcut: ['p', 'l'],
+        shortcut: ['p', 'a'],
+        items: []
+      }
+    ]
+  },
+  {
+    label: 'nav.group.settings',
+    items: [
+      {
+        title: 'nav.appearance',
+        url: '/dashboard/settings/appearance',
+        icon: 'palette',
+        isActive: false,
+        shortcut: ['a', 'p'],
         items: []
       }
     ]

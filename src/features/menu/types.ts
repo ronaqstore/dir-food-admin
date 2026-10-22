@@ -39,3 +39,12 @@ export interface MenuItemsFilter {
   page?: number;
   limit?: number;
 }
+
+export interface MenuItemsResponse {
+  data: MenuItemDTO[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}

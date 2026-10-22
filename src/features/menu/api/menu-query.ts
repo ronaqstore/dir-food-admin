@@ -1,26 +1,77 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { appFetch } from '@/lib/api/app-fetch';
 import type {
   MenuItemDTO,
   CreateMenuItemInput,
   UpdateMenuItemInput,
   ReplaceVariantsInput,
-  MenuItemsFilter
+  MenuItemsFilter,
+  MenuItemsResponse
 } from '../types';
 
 export const MENU_ITEMS_QUERY_KEY = ['menu-items'] as const;
 
+export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
+  return useInfiniteQuery<MenuItemsResponse>({
+    queryKey: [
+      ...MENU_ITEMS_QUERY_KEY,
+      'infinite',
+      filter?.categoryId ?? 'all',
+      filter?.search ?? ''
+    ],
+    queryFn: async ({ pageParam = 1 }) => {
+      const params = new URLSearchParams();
+      if (filter?.categoryId && filter.categoryId !== 'all') {
+        params.set('categoryId', filter.categoryId);
+      }
+      if (filter?.search?.trim()) {
+        params.set('search', filter.search.trim());
+      }
+      params.set('page', String(pageParam));
+      params.set('limit', String(filter?.limit ?? 24));
+
+      const queryStr = `?${params.toString()}`;
+      const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
+
+      if (Array.isArray(res)) {
+        return {
+          data: res,
+          meta: { page: Number(pageParam), limit: 24, total: res.length }
+        };
+      }
+      return res;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, limit, total } = lastPage.meta;
+      if (page * limit < total) {
+        return page + 1;
+      }
+      return undefined;
+    }
+  });
+}
+
 export function useMenuItems(filter?: MenuItemsFilter) {
   const params = new URLSearchParams();
   if (filter?.categoryId) params.set('categoryId', filter.categoryId);
+  if (filter?.search) params.set('search', filter.search);
   if (filter?.page) params.set('page', String(filter.page));
   if (filter?.limit) params.set('limit', String(filter.limit));
 
   const queryStr = params.toString() ? `?${params.toString()}` : '';
 
   return useQuery({
-    queryKey: [...MENU_ITEMS_QUERY_KEY, filter?.categoryId ?? 'all', filter?.page ?? 1],
-    queryFn: () => appFetch<MenuItemDTO[]>(`/api/items${queryStr}`)
+    queryKey: [
+      ...MENU_ITEMS_QUERY_KEY,
+      filter?.categoryId ?? 'all',
+      filter?.search ?? '',
+      filter?.page ?? 1
+    ],
+    queryFn: async () => {
+      const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
+      return Array.isArray(res) ? res : (res?.data ?? []);
+    }
   });
 }
 

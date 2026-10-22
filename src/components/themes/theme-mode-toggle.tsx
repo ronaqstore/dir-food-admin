@@ -25,7 +25,7 @@ export function ThemeModeToggle() {
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== 'd' || !e.shiftKey || !(e.metaKey || e.ctrlKey)) return;
+      if (!e.key || e.key.toLowerCase() !== 'd' || !e.shiftKey || !(e.metaKey || e.ctrlKey)) return;
       const target = e.target as HTMLElement | null;
       if (
         target instanceof HTMLInputElement ||

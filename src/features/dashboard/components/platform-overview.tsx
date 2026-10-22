@@ -15,7 +15,7 @@ export function PlatformOverview() {
   const user = session?.user as SessionUserShape | undefined;
 
   return (
-    <div className='space-y-6'>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-6'>
       {/* Platform Header */}
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div>
