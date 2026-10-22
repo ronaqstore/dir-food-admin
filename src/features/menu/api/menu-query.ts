@@ -17,7 +17,8 @@ export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
       ...MENU_ITEMS_QUERY_KEY,
       'infinite',
       filter?.categoryId ?? 'all',
-      filter?.search ?? ''
+      filter?.search ?? '',
+      filter?.isDeal === undefined ? 'all' : String(filter.isDeal)
     ],
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams();
@@ -26,6 +27,9 @@ export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
       }
       if (filter?.search?.trim()) {
         params.set('search', filter.search.trim());
+      }
+      if (typeof filter?.isDeal === 'boolean') {
+        params.set('isDeal', String(filter.isDeal));
       }
       params.set('page', String(pageParam));
       params.set('limit', String(filter?.limit ?? 24));
@@ -56,6 +60,7 @@ export function useMenuItems(filter?: MenuItemsFilter) {
   const params = new URLSearchParams();
   if (filter?.categoryId) params.set('categoryId', filter.categoryId);
   if (filter?.search) params.set('search', filter.search);
+  if (typeof filter?.isDeal === 'boolean') params.set('isDeal', String(filter.isDeal));
   if (filter?.page) params.set('page', String(filter.page));
   if (filter?.limit) params.set('limit', String(filter.limit));
 
@@ -66,11 +71,45 @@ export function useMenuItems(filter?: MenuItemsFilter) {
       ...MENU_ITEMS_QUERY_KEY,
       filter?.categoryId ?? 'all',
       filter?.search ?? '',
+      filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
       filter?.page ?? 1
     ],
     queryFn: async () => {
       const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
       return Array.isArray(res) ? res : (res?.data ?? []);
+    }
+  });
+}
+
+export function usePaginatedMenuItems(filter?: MenuItemsFilter) {
+  const params = new URLSearchParams();
+  if (filter?.categoryId) params.set('categoryId', filter.categoryId);
+  if (filter?.search) params.set('search', filter.search);
+  if (typeof filter?.isDeal === 'boolean') params.set('isDeal', String(filter.isDeal));
+  if (filter?.page) params.set('page', String(filter.page));
+  if (filter?.limit) params.set('limit', String(filter.limit));
+
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+
+  return useQuery<MenuItemsResponse>({
+    queryKey: [
+      ...MENU_ITEMS_QUERY_KEY,
+      'paginated',
+      filter?.categoryId ?? 'all',
+      filter?.search ?? '',
+      filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
+      filter?.page ?? 1,
+      filter?.limit ?? 12
+    ],
+    queryFn: async () => {
+      const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
+      if (Array.isArray(res)) {
+        return {
+          data: res,
+          meta: { page: filter?.page ?? 1, limit: filter?.limit ?? res.length, total: res.length }
+        };
+      }
+      return res;
     }
   });
 }

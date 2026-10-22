@@ -724,11 +724,18 @@ function FoodCard({
 
           {/* Dish Details */}
           <div className='min-w-0 flex-1'>
-            {categoryName ? (
-              <Badge variant='outline' className='text-[10px] font-normal px-1.5 py-0 mb-1 border-muted-foreground/20 text-muted-foreground'>
-                {categoryName}
-              </Badge>
-            ) : null}
+            <div className='flex items-center gap-1.5 flex-wrap mb-1'>
+              {categoryName ? (
+                <Badge variant='outline' className='text-[10px] font-normal px-1.5 py-0 border-muted-foreground/20 text-muted-foreground'>
+                  {categoryName}
+                </Badge>
+              ) : null}
+              {item.isDeal ? (
+                <Badge className='bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30 text-[10px] font-bold px-1.5 py-0'>
+                  🔥 Deal
+                </Badge>
+              ) : null}
+            </div>
 
             <h3 className='font-semibold text-foreground text-sm leading-snug line-clamp-1 group-hover:text-primary transition-colors'>
               {item.name}
@@ -755,6 +762,18 @@ function FoodCard({
                   {formatPkr(v.price)}
                 </span>
               ))}
+            </div>
+          ) : item.originalPrice != null && item.basePrice != null && item.originalPrice > item.basePrice ? (
+            <div className='flex items-baseline gap-1.5 flex-wrap'>
+              <span className='text-sm font-bold text-rose-600 dark:text-rose-400'>
+                {formatPkr(item.basePrice)}
+              </span>
+              <span className='text-xs text-muted-foreground line-through'>
+                {formatPkr(item.originalPrice)}
+              </span>
+              <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1 py-0.2 rounded'>
+                {Math.round(((item.originalPrice - item.basePrice) / item.originalPrice) * 100)}% OFF
+              </span>
             </div>
           ) : (
             <div className='flex items-baseline gap-1'>
@@ -849,6 +868,11 @@ function FoodListItem({
             <h4 className='font-semibold text-sm text-foreground truncate'>
               {item.name}
             </h4>
+            {item.isDeal ? (
+              <Badge className='bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30 text-[10px] font-bold px-1.5 py-0 shrink-0'>
+                🔥 Deal
+              </Badge>
+            ) : null}
             {categoryName ? (
               <Badge variant='outline' className='text-[10px] font-normal px-1.5 py-0 shrink-0 hidden sm:inline-flex'>
                 {categoryName}
@@ -861,6 +885,18 @@ function FoodListItem({
               <span className='font-medium text-foreground'>
                 {item.variants.map((v) => `${v.name}: ${formatPkr(v.price)}`).join(' • ')}
               </span>
+            ) : item.originalPrice != null && item.basePrice != null && item.originalPrice > item.basePrice ? (
+              <div className='flex items-baseline gap-1.5'>
+                <span className='font-bold text-rose-600 dark:text-rose-400'>
+                  {formatPkr(item.basePrice)}
+                </span>
+                <span className='line-through text-muted-foreground text-[11px]'>
+                  {formatPkr(item.originalPrice)}
+                </span>
+                <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400'>
+                  {Math.round(((item.originalPrice - item.basePrice) / item.originalPrice) * 100)}% OFF
+                </span>
+              </div>
             ) : (
               <span className='font-bold text-foreground'>
                 {item.basePrice != null ? formatPkr(item.basePrice) : 'Rs 0'}

@@ -8,10 +8,12 @@ export interface CreateItemVariantInput {
 }
 
 export interface CreateMenuItemInput {
-  categoryId: string;
+  categoryId?: string;
   name: string;
   description?: string;
   basePrice?: number; // in paisa
+  originalPrice?: number | null; // in paisa
+  isDeal?: boolean;
   variants?: CreateItemVariantInput[];
 }
 
@@ -20,6 +22,8 @@ export interface UpdateMenuItemInput {
   name?: string;
   description?: string;
   basePrice?: number | null; // in paisa
+  originalPrice?: number | null; // in paisa
+  isDeal?: boolean;
   isAvailable?: boolean;
   isActive?: boolean;
 }
@@ -38,6 +42,7 @@ export interface MenuItemsFilter {
   search?: string;
   page?: number;
   limit?: number;
+  isDeal?: boolean;
 }
 
 export interface MenuItemsResponse {

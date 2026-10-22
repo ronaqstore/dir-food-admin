@@ -161,6 +161,12 @@ export interface RestaurantProfileDTO {
 export interface PublishReadinessDTO {
   isReadyToPublish: boolean;
   missingPrerequisites: string[];
+  checks?: {
+    whatsapp: boolean;
+    hours: boolean;
+    items: boolean;
+    deliveryAreas: boolean;
+  };
 }
 
 export interface MenuCategoryDTO {
@@ -189,6 +195,8 @@ export interface MenuItemDTO {
   description: string | null;
   imageUrl: string | null;
   basePrice: number | null;
+  originalPrice: number | null;
+  isDeal: boolean;
   isAvailable: boolean;
   isActive: boolean;
   sortOrder: number;
