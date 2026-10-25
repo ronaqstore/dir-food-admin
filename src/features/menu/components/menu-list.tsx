@@ -8,7 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
-import { MenuManagementSkeleton } from '@/components/skeletons/menu-skeleton';
+import {
+  MenuManagementSkeleton,
+  MenuItemCardSkeleton,
+  MenuItemListRowSkeleton
+} from '@/components/skeletons/menu-skeleton';
 import {
   Sheet,
   SheetContent,
@@ -65,6 +69,7 @@ export function MenuList() {
   const {
     data,
     isLoading: isItemsLoading,
+    isFetching,
     error,
     refetch,
     fetchNextPage,
@@ -133,15 +138,21 @@ export function MenuList() {
     }));
   };
 
-  // Pre-calculate counts per category for the chips
+  // Pre-calculate counts per category from categories query data
   const categoryCounts = React.useMemo(() => {
     const counts: Record<string, number> = {};
-    if (!items) return counts;
-    for (const item of items) {
-      counts[item.categoryId] = (counts[item.categoryId] || 0) + 1;
+    if (!categories) return counts;
+    for (const cat of categories) {
+      counts[cat.id] = cat._count?.items ?? 0;
     }
     return counts;
-  }, [items]);
+  }, [categories]);
+
+  // Overall total items count across all categories
+  const allCategoriesTotal = React.useMemo(() => {
+    if (!categories || categories.length === 0) return totalServerCount;
+    return categories.reduce((sum, c) => sum + (c._count?.items ?? 0), 0);
+  }, [categories, totalServerCount]);
 
   // Overall metrics
   const totalCount = totalServerCount;
@@ -193,11 +204,11 @@ export function MenuList() {
 
   const hasNoCategories = !isCategoriesLoading && (!categories || categories.length === 0);
 
-  if (isCategoriesLoading || isItemsLoading) {
+  if (isCategoriesLoading && !categories) {
     return <MenuManagementSkeleton />;
   }
 
-  if (error) {
+  if (error && !items.length && !categories) {
     return (
       <div className='flex h-64 flex-col items-center justify-center gap-3 text-center'>
         <p className='text-sm text-destructive font-medium'>
@@ -221,8 +232,13 @@ export function MenuList() {
                 {t('menuItems.title')}
               </h1>
               <Badge variant='secondary' className='text-xs font-semibold'>
-                {totalCount}
+                {allCategoriesTotal}
               </Badge>
+              {isFetching && !isItemsLoading && (
+                <span className='inline-flex items-center gap-1 text-[11px] text-muted-foreground animate-in fade-in-50'>
+                  <Spinner className='size-3 text-primary animate-spin' />
+                </span>
+              )}
             </div>
             <p className='text-xs sm:text-sm text-muted-foreground mt-0.5'>
               {t('menuItems.description')}
@@ -359,7 +375,7 @@ export function MenuList() {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {totalCount}
+                {allCategoriesTotal}
               </span>
             </Button>
 
@@ -392,7 +408,30 @@ export function MenuList() {
         </div>
 
         {/* Content Area */}
-        {filteredItems.length === 0 ? (
+        {isItemsLoading ? (
+          viewMode === 'grid' ? (
+            <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in-50 duration-200'>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <MenuItemCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y animate-in fade-in-50 duration-200'>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <MenuItemListRowSkeleton key={i} />
+              ))}
+            </div>
+          )
+        ) : error ? (
+          <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed border-destructive/30 p-8 text-center animate-in fade-in-50 bg-destructive/5'>
+            <p className='text-sm text-destructive font-medium mb-3'>
+              {error instanceof Error ? error.message : t('common.unexpectedError')}
+            </p>
+            <Button variant='outline' size='sm' onClick={() => refetch()}>
+              {t('common.tryAgain')}
+            </Button>
+          </div>
+        ) : filteredItems.length === 0 ? (
           <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50 bg-card/40'>
             <div className='flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary mb-4'>
               <IconSalad className='size-7' />
@@ -619,7 +658,7 @@ export function MenuList() {
             >
               <span>{t('menuItems.filterByCategory')}</span>
               <Badge variant='outline' className={selectedCategory === 'all' ? 'border-primary-foreground text-primary-foreground' : ''}>
-                {totalCount}
+                {allCategoriesTotal}
               </Badge>
             </button>
 

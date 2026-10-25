@@ -13,10 +13,12 @@ import { createRegisterSchema, type RegisterFormValues } from '../schemas/regist
 import { registerRestaurant } from '../api/auth.service';
 import { normalizePhone } from '@/lib/auth/phone';
 import { RestaurantNameAvailability } from './restaurant-name-availability';
+import { useCities } from '@/features/settings/api/restaurant-query';
 
 export function RegisterForm() {
   const t = useTranslations();
   const router = useRouter();
+  const { data: cities } = useCities();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +27,7 @@ export function RegisterForm() {
   const form = useAppForm({
     defaultValues: {
       restaurantName: '',
+      cityId: '',
       ownerName: '',
       phone: '',
       password: '',
@@ -39,6 +42,7 @@ export function RegisterForm() {
       try {
         const payload = {
           restaurantName: value.restaurantName.trim(),
+          cityId: value.cityId || undefined,
           ownerName: value.ownerName.trim(),
           phone: normalizePhone(value.phone),
           password: value.password,
@@ -102,6 +106,31 @@ export function RegisterForm() {
                     required
                   />
                   <RestaurantNameAvailability name={field.state.value} />
+                </div>
+              )}
+            />
+
+            {/* District / City */}
+            <form.AppField
+              name='cityId'
+              children={(field) => (
+                <div className='space-y-1.5'>
+                  <label htmlFor='reg-city' className='text-sm font-medium text-foreground'>
+                    District / City
+                  </label>
+                  <select
+                    id='reg-city'
+                    value={field.state.value || ''}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className='h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+                  >
+                    <option value=''>Select District (Default: Lower Dir)</option>
+                    {cities?.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             />

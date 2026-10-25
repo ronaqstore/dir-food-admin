@@ -149,6 +149,8 @@ export interface RestaurantProfileDTO {
   whatsappNumber: string | null;
   addressText: string | null;
   minOrderAmount: number | null;
+  cityId?: string | null;
+  city?: { id: string; name: string; slug: string } | null;
   status: RestaurantStatus;
   manualStatus: ManualAvailabilityStatus;
   unavailableNote: string | null;
@@ -214,6 +216,7 @@ export interface DeliveryAreaItemDTO {
   isServed: boolean;
   deliveryFee: number | null;
   minOrderAmount: number | null;
+  isVerified?: boolean;
 }
 
 export interface TimeRangeDTO {

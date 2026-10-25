@@ -24,6 +24,7 @@ export interface UpdateRestaurantProfileInput {
   contactPhone?: string;
   whatsappNumber?: string;
   minOrderAmount?: number; // in paisa
+  cityId?: string;
 }
 
 export interface UpdateAvailabilityInput {

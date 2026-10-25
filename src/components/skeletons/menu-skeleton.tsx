@@ -34,6 +34,24 @@ export function MenuItemCardSkeleton() {
   );
 }
 
+export function MenuItemListRowSkeleton() {
+  return (
+    <div className='flex items-center justify-between gap-4 p-3 sm:px-4'>
+      <div className='flex items-center gap-3 min-w-0 flex-1'>
+        <Skeleton className='size-12 shrink-0 rounded-lg' />
+        <div className='space-y-2 flex-1'>
+          <Skeleton className='h-4 w-36 rounded-md' />
+          <Skeleton className='h-3 w-24 rounded-md' />
+        </div>
+      </div>
+      <div className='flex items-center gap-3 shrink-0'>
+        <Skeleton className='h-5 w-16 rounded-full' />
+        <Skeleton className='h-7 w-14 rounded-md' />
+      </div>
+    </div>
+  );
+}
+
 export function MenuManagementSkeleton() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-28 sm:pb-12'>

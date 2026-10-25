@@ -16,21 +16,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
-import { useCreateMasterArea, useUpdateMasterArea } from '../api/platform-query';
+import { useCreateMasterArea, useUpdateMasterArea, usePlatformCities } from '../api/platform-query';
 import type { MasterArea } from '../types';
 
 interface MasterAreaDialogProps {
   area?: MasterArea | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  defaultCityId?: string;
 }
 
-export function MasterAreaDialog({ area, open, onOpenChange }: MasterAreaDialogProps) {
+export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: MasterAreaDialogProps) {
   const t = useTranslations('platformAreas');
+  const { data: cities = [] } = usePlatformCities();
   const createMutation = useCreateMasterArea();
   const updateMutation = useUpdateMasterArea();
 
   const isEditing = Boolean(area);
+  const [cityId, setCityId] = React.useState('');
   const [name, setName] = React.useState('');
   const [slug, setSlug] = React.useState('');
   const [sortOrder, setSortOrder] = React.useState(0);
@@ -38,17 +41,19 @@ export function MasterAreaDialog({ area, open, onOpenChange }: MasterAreaDialogP
 
   React.useEffect(() => {
     if (area) {
+      setCityId(area.cityId || '');
       setName(area.name);
       setSlug(area.slug);
       setSortOrder(area.sortOrder);
       setIsActive(area.isActive);
     } else {
+      setCityId(defaultCityId || (cities[0]?.id ?? ''));
       setName('');
       setSlug('');
       setSortOrder(0);
       setIsActive(true);
     }
-  }, [area, open]);
+  }, [area, open, defaultCityId, cities]);
 
   const isPending = createMutation.isPending || updateMutation.isPending;
 
@@ -64,6 +69,7 @@ export function MasterAreaDialog({ area, open, onOpenChange }: MasterAreaDialogP
         await updateMutation.mutateAsync({
           id: area.id,
           input: {
+            cityId: cityId || undefined,
             name: name.trim(),
             slug: slug.trim() || undefined,
             sortOrder,
@@ -73,6 +79,7 @@ export function MasterAreaDialog({ area, open, onOpenChange }: MasterAreaDialogP
         toast.success(t('areaUpdated'));
       } else {
         await createMutation.mutateAsync({
+          cityId: cityId || undefined,
           name: name.trim(),
           slug: slug.trim() || undefined,
           sortOrder,
@@ -99,6 +106,25 @@ export function MasterAreaDialog({ area, open, onOpenChange }: MasterAreaDialogP
           </DialogHeader>
 
           <div className='space-y-3 text-sm'>
+            {cities.length > 0 && (
+              <div className='space-y-1.5'>
+                <Label htmlFor='area-city'>City / District *</Label>
+                <select
+                  id='area-city'
+                  className='w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring'
+                  value={cityId}
+                  onChange={(e) => setCityId(e.target.value)}
+                  required
+                >
+                  {cities.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className='space-y-1.5'>
               <Label htmlFor='area-name'>{t('areaName')}</Label>
               <Input

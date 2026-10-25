@@ -16,6 +16,7 @@ export function createRegisterSchema(t: (key: string) => string) {
         (val) => !val || val.trim() === '' || isValidPkMobile(val),
         t('auth.whatsappInvalid')
       ),
+    cityId: z.string().optional(),
     description: z.string().max(500)
   });
 }

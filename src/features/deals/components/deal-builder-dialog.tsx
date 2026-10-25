@@ -39,7 +39,6 @@ interface DealBuilderDialogProps {
 
 interface ComboRow {
   id: string;
-  isCustom: boolean;
   menuItemId?: string;
   name: string;
   quantity: number;
@@ -120,7 +119,6 @@ export function DealBuilderDialog({
             : undefined;
           return {
             id: `row-${idx}-${cleanName}`,
-            isCustom: !matched,
             menuItemId: matched?.id,
             name: matched?.name || cleanName,
             quantity: isNaN(qty) ? 1 : qty,
@@ -157,7 +155,6 @@ export function DealBuilderDialog({
     const first = availableDishes[0];
     const newRow: ComboRow = {
       id: `row-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      isCustom: false,
       menuItemId: first?.id,
       name: first?.name || '',
       quantity: 1,
@@ -168,17 +165,6 @@ export function DealBuilderDialog({
       syncDescription(next);
       return next;
     });
-  };
-
-  const handleAddCustomPerk = () => {
-    const newRow: ComboRow = {
-      id: `row-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      isCustom: true,
-      name: '',
-      quantity: 1,
-      unitPrice: 0
-    };
-    setComboRows((prev) => [...prev, newRow]);
   };
 
   const handleSelectDish = (index: number, dishId: string) => {
@@ -194,18 +180,6 @@ export function DealBuilderDialog({
           name: dish.name,
           unitPrice: getDishUnitPrice(dish)
         };
-      }
-      syncDescription(next);
-      return next;
-    });
-  };
-
-  const handleCustomNameChange = (index: number, val: string) => {
-    setComboRows((prev) => {
-      const next = [...prev];
-      const target = next[index];
-      if (target) {
-        next[index] = { ...target, name: val };
       }
       syncDescription(next);
       return next;
@@ -402,22 +376,12 @@ export function DealBuilderDialog({
                     className='flex items-center gap-2 rounded-md border border-border bg-background p-2 text-xs w-full min-w-0'
                   >
                     <div className='flex-1 min-w-0'>
-                      {!row.isCustom ? (
-                        <DishCombobox
-                          value={row.menuItemId}
-                          onSelect={(dish) => handleSelectDish(idx, dish.id)}
-                          dishes={availableDishes}
-                          disabled={isPending}
-                        />
-                      ) : (
-                        <Input
-                          value={row.name}
-                          onChange={(e) => handleCustomNameChange(idx, e.target.value)}
-                          placeholder='e.g. Free 500ml Drink or Extra Raita'
-                          disabled={isPending}
-                          className='h-9 text-xs'
-                        />
-                      )}
+                      <DishCombobox
+                        value={row.menuItemId}
+                        onSelect={(dish) => handleSelectDish(idx, dish.id)}
+                        dishes={availableDishes}
+                        disabled={isPending}
+                      />
                     </div>
 
                     <div className='flex items-center gap-1 rounded-md border border-input bg-background p-0.5 shrink-0'>
@@ -476,17 +440,6 @@ export function DealBuilderDialog({
                 >
                   <IconPlus className='size-3' />
                   <span>Add Dish from Menu</span>
-                </Button>
-                <Button
-                  type='button'
-                  variant='ghost'
-                  size='sm'
-                  onClick={handleAddCustomPerk}
-                  disabled={isPending}
-                  className='h-7 gap-1 text-xs text-muted-foreground hover:text-foreground'
-                >
-                  <IconPlus className='size-3' />
-                  <span>Add Free Bonus</span>
                 </Button>
               </div>
 

@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { toPaisa } from '@/lib/money';
-import { useCreatePlatformRestaurant } from '../api/platform-query';
+import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
 import { RestaurantNameAvailability } from '@/features/auth/components/restaurant-name-availability';
 import type { CreateRestaurantResponse } from '../types';
 
@@ -29,8 +29,10 @@ interface CreateRestaurantDialogProps {
 export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantDialogProps) {
   const t = useTranslations('platformRestaurants');
   const createMutation = useCreatePlatformRestaurant();
+  const { data: cities } = usePlatformCities();
 
   const [name, setName] = React.useState('');
+  const [cityId, setCityId] = React.useState('');
   const [contactPhone, setContactPhone] = React.useState('');
   const [whatsappNumber, setWhatsappNumber] = React.useState('');
   const [addressText, setAddressText] = React.useState('');
@@ -45,6 +47,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
     if (!open) {
       setResult(null);
       setName('');
+      setCityId('');
       setContactPhone('');
       setWhatsappNumber('');
       setAddressText('');
@@ -72,6 +75,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
     try {
       const res = await createMutation.mutateAsync({
         name: name.trim(),
+        cityId: cityId || undefined,
         contactPhone: contactPhone.trim(),
         whatsappNumber: whatsappNumber.trim() || undefined,
         addressText: addressText.trim() || undefined,
@@ -194,6 +198,23 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   onChange={(e) => setName(e.target.value)}
                 />
                 <RestaurantNameAvailability name={name} />
+              </div>
+
+              <div className='space-y-1.5'>
+                <Label htmlFor='create-city'>District / City</Label>
+                <select
+                  id='create-city'
+                  value={cityId}
+                  onChange={(e) => setCityId(e.target.value)}
+                  className='h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+                >
+                  <option value=''>Select District (Default: Lower Dir)</option>
+                  {cities?.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>

@@ -87,6 +87,23 @@ src/features/<module>/
 | | `PATCH /admin/restaurants/:id/slug` | Admin | Change restaurant URL slug |
 | | `POST /admin/restaurants/:id/setup-link` | Admin | Issue new single-use password setup link |
 | | `GET / POST / PATCH /admin/areas` | Admin | Master delivery areas CRUD |
+| | `POST /admin/areas/:id/approve` | Admin | Approve & publish unverified area to storefront |
+| | `POST /admin/areas/:id/merge` | Admin | Merge duplicate area into canonical area + register alias |
+| | `DELETE /admin/areas/:id` | Admin | Safely delete delivery area |
+| | `GET / POST / PATCH /admin/cities` | Admin | District / City management CRUD |
+| | `POST /me/restaurant/delivery-areas/custom` | Owner | Add missing delivery area (auto-checks aliases, defaults unverified) |
+| **Public** | `GET /public/cities` | Public | Active districts listing |
 | | `GET /admin/order-intents?ref=` | Admin | Support lookup by reference code |
 | | `GET /admin/activity?range=7d\|30d` | Admin | Platform-wide activity metrics per restaurant |
 | | `GET /admin/audit-logs` | Admin | Paginated audit trail (`?restaurantId&action&page`) |
+
+---
+
+## 5. District & Area State Management Rules
+
+1. **City-Scoped Query Keys**:
+   - `useDeliveryAreas(profile?.cityId)` MUST include `profile?.cityId` in its TanStack Query key (`['restaurant-delivery-areas', cityId]`).
+   - Profile tab district changes auto-invalidate `RESTAURANT_AREAS_KEY` on `useUpdateProfile.onSuccess` so delivery area lists instantly switch without requiring a manual page refresh.
+2. **Area Review & Alias Workflow**:
+   - Areas created by owners carry `isVerified: false`.
+   - Admin settings view filters by "Needs Review" and provides Approve Dialog (cleaning name/slug) and Merge Dialog (linking to canonical target and establishing permanent `AreaAlias`).

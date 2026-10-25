@@ -23,6 +23,8 @@ export interface PlatformRestaurant {
   addressText: string | null;
   cuisines: string[];
   minOrderAmount: number | string | null;
+  cityId?: string | null;
+  city?: { id: string; name: string; slug: string } | null;
   status: PlatformRestaurantStatus;
   statusReason: string | null;
   statusChangedAt: string | null;
@@ -76,6 +78,7 @@ export interface CreateRestaurantInput {
   addressText?: string;
   cuisines?: string[];
   minOrderAmount?: number;
+  cityId?: string;
   owner: CreateRestaurantOwnerInput;
 }
 
@@ -112,18 +115,52 @@ export interface PaginatedRestaurantsResponse {
   };
 }
 
-export interface MasterArea {
+export interface PlatformCity {
   id: string;
   name: string;
   slug: string;
   sortOrder: number;
   isActive: boolean;
+  areasCount?: number;
+  restaurantsCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCityInput {
+  name: string;
+  slug?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}
+
+export interface MasterArea {
+  id: string;
+  cityId?: string;
+  cityName?: string;
+  citySlug?: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isCustomCreated?: boolean;
+  isVerified?: boolean;
   activeRestaurantsCount: number;
   createdAt: string;
   updatedAt: string;
 }
 
+export interface ApproveAreaInput {
+  name?: string;
+  slug?: string;
+}
+
+export interface MergeAreaInput {
+  targetAreaId: string;
+}
+
 export interface CreateAreaInput {
+  cityId?: string;
   name: string;
   slug?: string;
   sortOrder?: number;
@@ -131,6 +168,7 @@ export interface CreateAreaInput {
 }
 
 export interface UpdateAreaInput {
+  cityId?: string;
   name?: string;
   slug?: string;
   sortOrder?: number;

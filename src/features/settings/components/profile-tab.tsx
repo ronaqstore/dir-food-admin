@@ -19,7 +19,8 @@ import {
   useUploadRestaurantImage,
   useDeleteRestaurantImage,
   usePublishReadiness,
-  usePublishRestaurant
+  usePublishRestaurant,
+  useCities
 } from '../api/restaurant-query';
 import type { ManualAvailabilityStatus } from '../types';
 
@@ -27,6 +28,7 @@ export function ProfileTab() {
   const t = useTranslations();
   const { data: profile, isLoading } = useRestaurantProfile();
   const { data: readiness, refetch: refetchReadiness } = usePublishReadiness();
+  const { data: cities } = useCities();
 
   const updateProfile = useUpdateProfile();
   const updateAvailability = useUpdateAvailability();
@@ -36,6 +38,7 @@ export function ProfileTab() {
 
   // Form states
   const [name, setName] = React.useState('');
+  const [cityId, setCityId] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [addressText, setAddressText] = React.useState('');
   const [contactPhone, setContactPhone] = React.useState('');
@@ -52,6 +55,7 @@ export function ProfileTab() {
   React.useEffect(() => {
     if (profile) {
       setName(profile.name || '');
+      setCityId(profile.cityId || '');
       setDescription(profile.description || '');
       setAddressText(profile.addressText || '');
       setContactPhone(profile.contactPhone || '');
@@ -67,6 +71,7 @@ export function ProfileTab() {
     try {
       await updateProfile.mutateAsync({
         name: name.trim() || undefined,
+        cityId: cityId || undefined,
         description: description.trim() || undefined,
         addressText: addressText.trim() || undefined,
         contactPhone: contactPhone.trim() || undefined,
@@ -500,15 +505,35 @@ export function ProfileTab() {
             </div>
           </div>
 
-          <div className='space-y-1.5'>
-            <Label htmlFor='address-text'>{t('restaurantSettings.address')}</Label>
-            <Input
-              id='address-text'
-              value={addressText}
-              onChange={(e) => setAddressText(e.target.value)}
-              placeholder={t('restaurantSettings.addressPlaceholder')}
-              disabled={isPending}
-            />
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            <div className='space-y-1.5'>
+              <Label htmlFor='restaurant-city'>District / City</Label>
+              <select
+                id='restaurant-city'
+                value={cityId}
+                onChange={(e) => setCityId(e.target.value)}
+                disabled={isPending}
+                className='h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+              >
+                <option value=''>Select District (Default: Lower Dir)</option>
+                {cities?.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className='space-y-1.5'>
+              <Label htmlFor='address-text'>{t('restaurantSettings.address')}</Label>
+              <Input
+                id='address-text'
+                value={addressText}
+                onChange={(e) => setAddressText(e.target.value)}
+                placeholder={t('restaurantSettings.addressPlaceholder')}
+                disabled={isPending}
+              />
+            </div>
           </div>
 
           <div className='space-y-1.5'>

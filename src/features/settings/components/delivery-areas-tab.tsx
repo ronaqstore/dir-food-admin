@@ -9,9 +9,22 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { DeliveryAreasTabSkeleton } from '@/components/skeletons/settings-skeleton';
-import { IconMapPin, IconSearch } from '@tabler/icons-react';
+import { IconMapPin, IconSearch, IconPlus } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
-import { useDeliveryAreas, useUpdateDeliveryAreas } from '../api/restaurant-query';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  useDeliveryAreas,
+  useUpdateDeliveryAreas,
+  useCreateCustomDeliveryArea,
+  useRestaurantProfile,
+} from '../api/restaurant-query';
 import type { DeliveryAreaItemDTO } from '../types';
 
 interface AreaRowState {
@@ -21,15 +34,46 @@ interface AreaRowState {
   isServed: boolean;
   feeInput: string;
   minOrderInput: string;
+  isVerified?: boolean;
 }
 
 export function DeliveryAreasTab() {
   const t = useTranslations();
-  const { data: areas, isLoading } = useDeliveryAreas();
+  const { data: profile } = useRestaurantProfile();
+  const { data: areas, isLoading } = useDeliveryAreas(profile?.cityId);
   const updateAreas = useUpdateDeliveryAreas();
+  const createCustomArea = useCreateCustomDeliveryArea();
 
   const [rows, setRows] = React.useState<AreaRowState[]>([]);
   const [search, setSearch] = React.useState('');
+  const [isAddOpen, setIsAddOpen] = React.useState(false);
+  const [newAreaName, setNewAreaName] = React.useState('');
+  const [newAreaFee, setNewAreaFee] = React.useState('');
+  const [newAreaMinOrder, setNewAreaMinOrder] = React.useState('');
+
+  const handleCreateArea = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAreaName.trim()) {
+      toast.error('Please enter an area name');
+      return;
+    }
+
+    try {
+      await createCustomArea.mutateAsync({
+        name: newAreaName.trim(),
+        deliveryFee: newAreaFee ? toPaisa(Number(newAreaFee)) : null,
+        minOrderAmount: newAreaMinOrder ? toPaisa(Number(newAreaMinOrder)) : null,
+      });
+      toast.success(`"${newAreaName.trim()}" added to your delivery areas!`);
+      setIsAddOpen(false);
+      setNewAreaName('');
+      setNewAreaFee('');
+      setNewAreaMinOrder('');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t('common.unexpectedError');
+      toast.error(msg);
+    }
+  };
 
   const filteredRows = React.useMemo(() => {
     if (!search.trim()) return rows;
@@ -38,7 +82,7 @@ export function DeliveryAreasTab() {
   }, [rows, search]);
 
   React.useEffect(() => {
-    if (areas && areas.length > 0) {
+    if (areas) {
       setRows(
         areas.map((a: DeliveryAreaItemDTO) => ({
           areaId: a.areaId,
@@ -46,7 +90,8 @@ export function DeliveryAreasTab() {
           slug: a.slug,
           isServed: a.isServed,
           feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '',
-          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : ''
+          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : '',
+          isVerified: a.isVerified !== false
         }))
       );
     }
@@ -87,9 +132,24 @@ export function DeliveryAreasTab() {
   }
 
   const servedCount = rows.filter((r) => r.isServed).length;
+  const currentDistrictName = profile?.city?.name ?? 'Lower Dir';
 
   return (
     <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
+      {/* District Notice Banner */}
+      <div className='flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-foreground'>
+        <div className='flex items-center gap-2'>
+          <IconMapPin className='size-4 text-primary shrink-0' />
+          <span>
+            Operating in District: <strong className='font-semibold text-primary'>{currentDistrictName}</strong>.
+            Delivery areas are scoped to your district so customers in {currentDistrictName} can order from you.
+          </span>
+        </div>
+        <span className='hidden sm:inline text-muted-foreground text-[11px]'>
+          (Change in Profile Settings)
+        </span>
+      </div>
+
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b pb-4'>
         <div>
           <h3 className='text-base font-semibold text-foreground'>
@@ -114,6 +174,79 @@ export function DeliveryAreasTab() {
           <Badge variant='secondary' className='w-fit text-xs font-normal whitespace-nowrap'>
             {t('restaurantSettings.areasServedCount', { served: servedCount, total: rows.length })}
           </Badge>
+
+          <Button
+            size='sm'
+            variant='outline'
+            className='h-8 text-xs gap-1.5'
+            onClick={() => setIsAddOpen(true)}
+          >
+            <IconPlus className='size-3.5' />
+            Add Missing Area
+          </Button>
+
+          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <DialogContent className='sm:max-w-md'>
+              <form onSubmit={handleCreateArea}>
+                <DialogHeader>
+                  <DialogTitle>Add Delivery Area</DialogTitle>
+                  <DialogDescription>
+                    Add a locality or neighborhood in your city. It will be enabled for your restaurant immediately.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className='space-y-4 py-4'>
+                  <div className='space-y-2'>
+                    <label className='text-xs font-medium'>Area Name *</label>
+                    <Input
+                      required
+                      placeholder='e.g. Qambar, Shahi Khel, Khazana'
+                      value={newAreaName}
+                      onChange={(e) => setNewAreaName(e.target.value)}
+                      className='h-9 text-xs'
+                    />
+                  </div>
+                  <div className='grid grid-cols-2 gap-3'>
+                    <div className='space-y-2'>
+                      <label className='text-xs font-medium'>Delivery Fee (Rs)</label>
+                      <Input
+                        type='number'
+                        min='0'
+                        placeholder='e.g. 100 (empty = WhatsApp)'
+                        value={newAreaFee}
+                        onChange={(e) => setNewAreaFee(e.target.value)}
+                        className='h-9 text-xs'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <label className='text-xs font-medium'>Min Order (Rs)</label>
+                      <Input
+                        type='number'
+                        min='0'
+                        placeholder='Default'
+                        value={newAreaMinOrder}
+                        onChange={(e) => setNewAreaMinOrder(e.target.value)}
+                        className='h-9 text-xs'
+                      />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    onClick={() => setIsAddOpen(false)}
+                    disabled={createCustomArea.isPending}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type='submit' disabled={createCustomArea.isPending}>
+                    {createCustomArea.isPending ? <Spinner className='size-4 me-2' /> : null}
+                    Add & Enable
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -139,6 +272,14 @@ export function DeliveryAreasTab() {
                 >
                   {row.name}
                 </span>
+                {row.isVerified === false && (
+                  <Badge
+                    variant='outline'
+                    className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
+                  >
+                    Pending Verification
+                  </Badge>
+                )}
               </div>
             </div>
 

@@ -7,6 +7,10 @@ import type {
   MasterArea,
   CreateAreaInput,
   UpdateAreaInput,
+  ApproveAreaInput,
+  MergeAreaInput,
+  PlatformCity,
+  CreateCityInput,
   PaginatedRestaurantsResponse,
   PlatformRestaurant,
   PlatformRestaurantDetail,
@@ -111,12 +115,38 @@ export function useIssueSetupLink() {
   });
 }
 
+export const PLATFORM_CITIES_QUERY_KEY = ['platform-cities'] as const;
+
+export function usePlatformCities() {
+  return useQuery({
+    queryKey: PLATFORM_CITIES_QUERY_KEY,
+    queryFn: () => appFetch<PlatformCity[]>('/api/admin/cities')
+  });
+}
+
+export function useCreatePlatformCity() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateCityInput) =>
+      appFetch<PlatformCity>('/api/admin/cities', {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: PLATFORM_CITIES_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
+  });
+}
+
 export const MASTER_AREAS_QUERY_KEY = ['master-areas'] as const;
 
-export function useMasterAreas() {
+export function useMasterAreas(cityId?: string) {
   return useQuery({
-    queryKey: MASTER_AREAS_QUERY_KEY,
-    queryFn: () => appFetch<MasterArea[]>('/api/admin/areas')
+    queryKey: [...MASTER_AREAS_QUERY_KEY, cityId],
+    queryFn: () =>
+      appFetch<MasterArea[]>(`/api/admin/areas${cityId ? `?cityId=${encodeURIComponent(cityId)}` : ''}`)
   });
 }
 
@@ -143,6 +173,50 @@ export function useUpdateMasterArea() {
       appFetch<MasterArea>(`/api/admin/areas/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
+  });
+}
+
+export function useDeleteMasterArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) =>
+      appFetch<{ success: boolean; message: string }>(`/api/admin/areas/${id}`, {
+        method: 'DELETE'
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
+  });
+}
+
+export function useApproveMasterArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input?: ApproveAreaInput }) =>
+      appFetch<MasterArea>(`/api/admin/areas/${id}/approve`, {
+        method: 'POST',
+        body: JSON.stringify(input || {})
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
+    }
+  });
+}
+
+export function useMergeMasterArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ sourceAreaId, targetAreaId }: { sourceAreaId: string; targetAreaId: string }) =>
+      appFetch<{ success: boolean; message: string }>(`/api/admin/areas/${sourceAreaId}/merge`, {
+        method: 'POST',
+        body: JSON.stringify({ targetAreaId })
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });

@@ -18,6 +18,7 @@ export interface RegisterRestaurantPayload {
   whatsappNumber?: string;
   description?: string;
   cuisines?: string[];
+  cityId?: string;
 }
 
 export interface RegisterRestaurantResponse {

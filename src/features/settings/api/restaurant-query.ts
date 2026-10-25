@@ -42,6 +42,7 @@ export function useUpdateProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
+      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -84,6 +85,7 @@ export function useUploadRestaurantImage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
+      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -113,6 +115,7 @@ export function usePublishRestaurant() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
+      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -140,9 +143,9 @@ export function useUpdateOperatingHours() {
   });
 }
 
-export function useDeliveryAreas() {
+export function useDeliveryAreas(cityId?: string | null) {
   return useQuery({
-    queryKey: RESTAURANT_AREAS_KEY,
+    queryKey: [...RESTAURANT_AREAS_KEY, cityId],
     queryFn: () => appFetch<DeliveryAreaItemDTO[]>('/api/restaurant/delivery-areas')
   });
 }
@@ -160,5 +163,33 @@ export function useUpdateDeliveryAreas() {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
     }
+  });
+}
+
+export function useCreateCustomDeliveryArea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: { name: string; deliveryFee?: number | null; minOrderAmount?: number | null }) =>
+      appFetch<DeliveryAreaItemDTO>('/api/restaurant/delivery-areas/custom', {
+        method: 'POST',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
+      queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
+    }
+  });
+}
+
+export const PUBLIC_CITIES_KEY = ['public-cities'] as const;
+
+export function useCities() {
+  return useQuery({
+    queryKey: PUBLIC_CITIES_KEY,
+    queryFn: () =>
+      appFetch<Array<{ id: string; name: string; slug: string; sortOrder: number }>>(
+        '/api/public/cities'
+      )
   });
 }
