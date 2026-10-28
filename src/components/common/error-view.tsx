@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import * as Sentry from '@sentry/nextjs';
 import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n/use-t';
 import type { AppErrorProps } from '@/types/pages';
 
 import { t as staticT } from '@/i18n/static-t';
+
+const sentryEnabled =
+  Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN) &&
+  process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true';
 
 function isChunkLoadError(error: Error): boolean {
   return (
@@ -16,13 +19,23 @@ function isChunkLoadError(error: Error): boolean {
   );
 }
 
+async function reportToSentry(error: unknown) {
+  if (!sentryEnabled) return;
+  try {
+    const Sentry = await import('@sentry/nextjs');
+    Sentry.captureException(error);
+  } catch {
+    // Sentry is optional in local/dev installs.
+  }
+}
+
 interface ErrorContentProps extends AppErrorProps {
   t: (key: string) => string;
 }
 
 function ErrorViewContent({ error, reset, t }: ErrorContentProps) {
   useEffect(() => {
-    Sentry.captureException(error);
+    void reportToSentry(error);
     if (isChunkLoadError(error)) {
       const key = 'pwa-chunk-reload';
       try {
@@ -32,7 +45,7 @@ function ErrorViewContent({ error, reset, t }: ErrorContentProps) {
           return;
         }
       } catch (storageErr) {
-        Sentry.captureException(storageErr);
+        void reportToSentry(storageErr);
       }
     }
   }, [error]);
