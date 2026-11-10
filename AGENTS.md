@@ -8,7 +8,7 @@ This document is the **single source of truth** for AI coding agents and develop
 
 **Dir Food** is a WhatsApp-first restaurant discovery and food ordering platform for Timergara and Lower Dir, KPK, Pakistan.
 
-- **User Roles in `dir-food-admin` (`http://localhost:3006`)**:
+- **User Roles in `dir-food-admin` (`http://localhost:3012`)**:
   1. **Restaurant Owner (`RESTAURANT_OWNER`)**: Manages their own restaurant — profile, WhatsApp number, weekly operating hours (`Asia/Karachi`), live availability (`AUTO`, `CLOSED`, `TEMP_UNAVAILABLE`), self-serve publishing (`Go Live` starting 30-day trial), menu categories, menu items with variants (`Half`/`Full`) & R2 images, served delivery areas & fees, incoming WhatsApp order requests (`TM-XXXXXX`), and 7d/30d stats.
   2. **Platform Admin (`PLATFORM_ADMIN`)**: Manages the platform — creates/onboards restaurants, generates single-use password setup links, approves/suspends/deactivates restaurants, extends/shortens 30-day subscriptions, manages master delivery areas (Timergara, Balambat, etc.), looks up order intents by reference, and audits platform activity.
 
@@ -50,7 +50,7 @@ src/features/<module>/
 
 ---
 
-## 4. Backend API Endpoints Catalog (`http://localhost:4000`)
+## 4. Backend API Endpoints Catalog (`http://localhost:3011`)
 
 | Domain | Method & Path | Role | Description |
 |---|---|---|---|

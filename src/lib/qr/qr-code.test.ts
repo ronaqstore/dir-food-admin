@@ -13,7 +13,7 @@ describe('QrCodeEncoder', () => {
   });
 
   it('encodes standard local restaurant URL without error', () => {
-    const url = 'http://localhost:3005/r/dir-hujra-restarents';
+    const url = 'http://localhost:3013/r/dir-hujra-restarents';
     const qr = QrCodeEncoder.encodeText(url, QrEcc.MEDIUM);
     assert.equal(qr.version, 4);
     assert.equal(qr.size, 33); // 4 * 4 + 17

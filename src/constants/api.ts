@@ -1,4 +1,4 @@
-export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000').replace(
+export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3011').replace(
   /\/+$/,
   ''
 );
@@ -6,4 +6,4 @@ export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhos
 export const APP_BASE_URL =
   typeof window !== 'undefined'
     ? ''
-    : (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3006').replace(/\/+$/, '');
+    : (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3012').replace(/\/+$/, '');

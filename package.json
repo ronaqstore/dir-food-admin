@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3006",
+    "dev": "next dev -p 3012",
     "build": "next build",
-    "start": "next start -p 3006",
+    "start": "next start -p 3012",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test 'src/**/*.test.ts'",
     "check": "node scripts/run-checks.mjs",

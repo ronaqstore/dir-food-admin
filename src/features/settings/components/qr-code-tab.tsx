@@ -32,14 +32,14 @@ export function QrCodeTab() {
   }, [profile?.logoUrl]);
 
   const [storefrontBase, setStorefrontBase] = React.useState<string>(
-    () => (process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3005').replace(/\/+$/, '')
+    () => (process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3013').replace(/\/+$/, '')
   );
 
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_WEB_URL) {
       setStorefrontBase(process.env.NEXT_PUBLIC_WEB_URL.replace(/\/+$/, ''));
     } else if (typeof window !== 'undefined') {
-      setStorefrontBase(`${window.location.protocol}//${window.location.hostname}:3005`);
+      setStorefrontBase(`${window.location.protocol}//${window.location.hostname}:3013`);
     }
   }, []);
 

@@ -30,7 +30,7 @@ import type {
 import '../styles/globals.css';
 
 export function generateMetadata(): Metadata {
-  const metadataBase = new URL(env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3006');
+  const metadataBase = new URL(env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3012');
 
   return {
     metadataBase,
