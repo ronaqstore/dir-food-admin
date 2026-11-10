@@ -8,7 +8,6 @@ import {
   IconAlertCircle,
   IconBrandWhatsapp,
   IconBuildingStore,
-  IconCheck,
   IconClock,
   IconCopy,
   IconExternalLink,

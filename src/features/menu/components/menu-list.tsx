@@ -31,8 +31,6 @@ import {
   IconX,
   IconChevronDown,
   IconChevronUp,
-  IconCheck,
-  IconAlertCircle
 } from '@tabler/icons-react';
 import { formatPkr } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';

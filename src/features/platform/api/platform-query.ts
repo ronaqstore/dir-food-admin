@@ -8,7 +8,6 @@ import type {
   CreateAreaInput,
   UpdateAreaInput,
   ApproveAreaInput,
-  MergeAreaInput,
   PlatformCity,
   CreateCityInput,
   PaginatedRestaurantsResponse,

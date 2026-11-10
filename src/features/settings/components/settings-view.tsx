@@ -8,7 +8,7 @@ import { ProfileTab } from './profile-tab';
 import { HoursTab } from './hours-tab';
 import { DeliveryAreasTab } from './delivery-areas-tab';
 import { QrCodeTab } from './qr-code-tab';
-import { AppearanceSettings } from '@/features/appearance/components/appearance-settings';
+import { AppearanceSettings } from '@/components/common/appearance-settings';
 
 export function SettingsView() {
   const t = useTranslations();

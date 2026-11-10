@@ -7,14 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { CategoryListSkeleton } from '@/components/skeletons/categories-skeleton';
-import { Icons } from '@/components/icons';
 import {
   IconPlus,
   IconPencil,
   IconChevronUp,
   IconChevronDown,
   IconFolder,
-  IconArrowsSort
 } from '@tabler/icons-react';
 import { useCategories, useUpdateCategory, useReorderCategories } from '../api/categories-query';
 import { CategoryDialog } from './category-dialog';

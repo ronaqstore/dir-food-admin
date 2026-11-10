@@ -16,9 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
-import { Switch } from '@/components/ui/switch';
-import { IconPlus, IconTrash, IconPhoto, IconUpload, IconMinus, IconSparkles } from '@tabler/icons-react';
-import { toPaisa, fromPaisa, formatPkr } from '@/lib/money';
+import { IconPlus, IconTrash, IconPhoto, IconUpload } from '@tabler/icons-react';
+import { toPaisa, fromPaisa } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
 import {
   useCreateMenuItem,

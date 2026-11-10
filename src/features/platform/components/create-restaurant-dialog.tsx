@@ -18,7 +18,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { toPaisa } from '@/lib/money';
 import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
-import { RestaurantNameAvailability } from '@/features/auth/components/restaurant-name-availability';
+import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
 import type { CreateRestaurantResponse } from '../types';
 
 interface CreateRestaurantDialogProps {

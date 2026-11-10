@@ -1,4 +1,4 @@
-import { AppearanceSettings } from '@/features/appearance/components/appearance-settings';
+import { AppearanceSettings } from '@/components/common/appearance-settings';
 import { getTranslations } from 'next-intl/server';
 import { APP_NAME } from '@/config/site';
 import type { Metadata } from 'next';

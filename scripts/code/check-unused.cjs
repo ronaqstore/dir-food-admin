@@ -40,7 +40,8 @@ const shouldCheckExports = !checkOnlyImports;
 const r = new Reporter("Unused Imports & Exports Audit", { emoji: "🧹" });
 
 function normPath(p) {
-  return path.normalize(path.resolve(p)).toLowerCase().replace(/\\/g, "/");
+  const resolved = path.normalize(path.resolve(p)).replace(/\\/g, "/");
+  return process.platform === "win32" ? resolved.toLowerCase() : resolved;
 }
 
 function resolveModule(fromFile, source) {
@@ -259,6 +260,17 @@ for (const absPath of allFiles) {
       }
     },
 
+    ImportExpression(p) {
+      // Dynamic import("...") — treat module as fully consumed (named + default)
+      if (!shouldCheckExports) return;
+      const src = p.node.source;
+      if (!src || src.type !== "StringLiteral") return;
+      const resolved = resolveModule(absPath, src.value);
+      if (!resolved) return;
+      if (!directImports.has(resolved)) directImports.set(resolved, new Set());
+      directImports.get(resolved).add("*");
+    },
+
     ExportDefaultDeclaration(p) {
       if (shouldCheckExports) {
         exports.set("default", {
@@ -269,6 +281,7 @@ for (const absPath of allFiles) {
         });
       }
     },
+
 
     ExportNamedDeclaration(p) {
       if (!shouldCheckExports) return;

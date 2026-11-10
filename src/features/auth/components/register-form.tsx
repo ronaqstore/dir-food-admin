@@ -12,7 +12,7 @@ import { Icons } from '@/components/icons';
 import { createRegisterSchema, type RegisterFormValues } from '../schemas/register.schema';
 import { registerRestaurant } from '../api/auth.service';
 import { normalizePhone } from '@/lib/auth/phone';
-import { RestaurantNameAvailability } from './restaurant-name-availability';
+import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
 import { useCities } from '@/features/settings/api/restaurant-query';
 
 export function RegisterForm() {

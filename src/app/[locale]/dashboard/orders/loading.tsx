@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { OrdersListSkeleton } from '@/components/skeletons/orders-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 

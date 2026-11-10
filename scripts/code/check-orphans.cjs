@@ -28,7 +28,8 @@ const srcRoot = path.join(ROOT, "src");
 const r = new Reporter("Orphan Components & Hooks Audit", { emoji: "🧟" });
 
 function normPath(p) {
-  return path.normalize(path.resolve(p)).toLowerCase().replace(/\\/g, "/");
+  const resolved = path.normalize(path.resolve(p)).replace(/\\/g, "/");
+  return process.platform === "win32" ? resolved.toLowerCase() : resolved;
 }
 
 function resolveModule(fromFile, source) {
@@ -143,12 +144,19 @@ while (queue.length > 0) {
       }
     },
     CallExpression(p) {
-      // Dynamic imports: import(...)
+      // Legacy Babel: import() as CallExpression(Import)
       if (p.node.callee && p.node.callee.type === "Import") {
         const arg = p.node.arguments[0];
         if (arg && arg.type === "StringLiteral") {
           enqueue(resolveModule(currentPath, arg.value));
         }
+      }
+    },
+    ImportExpression(p) {
+      // Modern Babel: import() as ImportExpression
+      const src = p.node.source;
+      if (src && src.type === "StringLiteral") {
+        enqueue(resolveModule(currentPath, src.value));
       }
     },
   });

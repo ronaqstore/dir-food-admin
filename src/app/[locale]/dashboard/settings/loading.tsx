@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 
