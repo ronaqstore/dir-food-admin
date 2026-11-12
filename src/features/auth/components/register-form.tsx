@@ -13,6 +13,7 @@ import { createRegisterSchema, type RegisterFormValues } from '../schemas/regist
 import { registerRestaurant } from '../api/auth.service';
 import { normalizePhone } from '@/lib/auth/phone';
 import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { useCities } from '@/features/settings/api/restaurant-query';
 
 export function RegisterForm() {
@@ -118,19 +119,21 @@ export function RegisterForm() {
                   <label htmlFor='reg-city' className='text-sm font-medium text-foreground'>
                     District / City
                   </label>
-                  <select
+                  <SearchableSelect
                     id='reg-city'
                     value={field.state.value || ''}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className='h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-                  >
-                    <option value=''>Select District (Default: Lower Dir)</option>
-                    {cities?.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => field.handleChange(val)}
+                    placeholder='Select District (Default: Lower Dir)'
+                    searchPlaceholder='Search district or city...'
+                    options={
+                      cities?.map((c) => ({
+                        value: c.id,
+                        label: c.name,
+                        sublabel: c.slug || undefined
+                      })) ?? []
+                    }
+                    allowClear
+                  />
                 </div>
               )}
             />

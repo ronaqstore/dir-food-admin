@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { useCreateMasterArea, useUpdateMasterArea, usePlatformCities } from '../api/platform-query';
 import type { MasterArea } from '../types';
 
@@ -109,19 +110,19 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
             {cities.length > 0 && (
               <div className='space-y-1.5'>
                 <Label htmlFor='area-city'>City / District *</Label>
-                <select
+                <SearchableSelect
                   id='area-city'
-                  className='w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring'
                   value={cityId}
-                  onChange={(e) => setCityId(e.target.value)}
+                  onChange={setCityId}
+                  placeholder='Select District / City'
+                  searchPlaceholder='Search district...'
+                  options={cities.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+                    sublabel: c.slug || undefined
+                  }))}
                   required
-                >
-                  {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
             )}
 

@@ -20,6 +20,7 @@ import { toPaisa } from '@/lib/money';
 import { isReservedPhoneNumber } from '@/lib/auth/phone';
 import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
 import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import type { CreateRestaurantResponse } from '../types';
 
 interface CreateRestaurantDialogProps {
@@ -212,19 +213,21 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
               <div className='space-y-1.5'>
                 <Label htmlFor='create-city'>District / City</Label>
-                <select
+                <SearchableSelect
                   id='create-city'
                   value={cityId}
-                  onChange={(e) => setCityId(e.target.value)}
-                  className='h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-                >
-                  <option value=''>Select District (Default: Lower Dir)</option>
-                  {cities?.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                  onChange={setCityId}
+                  placeholder='Select District (Default: Lower Dir)'
+                  searchPlaceholder='Search district or city...'
+                  options={
+                    cities?.map((c) => ({
+                      value: c.id,
+                      label: c.name,
+                      sublabel: c.slug || undefined
+                    })) ?? []
+                  }
+                  allowClear
+                />
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>

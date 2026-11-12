@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { IconPlus, IconTrash, IconPhoto, IconUpload } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
@@ -463,22 +464,22 @@ export function MenuItemDialog({
                 {t('menuItems.category')}
                 <span className='text-destructive ms-1'>*</span>
               </Label>
-              <select
+              <SearchableSelect
                 id='item-category'
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
+                onChange={setCategoryId}
                 disabled={isPending}
-                className='w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs focus:border-ring focus:outline-hidden focus:ring-1 focus:ring-ring'
-              >
-                <option value='' disabled>
-                  {t('menuItems.selectCategory')}
-                </option>
-                {categories?.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                placeholder={t('menuItems.selectCategory')}
+                searchPlaceholder='Search categories...'
+                options={
+                  categories?.map((cat) => ({
+                    value: cat.id,
+                    label: cat.name
+                  })) ?? []
+                }
+                pageSize={20}
+                required
+              />
               {errors.categoryId ? (
                 <p className='text-xs text-destructive'>{errors.categoryId}</p>
               ) : null}

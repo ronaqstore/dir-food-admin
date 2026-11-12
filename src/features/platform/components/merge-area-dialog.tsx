@@ -12,13 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { Spinner } from '@/components/ui/spinner';
 import { useMergeMasterArea } from '../api/platform-query';
 import type { MasterArea } from '../types';
@@ -117,18 +111,20 @@ export function MergeAreaDialog({
                   No other verified areas available in this district to merge into.
                 </p>
               ) : (
-                <Select value={targetAreaId} onValueChange={(val) => setTargetAreaId(val || '')}>
-                  <SelectTrigger id='target-area' className='w-full'>
-                    <SelectValue placeholder='Select destination area...' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {candidateTargetAreas.map((area) => (
-                      <SelectItem key={area.id} value={area.id}>
-                        {area.name} <span className='text-muted-foreground'>({area.cityName || 'Area'})</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchableSelect
+                  id='target-area'
+                  value={targetAreaId}
+                  onChange={setTargetAreaId}
+                  placeholder='Select destination area...'
+                  searchPlaceholder='Search areas...'
+                  options={candidateTargetAreas.map((area) => ({
+                    value: area.id,
+                    label: area.name,
+                    sublabel: area.cityName || 'Area'
+                  }))}
+                  pageSize={20}
+                  required
+                />
               )}
             </div>
           </div>

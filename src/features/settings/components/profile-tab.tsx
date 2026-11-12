@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import { IconPhoto, IconUpload, IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { isReservedPhoneNumber } from '@/lib/auth/phone';
@@ -518,20 +519,22 @@ export function ProfileTab() {
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='space-y-1.5'>
               <Label htmlFor='restaurant-city'>District / City</Label>
-              <select
+              <SearchableSelect
                 id='restaurant-city'
                 value={cityId}
-                onChange={(e) => setCityId(e.target.value)}
+                onChange={setCityId}
                 disabled={isPending}
-                className='h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-              >
-                <option value=''>Select District (Default: Lower Dir)</option>
-                {cities?.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                placeholder='Select District (Default: Lower Dir)'
+                searchPlaceholder='Search district or city...'
+                options={
+                  cities?.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+                    sublabel: c.slug || undefined
+                  })) ?? []
+                }
+                allowClear
+              />
             </div>
 
             <div className='space-y-1.5'>
