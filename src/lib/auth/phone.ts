@@ -21,3 +21,25 @@ export function isValidPkMobile(phone: string): boolean {
   }
   return /^03\d{9}$/.test(normalizePhone(phone));
 }
+
+/**
+ * Reserved platform / system numbers:
+ * - 03115514151 -> Super Admin / Platform Admin Login 1
+ * - 03059596704 -> Super Admin / Platform Admin Login 2
+ * - 03029825213 -> Super Admin Public Support Contact 1
+ * - 03484894115 -> Super Admin Public Support Contact 2
+ */
+export const RESERVED_PHONE_NUMBERS = [
+  '03115514151',
+  '03059596704',
+  '03029825213',
+  '03484894115'
+] as const;
+
+export function isReservedPhoneNumber(phone: string): boolean {
+  if (!phone) {
+    return false;
+  }
+  const normalized = normalizePhone(phone);
+  return (RESERVED_PHONE_NUMBERS as readonly string[]).includes(normalized);
+}

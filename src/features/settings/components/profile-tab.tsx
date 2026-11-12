@@ -12,6 +12,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconPhoto, IconUpload, IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
+import { isReservedPhoneNumber } from '@/lib/auth/phone';
 import {
   useRestaurantProfile,
   useUpdateProfile,
@@ -68,6 +69,15 @@ export function ProfileTab() {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (
+      (contactPhone.trim() && isReservedPhoneNumber(contactPhone)) ||
+      (whatsappNumber.trim() && isReservedPhoneNumber(whatsappNumber))
+    ) {
+      toast.error('This phone number is already in use');
+      return;
+    }
+
     try {
       await updateProfile.mutateAsync({
         name: name.trim() || undefined,

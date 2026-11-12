@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
-import { checkRestaurantName, type CheckRestaurantNameResult } from '../api/auth.service';
+import { checkRestaurantName, type CheckRestaurantNameResult } from '@/features/auth/api/auth.service';
 
 interface RestaurantNameAvailabilityProps {
   name: string;

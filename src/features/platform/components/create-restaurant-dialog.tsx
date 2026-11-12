@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { toPaisa } from '@/lib/money';
+import { isReservedPhoneNumber } from '@/lib/auth/phone';
 import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
 import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
 import type { CreateRestaurantResponse } from '../types';
@@ -61,6 +62,15 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
     if (!name.trim() || !contactPhone.trim() || !ownerName.trim() || !ownerPhone.trim()) {
       toast.error(t('fillRequiredFields'));
+      return;
+    }
+
+    if (
+      isReservedPhoneNumber(ownerPhone) ||
+      isReservedPhoneNumber(contactPhone) ||
+      (whatsappNumber.trim() && isReservedPhoneNumber(whatsappNumber))
+    ) {
+      toast.error('This phone number is already in use');
       return;
     }
 
