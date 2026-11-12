@@ -267,10 +267,6 @@ export function PlatformSettingsView() {
         cell: ({ row }) => {
           const area = row.original;
           const isPendingReview = area.isVerified === false;
-          const handleEditClick = (e: React.MouseEvent) => {
-            e.stopPropagation();
-            handleOpenEdit(area);
-          };
 
           return (
             <div
@@ -288,15 +284,6 @@ export function PlatformSettingsView() {
                   Approve
                 </Button>
               )}
-              <Button
-                size='sm'
-                variant='ghost'
-                className='gap-1 text-xs h-7'
-                onClick={handleEditClick}
-              >
-                <Icons.edit className='size-3.5' />
-                {t('editArea')}
-              </Button>
               <RowActionsMenu
                 actions={[
                   ...(isPendingReview
