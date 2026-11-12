@@ -222,3 +222,21 @@ export function useMergeMasterArea() {
     }
   });
 }
+
+export interface PlatformActivitySummary {
+  totalRestaurants: number;
+  pendingCount: number;
+  activeCount: number;
+  suspendedCount: number;
+  deactivatedCount: number;
+  intentsCreated: number;
+  intentsWhatsappOpened: number;
+}
+
+export function usePlatformActivity(range: '7d' | '30d' = '7d') {
+  return useQuery({
+    queryKey: ['platform-activity', range],
+    queryFn: () => appFetch<PlatformActivitySummary>(`/api/admin/activity?range=${range}`)
+  });
+}
+

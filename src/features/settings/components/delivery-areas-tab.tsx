@@ -196,8 +196,9 @@ export function DeliveryAreasTab() {
                 </DialogHeader>
                 <div className='space-y-4 py-4'>
                   <div className='space-y-2'>
-                    <label className='text-xs font-medium'>Area Name *</label>
+                    <label htmlFor='new-custom-area-name' className='text-xs font-medium'>Area Name *</label>
                     <Input
+                      id='new-custom-area-name'
                       required
                       placeholder='e.g. Qambar, Shahi Khel, Khazana'
                       value={newAreaName}
@@ -207,8 +208,9 @@ export function DeliveryAreasTab() {
                   </div>
                   <div className='grid grid-cols-2 gap-3'>
                     <div className='space-y-2'>
-                      <label className='text-xs font-medium'>Delivery Fee (Rs)</label>
+                      <label htmlFor='new-custom-area-fee' className='text-xs font-medium'>Delivery Fee (Rs)</label>
                       <Input
+                        id='new-custom-area-fee'
                         type='number'
                         min='0'
                         placeholder='e.g. 100 (empty = WhatsApp)'
@@ -218,8 +220,9 @@ export function DeliveryAreasTab() {
                       />
                     </div>
                     <div className='space-y-2'>
-                      <label className='text-xs font-medium'>Min Order (Rs)</label>
+                      <label htmlFor='new-custom-area-min-order' className='text-xs font-medium'>Min Order (Rs)</label>
                       <Input
+                        id='new-custom-area-min-order'
                         type='number'
                         min='0'
                         placeholder='Default'
