@@ -132,46 +132,6 @@ export function PlatformOverview() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <Card className='border-border/60 shadow-sm'>
-        <CardHeader className='pb-3'>
-          <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
-          <CardDescription className='text-xs'>
-            {t('dashboard.platformQuickActionsDesc')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className='flex flex-wrap gap-2.5'>
-          <Button
-            render={<Link href='/dashboard/platform/restaurants' />}
-            variant='default'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.building className='h-4 w-4' />
-            <span>{t('nav.restaurants')}</span>
-          </Button>
-
-          <Button
-            render={<Link href='/dashboard/platform/subscriptions' />}
-            variant='secondary'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.creditCard className='h-4 w-4' />
-            <span>{t('nav.subscriptions')}</span>
-          </Button>
-
-          <Button
-            render={<Link href='/dashboard/platform/settings' />}
-            variant='outline'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.settings className='h-4 w-4' />
-            <span>{t('nav.settings')}</span>
-          </Button>
-        </CardContent>
-      </Card>
 
       {/* Pending Approvals Widget */}
       <Card className='border-border/60 shadow-sm'>
