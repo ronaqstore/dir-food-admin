@@ -377,55 +377,6 @@ export function OwnerOverview() {
         </Card>
       </div>
 
-      {/* Quick Action Shortcuts */}
-      <Card className='border-border/60 shadow-sm'>
-        <CardHeader className='pb-3'>
-          <CardTitle className='text-base font-semibold'>{t('dashboard.quickActions')}</CardTitle>
-          <CardDescription className='text-xs'>{t('dashboard.quickActionsDesc')}</CardDescription>
-        </CardHeader>
-        <CardContent className='flex flex-wrap gap-2.5'>
-          <Button
-            render={<Link href='/dashboard/menu' />}
-            variant='default'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.add className='h-4 w-4' />
-            <span>{t('dashboard.addMenuItem')}</span>
-          </Button>
-
-          <Button
-            render={<Link href='/dashboard/orders' />}
-            variant='secondary'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.receipt className='h-4 w-4' />
-            <span>{t('dashboard.viewLiveOrders')}</span>
-          </Button>
-
-          <Button
-            render={<Link href='/dashboard/settings' />}
-            variant='outline'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.chat className='h-4 w-4' />
-            <span>{t('dashboard.whatsappSettings')}</span>
-          </Button>
-
-          <Button
-            render={<Link href='/dashboard/settings' />}
-            variant='outline'
-            size='sm'
-            className='gap-2'
-          >
-            <Icons.qrCode className='h-4 w-4 text-primary' />
-            <span>{t('dashboard.qrCodeShortcut')}</span>
-          </Button>
-        </CardContent>
-      </Card>
-
       {/* Recent Orders Preview */}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
