@@ -37,7 +37,7 @@ export const navGroups: NavGroup[] = [
       {
         title: 'nav.deals',
         url: '/dashboard/deals',
-        icon: 'sparkles',
+        icon: 'flame',
         isActive: false,
         shortcut: ['d', 'l'],
         items: []

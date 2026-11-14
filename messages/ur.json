@@ -2481,7 +2481,14 @@
     "displayPrice": "دکھائی جانے والی قیمت:",
     "percentOff": "% رعایت)",
     "dealBadge": "ڈیل",
-    "percentOffBadge": "% رعایت"
+    "percentOffBadge": "% رعایت",
+    "addonsTitle": "اضافی اشیاء / ایڈ آنز",
+    "addonsDescription": "گاہکوں کو اضافی چیز، چٹنی یا کولڈ ڈرنک شامل کرنے دیں",
+    "addAddon": "اضافی شامل کریں",
+    "addonNamePlaceholder": "مثلاً اضافی چیز، کولڈ ڈرنک",
+    "removeAddon": "اضافی کو ہٹائیں",
+    "noAddonsHint": "ابھی تک کوئی اضافی چیز شامل نہیں ہے۔ 'اضافی شامل کریں' پر کلک کریں تاکہ کسٹمرز مزید چیزیں منتخب کر سکیں۔",
+    "photoHint": "JPG، PNG یا WebP زیادہ سے زیادہ 3MB"
   },
   "restaurantSettings": {
     "title": "ریسٹورنٹ کی ترتیبات",

@@ -2481,7 +2481,14 @@
     "displayPrice": "Display price:",
     "percentOff": "% off)",
     "dealBadge": "Deal",
-    "percentOffBadge": "% OFF"
+    "percentOffBadge": "% OFF",
+    "addonsTitle": "Optional Add-ons / Extras",
+    "addonsDescription": "Let customers add extras like Extra Cheese, Dip Sauce, or Drink",
+    "addAddon": "Add Extra",
+    "addonNamePlaceholder": "e.g., Extra Cheese, Cold Drink",
+    "removeAddon": "Remove extra",
+    "noAddonsHint": "No add-ons configured. Click Add Extra to offer optional customizations.",
+    "photoHint": "JPG, PNG or WebP up to 3MB"
   },
   "restaurantSettings": {
     "title": "Restaurant Settings",

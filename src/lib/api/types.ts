@@ -187,6 +187,14 @@ export interface MenuItemVariantDTO {
   isActive: boolean;
 }
 
+export interface MenuItemAddonDTO {
+  id: string;
+  name: string;
+  price: number;
+  sortOrder: number;
+  isActive: boolean;
+}
+
 export interface MenuItemDTO {
   id: string;
   restaurantId: string;
@@ -201,6 +209,7 @@ export interface MenuItemDTO {
   isActive: boolean;
   sortOrder: number;
   variants: MenuItemVariantDTO[];
+  addons?: MenuItemAddonDTO[];
   category?: {
     id: string;
     name: string;

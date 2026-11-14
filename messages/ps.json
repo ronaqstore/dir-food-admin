@@ -2481,7 +2481,14 @@
     "displayPrice": "ښودل شوی قیمت:",
     "percentOff": "% تخفیف)",
     "dealBadge": "ډیل",
-    "percentOffBadge": "% تخفیف"
+    "percentOffBadge": "% تخفیف",
+    "addonsTitle": "اضافي توکي / اېډ آنز",
+    "addonsDescription": "پیرودونکو ته اجازه ورکړئ چي اضافي پنیر، چٹني یا څښاک وټاکي",
+    "addAddon": "اضافي اضافه کړئ",
+    "addonNamePlaceholder": "لکه اضافي پنیر، کولډ ډرنک",
+    "removeAddon": "اضافي لرې کړئ",
+    "noAddonsHint": "تر اوسه هیڅ اضافي توکي نشته. د اضافي غوراوي لپاره 'اضافي اضافه کړئ' وټاکئ.",
+    "photoHint": "JPG، PNG یا WebP تر ۳ ایم بي پورې"
   },
   "restaurantSettings": {
     "title": "د هوټل تنظیمات",

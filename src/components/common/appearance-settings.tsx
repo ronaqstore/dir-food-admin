@@ -200,7 +200,7 @@ export function AppearanceSettings() {
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2 text-base'>
-              <Icons.sparkles className='h-4 w-4' />
+              <Icons.palette className='h-4 w-4' />
               {t('appearance.accent')}
             </CardTitle>
             <CardDescription>{t('appearance.accentDescription')}</CardDescription>

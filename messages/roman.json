@@ -2481,7 +2481,14 @@
     "displayPrice": "Dikhayi jane wali qeemat:",
     "percentOff": "% off)",
     "dealBadge": "Deal",
-    "percentOffBadge": "% OFF"
+    "percentOffBadge": "% OFF",
+    "addonsTitle": "Optional Add-ons / Extras",
+    "addonsDescription": "Customer ko extra cheese, dip sauce ya drink add karne dein",
+    "addAddon": "Extra Add Karein",
+    "addonNamePlaceholder": "e.g., Extra Cheese, Cold Drink",
+    "removeAddon": "Extra hatayein",
+    "noAddonsHint": "Koi extra configure nahi hai. 'Extra Add Karein' pe click karein.",
+    "photoHint": "JPG, PNG ya WebP up to 3MB"
   },
   "restaurantSettings": {
     "title": "Restaurant Settings",

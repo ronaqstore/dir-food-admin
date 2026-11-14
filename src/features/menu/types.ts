@@ -13,6 +13,12 @@ export interface CreateItemVariantInput {
   price: number;
 }
 
+export interface CreateItemAddonInput {
+  id?: string;
+  name: string;
+  price: number;
+}
+
 export interface CreateMenuItemInput {
   categoryId?: string;
   name: string;
@@ -21,6 +27,7 @@ export interface CreateMenuItemInput {
   originalPrice?: number | null;
   isDeal?: boolean;
   variants?: CreateItemVariantInput[];
+  addons?: CreateItemAddonInput[];
 }
 
 export interface UpdateMenuItemInput {
@@ -36,6 +43,10 @@ export interface UpdateMenuItemInput {
 
 export interface ReplaceVariantsInput {
   variants: CreateItemVariantInput[];
+}
+
+export interface ReplaceAddonsInput {
+  addons: CreateItemAddonInput[];
 }
 
 export interface MenuItemsFilter {
@@ -62,6 +73,11 @@ export interface ReplaceVariantsPayload {
   input: ReplaceVariantsInput;
 }
 
+export interface ReplaceAddonsPayload {
+  id: string;
+  input: ReplaceAddonsInput;
+}
+
 export interface UploadItemImagePayload {
   id: string;
   file: File;
@@ -74,7 +90,22 @@ export interface MenuItemDialogProps {
   defaultCategoryId?: string;
 }
 
+export interface MenuItemImageFieldProps {
+  imagePreview: string | null;
+  name: string;
+  isPending: boolean;
+  onFileSelect: (file: File) => void;
+  onRemovePhoto: () => void;
+  t: (key: string, values?: Record<string, string | number>) => string;
+}
+
 export interface VariantField {
+  name: string;
+  price: string;
+}
+
+export interface AddonField {
+  id?: string;
   name: string;
   price: string;
 }
@@ -86,12 +117,14 @@ export interface MenuItemPricingProps {
   onPricingModeChange: (mode: PricingMode) => void;
   basePrice: string;
   onBasePriceChange: (val: string) => void;
-  originalPrice: string;
-  onOriginalPriceChange: (val: string) => void;
   variants: VariantField[];
   onAddVariant: () => void;
   onRemoveVariant: (index: number) => void;
   onVariantChange: (index: number, field: 'name' | 'price', val: string) => void;
+  addons: AddonField[];
+  onAddAddon: () => void;
+  onRemoveAddon: (index: number) => void;
+  onAddonChange: (index: number, field: 'name' | 'price', val: string) => void;
   errors: Record<string, string>;
   isPending: boolean;
   t: (key: string) => string;

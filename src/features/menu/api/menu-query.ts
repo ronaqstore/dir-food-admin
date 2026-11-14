@@ -8,6 +8,7 @@ import type {
   MenuItemsResponse,
   UpdateMenuItemPayload,
   ReplaceVariantsPayload,
+  ReplaceAddonsPayload,
   UploadItemImagePayload
 } from '../types';
 
@@ -162,6 +163,21 @@ export function useReplaceVariants() {
   return useMutation({
     mutationFn: ({ id, input }: ReplaceVariantsPayload) =>
       appFetch<MenuItemDTO>(`/api/items/${id}/variants`, {
+        method: 'PUT',
+        body: JSON.stringify(input)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENU_ITEMS_QUERY_KEY });
+    }
+  });
+}
+
+export function useReplaceAddons() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, input }: ReplaceAddonsPayload) =>
+      appFetch<MenuItemDTO>(`/api/items/${id}/addons`, {
         method: 'PUT',
         body: JSON.stringify(input)
       }),

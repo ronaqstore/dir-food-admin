@@ -9,7 +9,7 @@ import { Spinner } from '@/components/ui/spinner';
 import {
   IconPlus,
   IconSearch,
-  IconPhoto,
+  IconFlame,
   IconLayoutGrid,
   IconList,
   IconChevronLeft,
@@ -234,8 +234,8 @@ export function DealsList() {
         </div>
       ) : deals.length === 0 ? (
         <div className='rounded-xl border border-dashed p-10 text-center space-y-3'>
-          <div className='mx-auto flex size-12 items-center justify-center rounded-full bg-muted'>
-            <IconPhoto className='size-6 text-muted-foreground opacity-60' />
+          <div className='mx-auto flex size-12 items-center justify-center rounded-full bg-rose-500/10'>
+            <IconFlame className='size-6 text-rose-500' />
           </div>
           <div>
             <h3 className='text-sm font-semibold text-foreground'>
