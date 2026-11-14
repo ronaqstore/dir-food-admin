@@ -140,7 +140,7 @@ export function DealsList() {
   return (
     <div
       ref={topRef}
-      className='scroll-mt-6 space-y-5 p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0 overflow-x-hidden'
+      className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-12 scroll-smooth'
     >
       {}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 min-w-0'>
@@ -259,7 +259,7 @@ export function DealsList() {
           )}
         </div>
       ) : viewMode === 'grid' ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-w-0'>
           {deals.map((deal) => (
             <DealCard
               key={deal.id}
