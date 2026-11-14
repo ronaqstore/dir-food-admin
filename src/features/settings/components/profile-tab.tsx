@@ -314,8 +314,9 @@ export function ProfileTab() {
         ) : null}
 
         <div className='flex justify-end'>
-          <Button type='button' onClick={handleSaveAvailability} disabled={isPending} size='sm'>
-            {t('common.save')}
+          <Button type='button' onClick={handleSaveAvailability} disabled={isPending} size='sm' className='gap-1.5'>
+            <IconCheck className='size-4' />
+            <span>{t('common.save')}</span>
           </Button>
         </div>
       </div>
@@ -436,8 +437,9 @@ export function ProfileTab() {
           </div>
 
           <div className='flex justify-end pt-2'>
-            <Button type='submit' disabled={isPending}>
-              {t('restaurantSettings.saveProfile')}
+            <Button type='submit' disabled={isPending} className='gap-1.5'>
+              <IconCheck className='size-4' />
+              <span>{t('restaurantSettings.saveProfile')}</span>
             </Button>
           </div>
         </form>

@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { SearchableSelect } from '@/components/ui/searchable-select';
+import { IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { useCreateMasterArea, useUpdateMasterArea, usePlatformCities } from '../api/platform-query';
 import type { MasterAreaDialogProps } from '../types';
 
@@ -157,17 +158,33 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
             </div>
           </div>
 
-          <DialogFooter className='gap-2 sm:gap-0 pt-2'>
+          <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
             <Button
               type='button'
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
             >
-              {t('cancel')}
+              <IconX className='size-4' />
+              <span>{t('cancel')}</span>
             </Button>
-            <Button type='submit' disabled={isPending}>
-              {t('saveArea')}
+            <Button
+              type='submit'
+              disabled={isPending}
+              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+            >
+              {isEditing ? (
+                <>
+                  <IconCheck className='size-4' />
+                  <span>{t('saveArea')}</span>
+                </>
+              ) : (
+                <>
+                  <IconPlus className='size-4' />
+                  <span>{t('addArea')}</span>
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

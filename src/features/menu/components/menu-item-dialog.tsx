@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { IconToolsKitchen2 } from '@tabler/icons-react';
+import { IconToolsKitchen2, IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
 import {
@@ -430,16 +430,27 @@ export function MenuItemDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className='h-10 rounded-xl px-4 text-xs font-semibold'
+              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
             >
-              {t('common.cancel')}
+              <IconX className='size-4' />
+              <span>{t('common.cancel')}</span>
             </Button>
             <Button
               type='submit'
               disabled={isPending}
-              className='h-10 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
             >
-              <span>{t('common.save')}</span>
+              {isEditing ? (
+                <>
+                  <IconCheck className='size-4' />
+                  <span>{t('common.save')}</span>
+                </>
+              ) : (
+                <>
+                  <IconPlus className='size-4' />
+                  <span>{t('common.add')}</span>
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

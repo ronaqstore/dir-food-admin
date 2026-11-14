@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useExtendPlatformSubscription } from '../api/platform-query';
 import type { ExtendSubscriptionDialogProps } from '../types';
 
@@ -123,16 +124,19 @@ export function ExtendSubscriptionDialog({
           </div>
         </div>
 
-        <DialogFooter className='gap-2 sm:gap-0 pt-2'>
+        <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
           <Button type='button'
             variant='outline'
             onClick={() => onOpenChange(false)}
             disabled={extendMutation.isPending}
+            className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
           >
-            {t('cancel')}
+            <IconX className='size-4' />
+            <span>{t('cancel')}</span>
           </Button>
-          <Button type='button' onClick={handleExtend} disabled={extendMutation.isPending}>
-            {t('confirm')}
+          <Button type='button' onClick={handleExtend} disabled={extendMutation.isPending} className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'>
+            <IconCheck className='size-4' />
+            <span>{t('confirm')}</span>
           </Button>
         </DialogFooter>
       </DialogContent>

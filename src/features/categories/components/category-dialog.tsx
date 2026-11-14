@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { useCreateCategory, useUpdateCategory } from '../api/categories-query';
 import type { CategoryDialogProps } from '../types';
 
@@ -134,17 +135,33 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
             ) : null}
           </div>
 
-          <DialogFooter className='gap-2 sm:gap-0'>
+          <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
             <Button
               type='button'
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
             >
-              {t('common.cancel')}
+              <IconX className='size-4' />
+              <span>{t('common.cancel')}</span>
             </Button>
-            <Button type='submit' disabled={isPending || !name.trim()}>
-              {t('common.save')}
+            <Button
+              type='submit'
+              disabled={isPending || !name.trim()}
+              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+            >
+              {isEditing ? (
+                <>
+                  <IconCheck className='size-4' />
+                  <span>{t('common.save')}</span>
+                </>
+              ) : (
+                <>
+                  <IconPlus className='size-4' />
+                  <span>{t('common.add')}</span>
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

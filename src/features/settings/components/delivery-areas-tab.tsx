@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { DeliveryAreasTabSkeleton } from '@/components/skeletons/settings-skeleton';
-import { IconMapPin, IconSearch, IconPlus } from '@tabler/icons-react';
+import { IconMapPin, IconSearch, IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import {
   Dialog,
@@ -221,17 +221,24 @@ export function DeliveryAreasTab() {
                     </div>
                   </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
                   <Button
                     type='button'
-                    variant='ghost'
+                    variant='outline'
                     onClick={() => setIsAddOpen(false)}
                     disabled={createCustomArea.isPending}
+                    className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
                   >
-                    {t('common.cancel')}
+                    <IconX className='size-4' />
+                    <span>{t('common.cancel')}</span>
                   </Button>
-                  <Button type='submit' disabled={createCustomArea.isPending}>
-                    {t('restaurantSettings.addAndEnable')}
+                  <Button
+                    type='submit'
+                    disabled={createCustomArea.isPending}
+                    className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+                  >
+                    <IconPlus className='size-4' />
+                    <span>{t('common.add')}</span>
                   </Button>
                 </DialogFooter>
               </form>
@@ -323,8 +330,9 @@ export function DeliveryAreasTab() {
       </div>
 
       <div className='flex justify-end pt-4 border-t'>
-        <Button type='button' onClick={handleSave} disabled={updateAreas.isPending}>
-          {t('restaurantSettings.saveAreas')}
+        <Button type='button' onClick={handleSave} disabled={updateAreas.isPending} className='gap-1.5'>
+          <IconCheck className='size-4' />
+          <span>{t('restaurantSettings.saveAreas')}</span>
         </Button>
       </div>
     </div>

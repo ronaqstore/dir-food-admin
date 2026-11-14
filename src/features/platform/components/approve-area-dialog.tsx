@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useApproveMasterArea } from '../api/platform-query';
 import type { ApproveAreaDialogProps } from '../types';
 
@@ -97,17 +98,24 @@ export function ApproveAreaDialog({
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
             <Button
               type='button'
-              variant='ghost'
+              variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={approveMutation.isPending}
+              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
             >
-              {t('cancel')}
+              <IconX className='size-4' />
+              <span>{t('cancel')}</span>
             </Button>
-            <Button type='submit' disabled={approveMutation.isPending}>
-              {t('approveAndPublish')}
+            <Button
+              type='submit'
+              disabled={approveMutation.isPending}
+              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+            >
+              <IconCheck className='size-4' />
+              <span>{t('approveAndPublish')}</span>
             </Button>
           </DialogFooter>
         </form>

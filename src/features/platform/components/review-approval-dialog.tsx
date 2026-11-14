@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DialogDetailSkeleton } from '@/components/skeletons/dialog-skeleton';
 import { Icons } from '@/components/icons';
+import { IconX } from '@tabler/icons-react';
 import {
   usePlatformRestaurantDetail,
   useUpdatePlatformRestaurantStatus
@@ -170,13 +171,15 @@ export function ReviewApprovalDialog({
               </div>
             )}
 
-            <DialogFooter className='gap-2 sm:gap-0 pt-2'>
+            <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
               <Button type='button'
                 variant='outline'
                 onClick={() => onOpenChange(false)}
                 disabled={statusMutation.isPending}
+                className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
               >
-                {t('cancel')}
+                <IconX className='size-4' />
+                <span>{t('cancel')}</span>
               </Button>
               <Button type='button'
                 disabled={!isReady || statusMutation.isPending}

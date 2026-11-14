@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { IconCheck } from '@tabler/icons-react';
 import { HoursTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { useOperatingHours, useUpdateOperatingHours } from '../api/restaurant-query';
 import type { DayHoursInput, DayScheduleRow } from '../types';
@@ -153,8 +154,9 @@ export function HoursTab() {
       </div>
 
       <div className='flex justify-end pt-4 border-t'>
-        <Button type='button' onClick={handleSave} disabled={updateHours.isPending}>
-          {t('restaurantSettings.saveHours')}
+        <Button type='button' onClick={handleSave} disabled={updateHours.isPending} className='gap-1.5'>
+          <IconCheck className='size-4' />
+          <span>{t('restaurantSettings.saveHours')}</span>
         </Button>
       </div>
     </div>

@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { SearchableSelect } from '@/components/ui/searchable-select';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useMergeMasterArea } from '../api/platform-query';
 import type { MergeAreaDialogProps } from '../types';
 
@@ -124,20 +125,24 @@ export function MergeAreaDialog({
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className='gap-2 sm:gap-2 pt-3 border-t border-border/60'>
             <Button
               type='button'
-              variant='ghost'
+              variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={mergeMutation.isPending}
+              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
             >
-              {t('cancel')}
+              <IconX className='size-4' />
+              <span>{t('cancel')}</span>
             </Button>
             <Button
               type='submit'
               disabled={mergeMutation.isPending || !targetAreaId || candidateTargetAreas.length === 0}
+              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
             >
-              {t('confirmMerge')}
+              <IconCheck className='size-4' />
+              <span>{t('confirmMerge')}</span>
             </Button>
           </DialogFooter>
         </form>
