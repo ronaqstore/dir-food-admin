@@ -46,3 +46,24 @@ export interface DealCardProps {
   onEdit: (deal: MenuItemDTO) => void;
   onDelete: (deal: MenuItemDTO) => void;
 }
+
+export interface DealPhotoFieldProps {
+  imagePreview: string | null;
+  name: string;
+  isPending: boolean;
+  onFileSelect: (file: File) => void;
+  onRemovePhoto: () => void;
+  t: (key: string, values?: Record<string, string | number>) => string;
+}
+
+export interface DealPricingSectionProps {
+  basePrice: string;
+  onBasePriceChange: (val: string) => void;
+  originalPrice: string;
+  onOriginalPriceChange: (val: string) => void;
+  discountPercent: number;
+  calculatedSavings: number;
+  errors: Record<string, string>;
+  isPending: boolean;
+  t: (key: string, values?: Record<string, string | number>) => string;
+}

@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,8 +17,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
-import { IconPhoto, IconUpload } from '@tabler/icons-react';
-import { toPaisa, fromPaisa, formatPkr } from '@/lib/money';
+import { IconFlame } from '@tabler/icons-react';
+import { toPaisa, fromPaisa } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
 import {
   useCreateMenuItem,
@@ -30,6 +29,8 @@ import {
 } from '@/features/menu/api/menu-query';
 import { ApiError } from '@/lib/api/types';
 import { DealComboSection, getDishUnitPrice } from './deal-combo-section';
+import { DealPricingSection } from './deal-pricing-section';
+import { DealPhotoField } from './deal-photo-field';
 import type { DealBuilderDialogProps, ComboRow } from '../types';
 
 export function DealBuilderDialog({
@@ -38,7 +39,7 @@ export function DealBuilderDialog({
   deal,
   onSuccess
 }: DealBuilderDialogProps) {
-  const t = useTranslations('deals');
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const { data: categories } = useCategories();
   const { data: menuItems } = useMenuItems({ limit: 500 });
@@ -51,8 +52,6 @@ export function DealBuilderDialog({
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
-
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const isEditing = Boolean(deal);
   const createItem = useCreateMenuItem();
@@ -106,7 +105,15 @@ export function DealBuilderDialog({
       setDescription('');
       setBasePrice('');
       setOriginalPrice('');
-      setComboRows([]);
+      setComboRows([
+        {
+          id: `row-${Date.now()}-0`,
+          menuItemId: undefined,
+          name: '',
+          quantity: 1,
+          unitPrice: 0
+        }
+      ]);
       setImagePreview(null);
       setImageFile(null);
     }
@@ -124,13 +131,12 @@ export function DealBuilderDialog({
   };
 
   const handleAddDish = () => {
-    const first = availableDishes[0];
     const newRow: ComboRow = {
       id: `row-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      menuItemId: first?.id,
-      name: first?.name || '',
+      menuItemId: undefined,
+      name: '',
       quantity: 1,
-      unitPrice: first ? getDishUnitPrice(first) : 0
+      unitPrice: 0
     };
     setComboRows((prev) => {
       const next = [...prev, newRow];
@@ -186,17 +192,14 @@ export function DealBuilderDialog({
     setOriginalPrice(String(value));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 3 * 1024 * 1024) {
-      toast.error(t('imageSizeLimit'));
-      return;
-    }
-
+  const handleFileSelect = (file: File) => {
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleRemovePhoto = () => {
+    setImageFile(null);
+    setImagePreview(null);
   };
 
   const validate = (): boolean => {
@@ -251,7 +254,7 @@ export function DealBuilderDialog({
             isDeal: true
           }
         });
-        toast.success(t('dealUpdated'));
+        toast.success(t('deals.dealUpdated'));
       } else {
         const created = await createItem.mutateAsync({
           categoryId: targetCatId,
@@ -262,7 +265,7 @@ export function DealBuilderDialog({
           isDeal: true
         });
         savedId = created.id;
-        toast.success(t('dealCreated'));
+        toast.success(t('deals.dealCreated'));
       }
 
       if (savedId && imageFile) {
@@ -270,6 +273,8 @@ export function DealBuilderDialog({
           id: savedId,
           file: imageFile
         });
+      } else if (savedId && !imagePreview && deal?.imageUrl) {
+        await deleteImage.mutateAsync(savedId);
       }
 
       await queryClient.invalidateQueries({ queryKey: ['menu-items'] });
@@ -287,6 +292,15 @@ export function DealBuilderDialog({
     }
   };
 
+  const calculatedSavings = React.useMemo(() => {
+    const orig = Number(originalPrice);
+    const curr = Number(basePrice);
+    if (orig > 0 && curr > 0 && orig > curr) {
+      return orig - curr;
+    }
+    return 0;
+  }, [originalPrice, basePrice]);
+
   const discountPercent = React.useMemo(() => {
     const orig = Number(originalPrice);
     const curr = Number(basePrice);
@@ -298,32 +312,39 @@ export function DealBuilderDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-h-[90vh] overflow-y-auto overflow-x-hidden w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl'>
+      <DialogContent className='max-h-[90vh] overflow-y-auto overflow-x-hidden w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl rounded-2xl p-6'>
         <DialogHeader>
-          <DialogTitle className='text-base sm:text-lg'>
-            {isEditing ? t('dialogEditTitle') : t('dialogCreateTitle')}
-          </DialogTitle>
-          <DialogDescription className='text-xs'>
-            {t('dialogDesc')}
-          </DialogDescription>
+          <div className='flex items-center gap-3'>
+            <div className='flex size-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 shrink-0 shadow-2xs'>
+              <IconFlame className='size-5' />
+            </div>
+            <div className='space-y-0.5 text-start'>
+              <DialogTitle className='text-base sm:text-lg font-bold tracking-tight'>
+                {isEditing ? t('deals.dialogEditTitle') : t('deals.dialogCreateTitle')}
+              </DialogTitle>
+              <DialogDescription className='sr-only'>
+                {t('deals.dialogDesc')}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className='space-y-4 pt-1 w-full min-w-0'>
-          {}
+        <form onSubmit={handleSubmit} className='space-y-4 pt-2 w-full min-w-0'>
           <div className='space-y-1.5'>
-            <Label htmlFor='deal-name'>{t('dealTitleLabel')}</Label>
+            <Label htmlFor='deal-name' className='text-xs font-semibold text-foreground'>
+              {t('deals.dealTitleLabel')}
+            </Label>
             <Input
               id='deal-name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t('dealTitlePlaceholder')}
+              placeholder={t('deals.dealTitlePlaceholder')}
               disabled={isPending}
-              className='text-sm'
+              className='h-10 rounded-xl bg-background text-sm font-medium'
             />
             {errors.name ? <p className='text-xs text-destructive'>{errors.name}</p> : null}
           </div>
 
-          {}
           <DealComboSection
             comboRows={comboRows}
             availableDishes={availableDishes}
@@ -336,134 +357,66 @@ export function DealBuilderDialog({
             onSetOriginalPrice={handleSetOriginalPrice}
           />
 
-          {}
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-            <div className='space-y-1.5'>
-              <Label htmlFor='deal-price'>{t('dealPriceLabel')}</Label>
-              <div className='relative'>
-                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
-                  {t('common.currency')}
-                </span>
-                <Input
-                  id='deal-price'
-                  type='number'
-                  min='1'
-                  step='1'
-                  value={basePrice}
-                  onChange={(e) => setBasePrice(e.target.value)}
-                  placeholder={t('dealPricePlaceholder')}
-                  disabled={isPending}
-                  className='ps-11'
-                />
-              </div>
-              {errors.basePrice ? (
-                <p className='text-xs text-destructive'>{errors.basePrice}</p>
-              ) : null}
-            </div>
+          <DealPricingSection
+            basePrice={basePrice}
+            onBasePriceChange={setBasePrice}
+            originalPrice={originalPrice}
+            onOriginalPriceChange={setOriginalPrice}
+            discountPercent={discountPercent}
+            calculatedSavings={calculatedSavings}
+            errors={errors}
+            isPending={isPending}
+            t={t}
+          />
 
-            <div className='space-y-1.5'>
-              <div className='flex items-center justify-between'>
-                <Label htmlFor='deal-original-price'>{t('regularPriceLabel')}</Label>
-                <span className='text-[10px] text-muted-foreground'>{t('common.optional')}</span>
-              </div>
-              <div className='relative'>
-                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
-                  {t('common.currency')}
-                </span>
-                <Input
-                  id='deal-original-price'
-                  type='number'
-                  min='1'
-                  step='1'
-                  value={originalPrice}
-                  onChange={(e) => setOriginalPrice(e.target.value)}
-                  placeholder={t('regularPricePlaceholder')}
-                  disabled={isPending}
-                  className='ps-11'
-                />
-              </div>
-              {errors.originalPrice ? (
-                <p className='text-xs text-destructive'>{errors.originalPrice}</p>
-              ) : null}
-            </div>
-          </div>
-
-          {discountPercent > 0 ? (
-            <div className='rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-2.5 text-xs text-emerald-800 dark:text-emerald-300 font-medium'>
-              {t('customerSaves')} {formatPkr(toPaisa(Number(originalPrice) - Number(basePrice)))}{' '}
-              ({discountPercent}{t('offRegularPrice')}
-            </div>
-          ) : null}
-
-          {}
           <div className='space-y-1.5'>
-            <Label htmlFor='deal-description'>{t('dealDescLabel')}</Label>
+            <div className='flex items-center justify-between'>
+              <Label htmlFor='deal-description' className='text-xs font-semibold text-foreground'>
+                {t('deals.dealDescLabel')}
+              </Label>
+              <span className='text-[10px] text-muted-foreground'>{t('common.optional')}</span>
+            </div>
             <Textarea
               id='deal-description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('dealDescPlaceholder')}
+              placeholder={t('deals.dealDescPlaceholder')}
               rows={2}
               dir='auto'
               disabled={isPending}
-              className='text-xs'
+              className='rounded-xl bg-background text-xs leading-relaxed resize-none'
             />
           </div>
 
-          {}
-          <div className='space-y-1.5'>
-            <Label>{t('dealPhotoLabel')}</Label>
-            <div className='flex items-center gap-3'>
-              {imagePreview ? (
-                <div className='relative size-16 rounded-md border overflow-hidden shrink-0 bg-muted'>
-                  <Image src={imagePreview} alt={t('previewAlt')} fill unoptimized className='object-cover' />
-                </div>
-              ) : (
-                <div className='flex size-16 items-center justify-center rounded-md border border-dashed text-muted-foreground shrink-0'>
-                  <IconPhoto className='size-6 opacity-50' />
-                </div>
-              )}
-
-              <div className='space-y-1'>
-                <input
-                  ref={fileInputRef}
-                  type='file'
-                  accept='image/jpeg,image/png,image/webp'
-                  onChange={handleFileChange}
-                  className='hidden'
-                  disabled={isPending}
-                />
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isPending}
-                  className='h-8 text-xs gap-1.5'
-                >
-                  <IconUpload className='size-3.5' />
-                  <span>{imagePreview ? t('menuItems.changeImage') : t('menuItems.uploadImage')}</span>
-                </Button>
-                <p className='text-[10px] text-muted-foreground'>{t('imageHelp')}</p>
-              </div>
-            </div>
-          </div>
+          <DealPhotoField
+            imagePreview={imagePreview}
+            name={name}
+            isPending={isPending}
+            onFileSelect={handleFileSelect}
+            onRemovePhoto={handleRemovePhoto}
+            t={t}
+          />
 
           <DialogFooter
             showCloseButton={false}
-            className='mx-0 mb-0 mt-4 p-0 pt-3 border-t bg-transparent flex flex-row items-center justify-end gap-2'
+            className='mx-0 mb-0 mt-5 p-0 pt-4 border-t border-border/80 bg-transparent flex flex-row items-center justify-end gap-2.5'
           >
             <Button
               type='button'
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              className='h-10 rounded-xl px-4 text-xs font-medium'
             >
-              {t('cancel')}
+              {t('common.cancel')}
             </Button>
-            <Button type='submit' disabled={isPending}>
+            <Button
+              type='submit'
+              disabled={isPending}
+              className='h-10 rounded-xl px-5 text-xs font-bold shadow-sm'
+            >
               {isPending ? <Spinner className='me-2 size-4' /> : null}
-              {isEditing ? t('updateButton') : t('createButton')}
+              {isEditing ? t('deals.updateButton') : t('deals.createButton')}
             </Button>
           </DialogFooter>
         </form>

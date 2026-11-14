@@ -333,7 +333,7 @@ export function MenuItemDialog({
               <DialogTitle className='text-lg font-bold text-foreground'>
                 {isEditing ? t('menuItems.editItem') : t('menuItems.newItem')}
               </DialogTitle>
-              <DialogDescription className='text-xs text-muted-foreground mt-0.5 line-clamp-1'>
+              <DialogDescription className='sr-only'>
                 {t('menuItems.description')}
               </DialogDescription>
             </div>

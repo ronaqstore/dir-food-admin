@@ -60,10 +60,7 @@ export function MenuItemImageField({
           )}
         </div>
         <div className='min-w-0 flex-1 space-y-1.5'>
-          <p className='text-xs text-muted-foreground leading-relaxed'>
-            {t('menuItems.photoHint')}
-          </p>
-          <div className='flex flex-wrap items-center gap-2 pt-0.5'>
+          <div className='flex flex-wrap items-center gap-2'>
             <Button
               type='button'
               variant='outline'
@@ -91,6 +88,9 @@ export function MenuItemImageField({
               </Button>
             ) : null}
           </div>
+          <p className='text-[11px] text-muted-foreground'>
+            {t('menuItems.photoHint')}
+          </p>
         </div>
       </div>
     </div>

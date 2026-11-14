@@ -154,14 +154,11 @@ export function MenuItemPricing({
         </div>
       )}
 
-      <div className='space-y-3 rounded-2xl border border-border/70 bg-muted/20 p-4'>
+      <div className='space-y-3 rounded-2xl border border-border/70 bg-muted/20 p-3.5'>
         <div className='flex items-center justify-between gap-2'>
-          <div className='space-y-0.5'>
-            <div className='flex items-center gap-1.5'>
-              <IconSquarePlus className='size-4 text-primary' />
-              <Label className='text-xs font-semibold text-foreground'>{t('menuItems.addonsTitle')}</Label>
-            </div>
-            <p className='text-[11px] text-muted-foreground'>{t('menuItems.addonsDescription')}</p>
+          <div className='flex items-center gap-1.5'>
+            <IconSquarePlus className='size-4 text-primary' />
+            <Label className='text-xs font-semibold text-foreground'>{t('menuItems.addonsTitle')}</Label>
           </div>
           <Button
             type='button'
@@ -216,11 +213,7 @@ export function MenuItemPricing({
               </div>
             ))}
           </div>
-        ) : (
-          <div className='rounded-xl border border-dashed border-border/80 p-3 text-center'>
-            <p className='text-xs text-muted-foreground'>{t('menuItems.noAddonsHint')}</p>
-          </div>
-        )}
+        ) : null}
         {errors.addons ? <p className='text-xs text-destructive'>{errors.addons}</p> : null}
       </div>
     </>
