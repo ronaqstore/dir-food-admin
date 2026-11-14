@@ -78,10 +78,6 @@ export function loginPath(locale: AppLocale | string = defaultLocale): string {
   return localize('/login', locale);
 }
 
-export function platformAdminLoginPath(locale: AppLocale | string = defaultLocale): string {
-  return localize('/platform-admin/login', locale);
-}
-
 export function getDefaultRedirectForRole(role?: AuthAccountRole | null): string {
   if (role === 'PLATFORM_ADMIN') {
     return PLATFORM_ADMIN_DEFAULT_REDIRECT;

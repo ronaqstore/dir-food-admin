@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,14 +10,16 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Icons } from '@/components/icons';
+import type { LocaleOption } from '@/types/common';
 
-const LOCALES: { code: 'en' | 'ur' | 'ps'; label: string; nativeName: string }[] = [
+const LOCALES: LocaleOption[] = [
   { code: 'en', label: 'English', nativeName: 'English' },
   { code: 'ur', label: 'Urdu', nativeName: 'اردو' },
   { code: 'ps', label: 'Pashto', nativeName: 'پښتو' }
 ];
 
 export function LocaleSwitcher() {
+  const t = useTranslations('aria');
   const currentLocale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -33,11 +35,11 @@ export function LocaleSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button
+          <Button type='button'
             variant='ghost'
             size='sm'
             className='flex h-9 items-center gap-1.5 px-2 text-xs font-medium sm:px-2.5'
-            aria-label='Switch language'
+            aria-label={t('switchLanguage')}
           />
         }
       >

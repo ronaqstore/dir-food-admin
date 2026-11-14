@@ -85,7 +85,7 @@ export function CategoryList() {
         <p className='text-sm text-destructive font-medium'>
           {error instanceof Error ? error.message : t('common.unexpectedError')}
         </p>
-        <Button variant='outline' size='sm' onClick={() => refetch()}>
+        <Button type='button' variant='outline' size='sm' onClick={() => refetch()}>
           {t('common.tryAgain')}
         </Button>
       </div>
@@ -104,7 +104,7 @@ export function CategoryList() {
           <p className='text-sm text-muted-foreground'>{t('menuCategories.description')}</p>
         </div>
         <div className='flex items-center gap-2'>
-          <Button onClick={handleOpenCreate} className='gap-1.5'>
+          <Button type='button' onClick={handleOpenCreate} className='gap-1.5'>
             <IconPlus className='size-4' />
             <span>{t('menuCategories.newCategory')}</span>
           </Button>
@@ -122,7 +122,7 @@ export function CategoryList() {
           <p className='text-sm text-muted-foreground max-w-sm mb-5'>
             {t('menuCategories.emptyDescription')}
           </p>
-          <Button onClick={handleOpenCreate} className='gap-1.5'>
+          <Button type='button' onClick={handleOpenCreate} className='gap-1.5'>
             <IconPlus className='size-4' />
             <span>{t('menuCategories.newCategory')}</span>
           </Button>
@@ -137,23 +137,23 @@ export function CategoryList() {
               >
                 <div className='flex items-center gap-3 min-w-0'>
                   <div className='flex flex-col gap-0.5'>
-                    <Button
+                    <Button type='button'
                       variant='ghost'
                       size='icon'
                       className='h-6 w-6 text-muted-foreground hover:text-foreground'
                       disabled={index === 0 || isReordering}
                       onClick={() => handleMove(index, 'up')}
-                      aria-label='Move category up'
+                      aria-label={t('common.moveCategoryUp')}
                     >
                       <IconChevronUp className='size-4' />
                     </Button>
-                    <Button
+                    <Button type='button'
                       variant='ghost'
                       size='icon'
                       className='h-6 w-6 text-muted-foreground hover:text-foreground'
                       disabled={index === items.length - 1 || isReordering}
                       onClick={() => handleMove(index, 'down')}
-                      aria-label='Move category down'
+                      aria-label={t('common.moveCategoryDown')}
                     >
                       <IconChevronDown className='size-4' />
                     </Button>
@@ -191,7 +191,7 @@ export function CategoryList() {
                       disabled={updateCategory.isPending}
                       aria-label={cat.name}
                     />
-                    <Button
+                    <Button type='button'
                       variant='outline'
                       size='sm'
                       onClick={() => handleOpenEdit(cat)}

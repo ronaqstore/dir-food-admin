@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { appFetch } from '@/lib/api/app-fetch';
+import { AppError } from '@/lib/errors';
 import type {
   RestaurantProfileDTO,
   PublishReadinessDTO,
@@ -8,7 +9,11 @@ import type {
   DayScheduleDTO,
   UpdateHoursInput,
   DeliveryAreaItemDTO,
-  UpdateDeliveryAreasInput
+  UpdateDeliveryAreasInput,
+  RestaurantProfileQueryOptions,
+  UploadRestaurantImagePayload,
+  QuickAddAreaInput,
+  MasterCityOption
 } from '../types';
 
 export const RESTAURANT_PROFILE_KEY = ['restaurant-profile'] as const;
@@ -16,10 +21,11 @@ export const RESTAURANT_READINESS_KEY = ['restaurant-readiness'] as const;
 export const RESTAURANT_HOURS_KEY = ['restaurant-hours'] as const;
 export const RESTAURANT_AREAS_KEY = ['restaurant-delivery-areas'] as const;
 
-export function useRestaurantProfile() {
+export function useRestaurantProfile(options?: RestaurantProfileQueryOptions) {
   return useQuery({
     queryKey: RESTAURANT_PROFILE_KEY,
-    queryFn: () => appFetch<RestaurantProfileDTO>('/api/restaurant')
+    queryFn: () => appFetch<RestaurantProfileDTO>('/api/restaurant'),
+    ...options
   });
 }
 
@@ -66,7 +72,7 @@ export function useUploadRestaurantImage() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ kind, file }: { kind: 'logo' | 'cover'; file: File }) => {
+    mutationFn: async ({ kind, file }: UploadRestaurantImagePayload) => {
       const formData = new FormData();
       formData.append('file', file);
 
@@ -77,7 +83,7 @@ export function useUploadRestaurantImage() {
 
       if (!res.ok) {
         const error = await res.json().catch(() => null);
-        throw new Error(error?.message || `Failed to upload ${kind}`);
+        throw new AppError(error?.message || `Failed to upload ${kind}`);
       }
 
       return res.json() as Promise<RestaurantProfileDTO>;
@@ -170,7 +176,7 @@ export function useCreateCustomDeliveryArea() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: { name: string; deliveryFee?: number | null; minOrderAmount?: number | null }) =>
+    mutationFn: (input: QuickAddAreaInput) =>
       appFetch<DeliveryAreaItemDTO>('/api/restaurant/delivery-areas/custom', {
         method: 'POST',
         body: JSON.stringify(input)
@@ -188,7 +194,7 @@ export function useCities() {
   return useQuery({
     queryKey: PUBLIC_CITIES_KEY,
     queryFn: () =>
-      appFetch<Array<{ id: string; name: string; slug: string; sortOrder: number }>>(
+      appFetch<MasterCityOption[]>(
         '/api/public/cities'
       )
   });

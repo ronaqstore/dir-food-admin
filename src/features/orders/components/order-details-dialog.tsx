@@ -23,15 +23,9 @@ import {
 } from '@/components/ui/table';
 import { Icons } from '@/components/icons';
 import { formatPkr } from '@/lib/money';
+import { WHATSAPP_BASE_URL } from '@/constants/api';
 import { useOrderDetail } from '../api/orders-query';
-import type { OwnerOrderIntent } from '../types';
-
-interface OrderDetailsDialogProps {
-  orderId: string | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  initialOrder?: OwnerOrderIntent | null;
-}
+import type { OrderDetailsDialogProps } from '../types';
 
 export function OrderDetailsDialog({
   orderId,
@@ -60,7 +54,7 @@ export function OrderDetailsDialog({
   const whatsappChatUrl = React.useMemo(() => {
     if (!cleanPhone || !customerName || !reference) return '';
     const message = `Assalam-o-Alaikum ${customerName}, regarding your Dir Food order #${reference}:`;
-    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    return `${WHATSAPP_BASE_URL}/${cleanPhone}?text=${encodeURIComponent(message)}`;
   }, [cleanPhone, customerName, reference]);
 
   return (
@@ -105,7 +99,7 @@ export function OrderDetailsDialog({
             </DialogHeader>
 
             <div className='space-y-4 text-sm'>
-              {/* Customer & Contact Section */}
+              {}
               <div className='rounded-lg border bg-card p-3 shadow-xs'>
                 <div className='mb-2 flex items-center justify-between font-semibold text-foreground'>
                   <span className='flex items-center gap-1.5'>
@@ -138,7 +132,7 @@ export function OrderDetailsDialog({
                 </div>
               </div>
 
-              {/* Delivery Details Section */}
+              {}
               <div className='rounded-lg border bg-card p-3 shadow-xs'>
                 <div className='mb-2 font-semibold text-foreground'>{t('deliveryInfo')}</div>
                 <div className='space-y-1.5'>
@@ -159,7 +153,7 @@ export function OrderDetailsDialog({
                 </div>
               </div>
 
-              {/* Ordered Dishes Breakdown */}
+              {}
               <div className='space-y-1.5'>
                 <div className='font-semibold text-foreground'>{t('itemsBreakdown')}</div>
                 <div className='overflow-hidden rounded-lg border'>
@@ -197,7 +191,7 @@ export function OrderDetailsDialog({
                 </div>
               </div>
 
-              {/* Totals & Delivery Fee */}
+              {}
               <div className='rounded-lg bg-muted/40 p-3 space-y-1.5'>
                 <div className='flex items-center justify-between text-muted-foreground'>
                   <span>{t('subtotal')}</span>
@@ -231,7 +225,7 @@ export function OrderDetailsDialog({
                 </div>
               </div>
 
-              {/* Timeline Info */}
+              {}
               <div className='rounded-lg border border-dashed p-2.5 text-xs text-muted-foreground space-y-1'>
                 <div className='flex items-center justify-between'>
                   <span>{t('whatsappOpenedTime')}:</span>
@@ -246,7 +240,7 @@ export function OrderDetailsDialog({
 
             <DialogFooter className='gap-2 sm:gap-0'>
               {whatsappChatUrl && (
-                <Button
+                <Button type='button'
                   className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5'
                   render={<a href={whatsappChatUrl} target='_blank' rel='noopener noreferrer' />}
                 >
@@ -254,7 +248,7 @@ export function OrderDetailsDialog({
                   {t('chatOnWhatsapp')}
                 </Button>
               )}
-              <Button variant='outline' onClick={() => onOpenChange(false)}>
+              <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
                 {t('close')}
               </Button>
             </DialogFooter>

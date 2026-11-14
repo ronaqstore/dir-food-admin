@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import { Icons } from '@/components/icons';
 import { formatPkr } from '@/lib/money';
+import { WHATSAPP_BASE_URL } from '@/constants/api';
 import { useOrders, useOrderStats } from '../api/orders-query';
 import { OrderDetailsDialog } from './order-details-dialog';
 import type { OrderIntentStatus, OwnerOrderIntent } from '../types';
@@ -62,12 +63,32 @@ export function OrdersList() {
   const getWhatsAppLink = (order: OwnerOrderIntent) => {
     const clean = getCleanPhone(order.customerPhone);
     const message = `Assalam-o-Alaikum ${order.customerName}, regarding your Dir Food order #${order.reference}:`;
-    return `https://wa.me/${clean}?text=${encodeURIComponent(message)}`;
+    return `${WHATSAPP_BASE_URL}/${clean}?text=${encodeURIComponent(message)}`;
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPage(1);
+  };
+
+  const handleFilterAll = () => {
+    setStatusFilter('ALL');
+    setPage(1);
+  };
+
+  const handleFilterHandoffReady = () => {
+    setStatusFilter('WHATSAPP_HANDOFF_READY');
+    setPage(1);
+  };
+
+  const handleFilterWhatsappOpened = () => {
+    setStatusFilter('WHATSAPP_OPENED');
+    setPage(1);
   };
 
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
-      {/* Page Title & Subtitle */}
+      {}
       <div className='shrink-0'>
         <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
           {t('title')}
@@ -75,7 +96,7 @@ export function OrdersList() {
         <p className='text-sm text-muted-foreground mt-0.5'>{t('subtitle')}</p>
       </div>
 
-      {/* Top Metric Cards */}
+      {}
       <div className='grid shrink-0 gap-3 grid-cols-1 sm:grid-cols-3'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -117,16 +138,13 @@ export function OrdersList() {
         </Card>
       </div>
 
-      {/* Filter and Search Bar */}
+      {}
       <div className='flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <div className='relative flex-1 sm:max-w-xs'>
-          <Icons.search className='absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
+          <Icons.search className='absolute inset-s-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
           <Input
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
+            onChange={handleSearchChange}
             placeholder={t('searchPlaceholder')}
             className='ps-9'
           />
@@ -134,33 +152,27 @@ export function OrdersList() {
 
         <div className='flex items-center gap-1.5 overflow-x-auto'>
           <Button
+            type='button'
             size='sm'
             variant={statusFilter === 'ALL' ? 'default' : 'outline'}
-            onClick={() => {
-              setStatusFilter('ALL');
-              setPage(1);
-            }}
+            onClick={handleFilterAll}
           >
             {t('filterAll')}
           </Button>
           <Button
+            type='button'
             size='sm'
             variant={statusFilter === 'WHATSAPP_HANDOFF_READY' ? 'default' : 'outline'}
-            onClick={() => {
-              setStatusFilter('WHATSAPP_HANDOFF_READY');
-              setPage(1);
-            }}
+            onClick={handleFilterHandoffReady}
           >
             <Icons.clock className='me-1 size-3.5' />
             {t('filterHandoffReady')}
           </Button>
           <Button
+            type='button'
             size='sm'
             variant={statusFilter === 'WHATSAPP_OPENED' ? 'default' : 'outline'}
-            onClick={() => {
-              setStatusFilter('WHATSAPP_OPENED');
-              setPage(1);
-            }}
+            onClick={handleFilterWhatsappOpened}
           >
             <Icons.checks className='me-1 size-3.5' />
             {t('filterWhatsappOpened')}
@@ -168,7 +180,7 @@ export function OrdersList() {
         </div>
       </div>
 
-      {/* Orders List / Table */}
+      {}
       {isLoading ? (
         <OrdersListSkeleton />
       ) : orders.length === 0 ? (
@@ -181,7 +193,7 @@ export function OrdersList() {
         </Card>
       ) : (
         <>
-          {/* Desktop & Tablet Table View */}
+          {}
           <div className='hidden md:flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-card shadow-xs'>
             <Table containerClassName='min-h-0 flex-1 overflow-auto overscroll-contain'>
               <TableHeader className='sticky top-0 z-20 bg-background shadow-[0_1px_0_0_var(--border)]'>
@@ -266,6 +278,7 @@ export function OrdersList() {
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Button
+                            type='button'
                             size='sm'
                             variant='ghost'
                             className='size-8 p-0 text-muted-foreground hover:text-foreground'
@@ -275,6 +288,7 @@ export function OrdersList() {
                             <Icons.eye className='size-4' />
                           </Button>
                           <Button
+                            type='button'
                             size='sm'
                             variant='outline'
                             className='size-8 p-0 text-emerald-600 hover:text-emerald-700 border-emerald-500/30'
@@ -294,7 +308,7 @@ export function OrdersList() {
             </Table>
           </div>
 
-          {/* Mobile Card List View */}
+          {}
           <div className='grid gap-3 md:hidden min-h-0 flex-1 overflow-y-auto overscroll-y-contain'>
             {orders.map((order) => {
               const totalPkr = formatPkr(
@@ -350,10 +364,11 @@ export function OrdersList() {
                   <div className='mt-3 flex items-center justify-between border-t pt-2.5'>
                     <div className='font-mono font-bold text-foreground text-sm'>{totalPkr}</div>
                     <div className='flex items-center gap-1.5' onClick={(e) => e.stopPropagation()}>
-                      <Button size='sm' variant='outline' onClick={() => handleOpenDetail(order)}>
+                      <Button type='button' size='sm' variant='outline' onClick={() => handleOpenDetail(order)}>
                         {t('viewDetails')}
                       </Button>
                       <Button
+                        type='button'
                         size='sm'
                         className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1 px-2.5'
                         render={<a href={whatsappLink} target='_blank' rel='noopener noreferrer' />}
@@ -368,7 +383,7 @@ export function OrdersList() {
             })}
           </div>
 
-          {/* Pagination Controls */}
+          {}
           {totalPages > 1 && (
             <div className='shrink-0 flex items-center justify-between pt-2'>
               <div className='text-xs text-muted-foreground'>
@@ -376,9 +391,11 @@ export function OrdersList() {
               </div>
               <div className='flex items-center gap-1'>
                 <Button
+                  type='button'
                   size='sm'
                   variant='outline'
                   disabled={page <= 1}
+                  aria-label={t('prevPage')}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
                   <Icons.chevronLeft className='size-4' />
@@ -387,9 +404,11 @@ export function OrdersList() {
                   {page} / {totalPages}
                 </span>
                 <Button
+                  type='button'
                   size='sm'
                   variant='outline'
                   disabled={page >= totalPages}
+                  aria-label={t('nextPage')}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >
                   <Icons.chevronRight className='size-4' />
@@ -400,7 +419,7 @@ export function OrdersList() {
         </>
       )}
 
-      {/* Order Details Dialog */}
+      {}
       <OrderDetailsDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}

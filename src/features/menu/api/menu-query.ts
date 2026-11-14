@@ -1,12 +1,14 @@
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { appFetch } from '@/lib/api/app-fetch';
+import { AppError } from '@/lib/errors';
 import type {
   MenuItemDTO,
   CreateMenuItemInput,
-  UpdateMenuItemInput,
-  ReplaceVariantsInput,
   MenuItemsFilter,
-  MenuItemsResponse
+  MenuItemsResponse,
+  UpdateMenuItemPayload,
+  ReplaceVariantsPayload,
+  UploadItemImagePayload
 } from '../types';
 
 export const MENU_ITEMS_QUERY_KEY = ['menu-items'] as const;
@@ -18,7 +20,8 @@ export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
       'infinite',
       filter?.categoryId ?? 'all',
       filter?.search ?? '',
-      filter?.isDeal === undefined ? 'all' : String(filter.isDeal)
+      filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
+      filter?.isAvailable === undefined ? 'all' : String(filter.isAvailable)
     ],
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams();
@@ -30,6 +33,9 @@ export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
       }
       if (typeof filter?.isDeal === 'boolean') {
         params.set('isDeal', String(filter.isDeal));
+      }
+      if (typeof filter?.isAvailable === 'boolean') {
+        params.set('isAvailable', String(filter.isAvailable));
       }
       params.set('page', String(pageParam));
       params.set('limit', String(filter?.limit ?? 24));
@@ -61,6 +67,7 @@ export function useMenuItems(filter?: MenuItemsFilter) {
   if (filter?.categoryId) params.set('categoryId', filter.categoryId);
   if (filter?.search) params.set('search', filter.search);
   if (typeof filter?.isDeal === 'boolean') params.set('isDeal', String(filter.isDeal));
+  if (typeof filter?.isAvailable === 'boolean') params.set('isAvailable', String(filter.isAvailable));
   if (filter?.page) params.set('page', String(filter.page));
   if (filter?.limit) params.set('limit', String(filter.limit));
 
@@ -72,6 +79,7 @@ export function useMenuItems(filter?: MenuItemsFilter) {
       filter?.categoryId ?? 'all',
       filter?.search ?? '',
       filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
+      filter?.isAvailable === undefined ? 'all' : String(filter.isAvailable),
       filter?.page ?? 1
     ],
     queryFn: async () => {
@@ -86,6 +94,7 @@ export function usePaginatedMenuItems(filter?: MenuItemsFilter) {
   if (filter?.categoryId) params.set('categoryId', filter.categoryId);
   if (filter?.search) params.set('search', filter.search);
   if (typeof filter?.isDeal === 'boolean') params.set('isDeal', String(filter.isDeal));
+  if (typeof filter?.isAvailable === 'boolean') params.set('isAvailable', String(filter.isAvailable));
   if (filter?.page) params.set('page', String(filter.page));
   if (filter?.limit) params.set('limit', String(filter.limit));
 
@@ -98,6 +107,7 @@ export function usePaginatedMenuItems(filter?: MenuItemsFilter) {
       filter?.categoryId ?? 'all',
       filter?.search ?? '',
       filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
+      filter?.isAvailable === undefined ? 'all' : String(filter.isAvailable),
       filter?.page ?? 1,
       filter?.limit ?? 12
     ],
@@ -134,7 +144,7 @@ export function useUpdateMenuItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateMenuItemInput }) =>
+    mutationFn: ({ id, input }: UpdateMenuItemPayload) =>
       appFetch<MenuItemDTO>(`/api/items/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(input)
@@ -150,7 +160,7 @@ export function useReplaceVariants() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: ReplaceVariantsInput }) =>
+    mutationFn: ({ id, input }: ReplaceVariantsPayload) =>
       appFetch<MenuItemDTO>(`/api/items/${id}/variants`, {
         method: 'PUT',
         body: JSON.stringify(input)
@@ -165,7 +175,7 @@ export function useUploadItemImage() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, file }: { id: string; file: File }) => {
+    mutationFn: async ({ id, file }: UploadItemImagePayload) => {
       const formData = new FormData();
       formData.append('file', file);
 
@@ -176,7 +186,7 @@ export function useUploadItemImage() {
 
       if (!res.ok) {
         const error = await res.json().catch(() => null);
-        throw new Error(error?.message || 'Failed to upload photo');
+        throw new AppError(error?.message || 'Failed to upload photo');
       }
 
       return res.json() as Promise<MenuItemDTO>;

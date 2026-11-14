@@ -4,12 +4,14 @@ import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n/use-t';
 import type { AppErrorProps } from '@/types/pages';
+import type { ErrorContentProps, AppErrorViewProps } from '@/types/common';
 
 import { t as staticT } from '@/i18n/static-t';
+import { env } from '@/config/env';
 
 const sentryEnabled =
-  Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN) &&
-  process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true';
+  Boolean(env.NEXT_PUBLIC_SENTRY_DSN) &&
+  env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true';
 
 function isChunkLoadError(error: Error): boolean {
   return (
@@ -24,13 +26,9 @@ async function reportToSentry(error: unknown) {
   try {
     const Sentry = await import('@sentry/nextjs');
     Sentry.captureException(error);
-  } catch {
-    // Sentry is optional in local/dev installs.
+  } catch (err) {
+    return null;
   }
-}
-
-interface ErrorContentProps extends AppErrorProps {
-  t: (key: string) => string;
 }
 
 function ErrorViewContent({ error, reset, t }: ErrorContentProps) {
@@ -45,7 +43,7 @@ function ErrorViewContent({ error, reset, t }: ErrorContentProps) {
           return;
         }
       } catch (storageErr) {
-        void reportToSentry(storageErr);
+        return;
       }
     }
   }, [error]);
@@ -83,7 +81,7 @@ export function ErrorView({
   error,
   reset,
   staticFallback = false
-}: AppErrorProps & { staticFallback?: boolean }) {
+}: AppErrorViewProps) {
   if (staticFallback) {
     return <StaticErrorView error={error} reset={reset} />;
   }

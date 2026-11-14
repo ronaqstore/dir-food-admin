@@ -94,9 +94,9 @@ export const NotificationCard: FC<NotificationCardProps> = ({
     >
       <div className='px-4 py-3.5'>
         <div className='flex items-start justify-between gap-3'>
-          {/* Main content */}
+          {}
           <div className='min-w-0 flex-1 space-y-1'>
-            {/* Title with unread indicator */}
+            {}
             <div className='flex items-center gap-2'>
               <h3
                 className={cn(
@@ -109,7 +109,7 @@ export const NotificationCard: FC<NotificationCardProps> = ({
               {isUnread && <div className='h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary' />}
             </div>
 
-            {/* Description */}
+            {}
             <p
               className={cn(
                 'mb-0 text-[13px]',
@@ -120,7 +120,7 @@ export const NotificationCard: FC<NotificationCardProps> = ({
             </p>
           </div>
 
-          {/* Mark as read button */}
+          {}
           {isUnread && onMarkAsRead && (
             <button
               type='button'
@@ -137,7 +137,7 @@ export const NotificationCard: FC<NotificationCardProps> = ({
         </div>
 
         <div className='mt-3 flex items-end justify-between'>
-          {/* Actions */}
+          {}
           {actions.length > 0 && (
             <div className={cn('flex flex-wrap items-center gap-2', !isUnread && 'opacity-60')}>
               {actions.map((action) => {
@@ -180,7 +180,7 @@ export const NotificationCard: FC<NotificationCardProps> = ({
             </div>
           )}
 
-          {/* Timestamp */}
+          {}
           {createdAt && (
             <span className='text-muted-foreground/60 inline-block text-[11px]'>
               {formatDate(createdAt, t)}

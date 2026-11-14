@@ -246,7 +246,7 @@ function CompactOrFullTable<TData>({
                     className={cn(
                       'bg-background sticky top-0 z-20 shadow-[0_1px_0_0_var(--border)]',
                       isActions && 'w-20 text-end pe-3',
-                      isSticky && 'sticky start-0 z-30 shadow-[1px_1px_0_0_var(--border)]'
+                      isSticky && 'sticky inset-s-0 z-30 shadow-[1px_1px_0_0_var(--border)]'
                     )}
                   >
                     {header.isPlaceholder
@@ -283,7 +283,7 @@ function CompactOrFullTable<TData>({
                       className={cn(
                         isActions && 'w-20 text-end pe-3',
                         isSticky &&
-                          'bg-background sticky start-0 z-10 shadow-[1px_0_0_0_var(--border)]'
+                          'bg-background sticky inset-s-0 z-10 shadow-[1px_0_0_0_var(--border)]'
                       )}
                     >
                       {isActions ? (
@@ -335,7 +335,7 @@ function CompactOrFullTable<TData>({
                       className={cn(
                         isActions && 'w-20 text-end pe-3',
                         isSticky &&
-                          'bg-background sticky start-0 z-10 shadow-[1px_0_0_0_var(--border)]'
+                          'bg-background sticky inset-s-0 z-10 shadow-[1px_0_0_0_var(--border)]'
                       )}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

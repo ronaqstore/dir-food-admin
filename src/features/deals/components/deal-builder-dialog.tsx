@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -16,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
-import { IconPlus, IconTrash, IconPhoto, IconMinus, IconUpload } from '@tabler/icons-react';
+import { IconPhoto, IconUpload } from '@tabler/icons-react';
 import { toPaisa, fromPaisa, formatPkr } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
 import {
@@ -26,38 +28,9 @@ import {
   useDeleteItemImage,
   useMenuItems
 } from '@/features/menu/api/menu-query';
-import type { MenuItemDTO } from '@/features/menu/types';
 import { ApiError } from '@/lib/api/types';
-import { DishCombobox } from './dish-combobox';
-
-interface DealBuilderDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  deal?: MenuItemDTO | null;
-  onSuccess?: () => void;
-}
-
-interface ComboRow {
-  id: string;
-  menuItemId?: string;
-  name: string;
-  quantity: number;
-  unitPrice: number;
-}
-
-// Safely extract price from either basePrice or first active variant
-function getDishUnitPrice(dish: MenuItemDTO): number {
-  if (dish.basePrice != null && dish.basePrice > 0) {
-    return fromPaisa(dish.basePrice);
-  }
-  if (dish.variants && dish.variants.length > 0) {
-    const firstActive = dish.variants.find((v) => v.isActive !== false) || dish.variants[0];
-    if (firstActive && firstActive.price > 0) {
-      return fromPaisa(firstActive.price);
-    }
-  }
-  return 0;
-}
+import { DealComboSection, getDishUnitPrice } from './deal-combo-section';
+import type { DealBuilderDialogProps, ComboRow } from '../types';
 
 export function DealBuilderDialog({
   open,
@@ -65,9 +38,9 @@ export function DealBuilderDialog({
   deal,
   onSuccess
 }: DealBuilderDialogProps) {
+  const t = useTranslations('deals');
   const queryClient = useQueryClient();
   const { data: categories } = useCategories();
-  // Fetch all menu dishes without pagination cutoff
   const { data: menuItems } = useMenuItems({ limit: 500 });
 
   const [name, setName] = React.useState('');
@@ -93,7 +66,6 @@ export function DealBuilderDialog({
     uploadImage.isPending ||
     deleteImage.isPending;
 
-  // Dishes available for combo (excluding deals and current item)
   const availableDishes = React.useMemo(() => {
     if (!Array.isArray(menuItems)) return [];
     return menuItems.filter((i) => i.id !== deal?.id && !i.isDeal && i.isActive !== false);
@@ -210,12 +182,16 @@ export function DealBuilderDialog({
     return comboRows.reduce((acc, row) => acc + (row.unitPrice || 0) * row.quantity, 0);
   }, [comboRows]);
 
+  const handleSetOriginalPrice = (value: number) => {
+    setOriginalPrice(String(value));
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 3 * 1024 * 1024) {
-      toast.error('Image size must be less than 3MB');
+      toast.error(t('imageSizeLimit'));
       return;
     }
 
@@ -255,7 +231,6 @@ export function DealBuilderDialog({
     try {
       let savedId = deal?.id;
 
-      // Automatically assign to a Deals category or fallback to undefined so backend auto-creates 'Deals & Combos'
       const dealsCat = categories?.find(
         (c) =>
           c.name.toLowerCase().includes('deal') ||
@@ -276,7 +251,7 @@ export function DealBuilderDialog({
             isDeal: true
           }
         });
-        toast.success('Deal updated successfully');
+        toast.success(t('dealUpdated'));
       } else {
         const created = await createItem.mutateAsync({
           categoryId: targetCatId,
@@ -287,7 +262,7 @@ export function DealBuilderDialog({
           isDeal: true
         });
         savedId = created.id;
-        toast.success('Deal created successfully');
+        toast.success(t('dealCreated'));
       }
 
       if (savedId && imageFile) {
@@ -326,145 +301,48 @@ export function DealBuilderDialog({
       <DialogContent className='max-h-[90vh] overflow-y-auto overflow-x-hidden w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl'>
         <DialogHeader>
           <DialogTitle className='text-base sm:text-lg'>
-            {isEditing ? 'Edit Combo Deal' : 'Create Combo Deal'}
+            {isEditing ? t('dialogEditTitle') : t('dialogCreateTitle')}
           </DialogTitle>
           <DialogDescription className='text-xs'>
-            Bundle dishes from across your menu into a promotional package.
+            {t('dialogDesc')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-4 pt-1 w-full min-w-0'>
-          {/* Section 1: Deal Title (No Category input needed) */}
+          {}
           <div className='space-y-1.5'>
-            <Label htmlFor='deal-name'>Deal Title *</Label>
+            <Label htmlFor='deal-name'>{t('dealTitleLabel')}</Label>
             <Input
               id='deal-name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder='e.g. Mega Feast Combo (2 Burgers + 1 Pizza + Drinks)'
+              placeholder={t('dealTitlePlaceholder')}
               disabled={isPending}
               className='text-sm'
             />
             {errors.name ? <p className='text-xs text-destructive'>{errors.name}</p> : null}
           </div>
 
-          {/* Section 2: Combo Items from All Categories */}
-          <div className='rounded-lg border border-border p-3 sm:p-3.5 space-y-3 bg-muted/20 w-full min-w-0'>
-            <div className='flex flex-wrap items-center justify-between gap-2'>
-              <div>
-                <Label className='text-xs font-semibold'>Dishes in this Combo</Label>
-                <p className='text-[11px] text-muted-foreground'>
-                  Pick items from across your menu categories (Burgers, Pizzas, Karahi, Drinks, etc.)
-                </p>
-              </div>
-              {calculatedTotalValue > 0 ? (
-                <span className='text-xs font-medium text-muted-foreground whitespace-nowrap'>
-                  Standard Value: <strong className='text-foreground'>{formatPkr(toPaisa(calculatedTotalValue))}</strong>
-                </span>
-              ) : null}
-            </div>
+          {}
+          <DealComboSection
+            comboRows={comboRows}
+            availableDishes={availableDishes}
+            calculatedTotalValue={calculatedTotalValue}
+            isPending={isPending}
+            onSelectDish={handleSelectDish}
+            onQtyChange={handleQtyChange}
+            onRemoveRow={handleRemoveRow}
+            onAddDish={handleAddDish}
+            onSetOriginalPrice={handleSetOriginalPrice}
+          />
 
-            {comboRows.length === 0 ? (
-              <div className='rounded-md border border-dashed border-border/80 p-4 text-center text-xs text-muted-foreground'>
-                No items added yet. Click &ldquo;Add Dish from Menu&rdquo; to start bundling items.
-              </div>
-            ) : (
-              <div className='space-y-2'>
-                {comboRows.map((row, idx) => (
-                  <div
-                    key={row.id}
-                    className='flex items-center gap-2 rounded-md border border-border bg-background p-2 text-xs w-full min-w-0'
-                  >
-                    <div className='flex-1 min-w-0'>
-                      <DishCombobox
-                        value={row.menuItemId}
-                        onSelect={(dish) => handleSelectDish(idx, dish.id)}
-                        dishes={availableDishes}
-                        disabled={isPending}
-                      />
-                    </div>
-
-                    <div className='flex items-center gap-1 rounded-md border border-input bg-background p-0.5 shrink-0'>
-                      <button
-                        type='button'
-                        onClick={() => handleQtyChange(idx, -1)}
-                        disabled={row.quantity <= 1 || isPending}
-                        className='flex size-6 items-center justify-center rounded hover:bg-muted disabled:opacity-40 transition-colors cursor-pointer'
-                        aria-label='Decrease quantity'
-                      >
-                        <IconMinus className='size-3' />
-                      </button>
-                      <span className='w-5 text-center font-semibold text-xs'>{row.quantity}</span>
-                      <button
-                        type='button'
-                        onClick={() => handleQtyChange(idx, 1)}
-                        disabled={isPending}
-                        className='flex size-6 items-center justify-center rounded hover:bg-muted transition-colors cursor-pointer'
-                        aria-label='Increase quantity'
-                      >
-                        <IconPlus className='size-3' />
-                      </button>
-                    </div>
-
-                    {row.unitPrice > 0 ? (
-                      <span className='text-[11px] font-semibold text-muted-foreground w-14 sm:w-16 text-end shrink-0 whitespace-nowrap'>
-                        {formatPkr(toPaisa(row.unitPrice * row.quantity))}
-                      </span>
-                    ) : null}
-
-                    <Button
-                      type='button'
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => handleRemoveRow(idx)}
-                      disabled={isPending}
-                      className='size-7 text-muted-foreground hover:text-destructive shrink-0'
-                      aria-label='Remove item'
-                    >
-                      <IconTrash className='size-3.5' />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className='flex flex-wrap items-center justify-between gap-2 pt-1 w-full min-w-0'>
-              <div className='flex items-center gap-2'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={handleAddDish}
-                  disabled={isPending || availableDishes.length === 0}
-                  className='h-7 gap-1 text-xs'
-                >
-                  <IconPlus className='size-3' />
-                  <span>Add Dish from Menu</span>
-                </Button>
-              </div>
-
-              {calculatedTotalValue > 0 ? (
-                <Button
-                  type='button'
-                  variant='secondary'
-                  size='sm'
-                  onClick={() => setOriginalPrice(String(calculatedTotalValue))}
-                  disabled={isPending}
-                  className='h-7 text-xs font-medium'
-                >
-                  Set Original Price to {formatPkr(toPaisa(calculatedTotalValue))}
-                </Button>
-              ) : null}
-            </div>
-          </div>
-
-          {/* Section 3: Pricing */}
+          {}
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             <div className='space-y-1.5'>
-              <Label htmlFor='deal-price'>Deal Price *</Label>
+              <Label htmlFor='deal-price'>{t('dealPriceLabel')}</Label>
               <div className='relative'>
-                <span className='absolute start-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
-                  Rs.
+                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
+                  {t('common.currency')}
                 </span>
                 <Input
                   id='deal-price'
@@ -473,7 +351,7 @@ export function DealBuilderDialog({
                   step='1'
                   value={basePrice}
                   onChange={(e) => setBasePrice(e.target.value)}
-                  placeholder='e.g. 1999'
+                  placeholder={t('dealPricePlaceholder')}
                   disabled={isPending}
                   className='ps-11'
                 />
@@ -485,12 +363,12 @@ export function DealBuilderDialog({
 
             <div className='space-y-1.5'>
               <div className='flex items-center justify-between'>
-                <Label htmlFor='deal-original-price'>Original / Regular Price</Label>
-                <span className='text-[10px] text-muted-foreground'>Optional</span>
+                <Label htmlFor='deal-original-price'>{t('regularPriceLabel')}</Label>
+                <span className='text-[10px] text-muted-foreground'>{t('common.optional')}</span>
               </div>
               <div className='relative'>
-                <span className='absolute start-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
-                  Rs.
+                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
+                  {t('common.currency')}
                 </span>
                 <Input
                   id='deal-original-price'
@@ -499,7 +377,7 @@ export function DealBuilderDialog({
                   step='1'
                   value={originalPrice}
                   onChange={(e) => setOriginalPrice(e.target.value)}
-                  placeholder='e.g. 2450'
+                  placeholder={t('regularPricePlaceholder')}
                   disabled={isPending}
                   className='ps-11'
                 />
@@ -512,19 +390,19 @@ export function DealBuilderDialog({
 
           {discountPercent > 0 ? (
             <div className='rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-2.5 text-xs text-emerald-800 dark:text-emerald-300 font-medium'>
-              Customer saves {formatPkr(toPaisa(Number(originalPrice) - Number(basePrice)))}{' '}
-              ({discountPercent}% off regular price)
+              {t('customerSaves')} {formatPkr(toPaisa(Number(originalPrice) - Number(basePrice)))}{' '}
+              ({discountPercent}{t('offRegularPrice')}
             </div>
           ) : null}
 
-          {/* Section 4: Description */}
+          {}
           <div className='space-y-1.5'>
-            <Label htmlFor='deal-description'>Deal Description</Label>
+            <Label htmlFor='deal-description'>{t('dealDescLabel')}</Label>
             <Textarea
               id='deal-description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder='Auto-generated from combo items or enter custom details'
+              placeholder={t('dealDescPlaceholder')}
               rows={2}
               dir='auto'
               disabled={isPending}
@@ -532,14 +410,13 @@ export function DealBuilderDialog({
             />
           </div>
 
-          {/* Section 5: Photo */}
+          {}
           <div className='space-y-1.5'>
-            <Label>Deal Photo</Label>
+            <Label>{t('dealPhotoLabel')}</Label>
             <div className='flex items-center gap-3'>
               {imagePreview ? (
                 <div className='relative size-16 rounded-md border overflow-hidden shrink-0 bg-muted'>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imagePreview} alt='Preview' className='size-full object-cover' />
+                  <Image src={imagePreview} alt={t('previewAlt')} fill unoptimized className='object-cover' />
                 </div>
               ) : (
                 <div className='flex size-16 items-center justify-center rounded-md border border-dashed text-muted-foreground shrink-0'>
@@ -565,9 +442,9 @@ export function DealBuilderDialog({
                   className='h-8 text-xs gap-1.5'
                 >
                   <IconUpload className='size-3.5' />
-                  <span>{imagePreview ? 'Change Photo' : 'Upload Photo'}</span>
+                  <span>{imagePreview ? t('menuItems.changeImage') : t('menuItems.uploadImage')}</span>
                 </Button>
-                <p className='text-[10px] text-muted-foreground'>JPG, PNG or WebP up to 3MB</p>
+                <p className='text-[10px] text-muted-foreground'>{t('imageHelp')}</p>
               </div>
             </div>
           </div>
@@ -582,11 +459,11 @@ export function DealBuilderDialog({
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type='submit' disabled={isPending}>
-              {isPending ? <Spinner className='mr-2 size-4' /> : null}
-              {isEditing ? 'Save Changes' : 'Create Deal'}
+              {isPending ? <Spinner className='me-2 size-4' /> : null}
+              {isEditing ? t('updateButton') : t('createButton')}
             </Button>
           </DialogFooter>
         </form>

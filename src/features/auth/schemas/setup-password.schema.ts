@@ -11,5 +11,3 @@ export function createSetupPasswordSchema(t: (key: string) => string) {
       path: ['confirmPassword']
     });
 }
-
-export type SetupPasswordSchemaType = z.infer<ReturnType<typeof createSetupPasswordSchema>>;

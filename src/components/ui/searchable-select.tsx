@@ -33,7 +33,6 @@ export interface SearchableSelectProps {
   triggerClassName?: string;
   pageSize?: number;
   allowClear?: boolean;
-  /** Optional async callback to fetch the next batch from the server */
   onLoadMore?: () => Promise<void> | void;
   hasMoreRemote?: boolean;
   isLoadingRemote?: boolean;
@@ -66,13 +65,11 @@ export function SearchableSelect({
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  // Find currently selected option
   const selectedOption = React.useMemo(() => {
     if (!value) return null;
     return options.find((opt) => opt.value === value) ?? null;
   }, [options, value]);
 
-  // Filter options based on search query
   const filteredOptions = React.useMemo(() => {
     if (!search.trim()) return options;
     const q = search.toLowerCase().trim();
@@ -83,7 +80,6 @@ export function SearchableSelect({
     );
   }, [options, search]);
 
-  // Display only the current paginated slice (starts at 20, increments by 20 on scroll)
   const displayedOptions = React.useMemo(() => {
     return filteredOptions.slice(0, visibleLimit);
   }, [filteredOptions, visibleLimit]);
@@ -91,12 +87,10 @@ export function SearchableSelect({
   const hasMoreLocal = visibleLimit < filteredOptions.length;
   const canLoadMore = hasMoreLocal || (hasMoreRemote && !isLoadingRemote);
 
-  // Auto-focus search input when popover opens
   React.useEffect(() => {
     if (open) {
       setVisibleLimit(pageSize);
       setSearch('');
-      // Small timeout to allow popover animation / mounting to complete
       const timer = setTimeout(() => {
         searchInputRef.current?.focus();
       }, 50);
@@ -104,7 +98,6 @@ export function SearchableSelect({
     }
   }, [open, pageSize]);
 
-  // Reset pagination when search query changes
   React.useEffect(() => {
     setVisibleLimit(pageSize);
     if (listRef.current) {
@@ -112,7 +105,6 @@ export function SearchableSelect({
     }
   }, [search, pageSize]);
 
-  // Handle scroll to bottom -> auto-fetch next 20 items ("like Instagram")
   const handleScroll = React.useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
       const target = e.currentTarget;
@@ -216,9 +208,9 @@ export function SearchableSelect({
                 'duration-100 data-[side=bottom]:slide-in-from-top-1 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 p-1.5'
               )}
             >
-              {/* Search Bar */}
+              {}
               <div className='relative mb-1.5 px-0.5'>
-                <div className='pointer-events-none absolute inset-y-0 start-2.5 flex items-center text-muted-foreground'>
+                <div className='pointer-events-none absolute inset-y-0 inset-s-2.5 flex items-center text-muted-foreground'>
                   <IconSearch className='h-3.5 w-3.5' />
                 </div>
                 <input
@@ -233,7 +225,7 @@ export function SearchableSelect({
                   <button
                     type='button'
                     onClick={() => setSearch('')}
-                    className='absolute inset-y-0 end-2 flex items-center text-muted-foreground hover:text-foreground cursor-pointer'
+                    className='absolute inset-y-0 inset-e-2 flex items-center text-muted-foreground hover:text-foreground cursor-pointer'
                     aria-label='Clear search'
                   >
                     <IconX className='h-3 w-3' />
@@ -241,7 +233,7 @@ export function SearchableSelect({
                 )}
               </div>
 
-              {/* Items Counter Header (when many items) */}
+              {}
               {filteredOptions.length > pageSize && (
                 <div className='flex items-center justify-between px-2 py-1 text-[11px] font-medium text-muted-foreground border-b border-border/50 mb-1'>
                   <span>Matches: {filteredOptions.length}</span>
@@ -251,7 +243,7 @@ export function SearchableSelect({
                 </div>
               )}
 
-              {/* Scrollable list with auto-fetch infinite scroll */}
+              {}
               <div
                 ref={listRef}
                 onScroll={handleScroll}
@@ -300,7 +292,7 @@ export function SearchableSelect({
                   })
                 )}
 
-                {/* Loading indicator when scrolling near bottom to fetch next 20 items */}
+                {}
                 {(isLoadingBatch || isLoadingRemote) && (
                   <div className='flex items-center justify-center gap-1.5 py-2 text-xs text-primary font-medium'>
                     <IconLoader2 className='h-3.5 w-3.5 animate-spin' />
@@ -308,7 +300,7 @@ export function SearchableSelect({
                   </div>
                 )}
 
-                {/* Subtle end indicator when all loaded */}
+                {}
                 {!hasMoreLocal && !hasMoreRemote && filteredOptions.length > pageSize && (
                   <div className='py-1.5 text-center text-[10px] text-muted-foreground/70'>
                     All {filteredOptions.length} items loaded
@@ -320,7 +312,7 @@ export function SearchableSelect({
         </PopoverPrimitive.Portal>
       </PopoverPrimitive.Root>
 
-      {/* Hidden input to support native form submissions & validations */}
+      {}
       {required && (
         <input
           tabIndex={-1}

@@ -22,6 +22,11 @@ export function ComboboxField({
   const effSearchPlaceholder = searchPlaceholder ?? t('search.option');
   const effEmptyMessage = emptyMessage ?? t('search.noResults');
 
+  const handleValueChange = (val: string) => {
+    field.handleChange(val);
+    field.handleBlur();
+  };
+
   return (
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={field.name}>
@@ -32,10 +37,7 @@ export function ComboboxField({
         id={field.name}
         name={field.name}
         value={field.state.value ?? ''}
-        onChange={(val) => {
-          field.handleChange(val);
-          field.handleBlur();
-        }}
+        onChange={handleValueChange}
         placeholder={effPlaceholder}
         searchPlaceholder={effSearchPlaceholder}
         emptyText={effEmptyMessage}

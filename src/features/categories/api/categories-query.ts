@@ -3,7 +3,7 @@ import { appFetch } from '@/lib/api/app-fetch';
 import type {
   CategoryWithCount,
   CreateCategoryInput,
-  UpdateCategoryInput,
+  UpdateCategoryMutationPayload,
   ReorderCategoriesInput
 } from '../types';
 
@@ -35,7 +35,7 @@ export function useUpdateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateCategoryInput }) =>
+    mutationFn: ({ id, input }: UpdateCategoryMutationPayload) =>
       appFetch<CategoryWithCount>(`/api/categories/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(input)

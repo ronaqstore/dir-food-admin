@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -16,11 +15,15 @@ import {
   IconRocket
 } from '@tabler/icons-react';
 import { Link } from '@/i18n/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
+import { STOREFRONT_BASE_URL, WHATSAPP_BASE_URL } from '@/constants/api';
+import { env } from '@/config/env';
+import { formatPkr } from '@/lib/money';
+import type { MissingPublishStep } from '../types';
 import {
   useRestaurantProfile,
   usePublishReadiness,
@@ -42,7 +45,6 @@ export function OwnerOverview() {
   const isPending = currentStatus === 'PENDING';
   const isActive = currentStatus === 'ACTIVE';
 
-  // Calculate check progress
   const checks = {
     whatsapp: Boolean(profile?.whatsappNumber || readiness?.checks?.whatsapp),
     hours: readiness?.checks
@@ -56,14 +58,7 @@ export function OwnerOverview() {
       : !readiness?.missingPrerequisites?.some((p) => p.toLowerCase().includes('area'))
   };
 
-  // Determine only what is actually missing to publish
-  const missingSteps: {
-    id: 'items' | 'whatsapp' | 'hours' | 'deliveryAreas';
-    description: string;
-    href: string;
-    buttonText: string;
-    icon: React.ReactNode;
-  }[] = [];
+  const missingSteps: MissingPublishStep[] = [];
 
   if (!checks.items) {
     missingSteps.push({
@@ -104,7 +99,7 @@ export function OwnerOverview() {
 
   const isReadyToPublish = readiness?.isReadyToPublish ?? missingSteps.length === 0;
 
-  const storefrontBase = process.env.NEXT_PUBLIC_STOREFRONT_URL || 'https://dirfood.pk';
+  const storefrontBase = env.NEXT_PUBLIC_WEB_URL || STOREFRONT_BASE_URL;
   const storefrontUrl = profile?.slug ? `${storefrontBase}/r/${profile.slug}` : '';
 
   const handlePublish = async () => {
@@ -134,12 +129,12 @@ export function OwnerOverview() {
     const shareText = encodeURIComponent(
       `Assalam-o-Alaikum! Our restaurant ${restaurantName} is now live on Dir Food. Check out our menu and place orders here: ${storefrontUrl}`
     );
-    window.open(`https://wa.me/?text=${shareText}`, '_blank', 'noopener,noreferrer');
+    window.open(`${WHATSAPP_BASE_URL}/?text=${shareText}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-6'>
-      {/* Welcome & Status Header */}
+      {}
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div>
           <h1 className='text-2xl sm:text-3xl font-bold tracking-tight text-foreground'>
@@ -160,18 +155,8 @@ export function OwnerOverview() {
           >
             {isPending ? t('dashboard.setupInProgressBadge') : t('dashboard.activeBadge')}
           </Badge>
-          {profile?.subscriptionEndsAt ? (
-            <Badge
-              variant='outline'
-              className='border-primary/30 bg-primary/10 text-primary text-xs font-medium'
-            >
-              {t('restaurantSettings.trialDaysRemaining', {
-                date: new Date(profile.subscriptionEndsAt).toLocaleDateString()
-              })}
-            </Badge>
-          ) : null}
           {isActive && storefrontUrl ? (
-            <Button
+            <Button type='button'
               render={<a href={storefrontUrl} target='_blank' rel='noopener noreferrer' />}
               variant='outline'
               size='sm'
@@ -184,7 +169,7 @@ export function OwnerOverview() {
         </div>
       </div>
 
-      {/* Option 2: Active Storefront Live Banner */}
+      {}
       {isActive ? (
         <Card className='border-emerald-500/30 bg-emerald-500/5 shadow-xs'>
           <CardContent className='flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between'>
@@ -197,16 +182,6 @@ export function OwnerOverview() {
                   <h3 className='font-semibold text-foreground text-base'>
                     {t('dashboard.storefrontLiveTitle')}
                   </h3>
-                  {profile?.subscriptionEndsAt ? (
-                    <Badge
-                      variant='outline'
-                      className='border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs'
-                    >
-                      {t('restaurantSettings.trialDaysRemaining', {
-                        date: new Date(profile.subscriptionEndsAt).toLocaleDateString()
-                      })}
-                    </Badge>
-                  ) : null}
                 </div>
                 <p className='text-xs sm:text-sm text-muted-foreground'>
                   {t('dashboard.storefrontLiveDesc')}
@@ -215,7 +190,7 @@ export function OwnerOverview() {
             </div>
 
             <div className='flex flex-wrap items-center gap-2 pt-2 sm:pt-0'>
-              <Button
+              <Button type='button'
                 onClick={handleCopyLink}
                 variant='outline'
                 size='sm'
@@ -224,11 +199,11 @@ export function OwnerOverview() {
                 <IconCopy className='size-3.5' />
                 <span>{t('dashboard.copyMenuLink')}</span>
               </Button>
-              <Button
+              <Button type='button'
                 onClick={handleShareWhatsApp}
                 variant='default'
                 size='sm'
-                className='gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white font-medium'
+                className='gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium'
               >
                 <IconBrandWhatsapp className='size-4' />
                 <span>{t('dashboard.shareOnWhatsapp')}</span>
@@ -238,7 +213,7 @@ export function OwnerOverview() {
         </Card>
       ) : null}
 
-      {/* Actionable Prompt: Only show what is NOT done yet */}
+      {}
       {isPending ? (
         missingSteps.length > 0 ? (
           <div className='flex flex-col gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3.5 sm:flex-row sm:items-center sm:justify-between shadow-2xs'>
@@ -257,7 +232,7 @@ export function OwnerOverview() {
             </div>
 
             <div className='flex items-center gap-2 shrink-0 self-end sm:self-center'>
-              <Button
+              <Button type='button'
                 render={<Link href={missingSteps[0].href} />}
                 size='sm'
                 variant='default'
@@ -285,7 +260,7 @@ export function OwnerOverview() {
             </div>
 
             <div className='flex items-center gap-2 shrink-0 self-end sm:self-center'>
-              <Button
+              <Button type='button'
                 onClick={handlePublish}
                 disabled={publishRestaurant.isPending}
                 size='sm'
@@ -308,9 +283,9 @@ export function OwnerOverview() {
         )
       ) : null}
 
-      {/* Key Metric Cards */}
+      {}
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-        {/* Today's Orders */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -326,7 +301,7 @@ export function OwnerOverview() {
           </CardContent>
         </Card>
 
-        {/* Today's Sales */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -337,12 +312,12 @@ export function OwnerOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>Rs 0</div>
+            <div className='text-2xl font-bold'>{formatPkr(0)}</div>
             <p className='text-[11px] text-muted-foreground mt-1'>{t('dashboard.todaySalesHint')}</p>
           </CardContent>
         </Card>
 
-        {/* Active Orders */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -358,7 +333,7 @@ export function OwnerOverview() {
           </CardContent>
         </Card>
 
-        {/* Menu Items */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -377,7 +352,7 @@ export function OwnerOverview() {
         </Card>
       </div>
 
-      {/* Recent Orders Preview */}
+      {}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
           <CardTitle className='text-base font-semibold'>{t('dashboard.recentOrders')}</CardTitle>

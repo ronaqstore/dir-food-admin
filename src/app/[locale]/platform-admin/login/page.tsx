@@ -23,7 +23,7 @@ export default async function PlatformAdminLoginPage() {
         aria-hidden
         className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.6_0.1_20_/_0.1),transparent_55%)]'
       />
-      <div className='fixed top-4 end-4 z-20 flex items-center gap-2'>
+      <div className='fixed top-4 inset-e-4 z-20 flex items-center gap-2'>
         <LocaleSwitcher />
         <ThemeModeToggle />
       </div>

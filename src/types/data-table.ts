@@ -75,19 +75,4 @@ export interface UseDataTableProps<TData>
   startTransition?: React.TransitionStartFunction;
 }
 
-export interface ListFilters {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sort?: string;
-  [key: string]: unknown;
-}
-
-export interface Paginated<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
 export * from '@/components/data-table/types';

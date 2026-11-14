@@ -4,11 +4,7 @@ import * as React from 'react';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { checkRestaurantName, type CheckRestaurantNameResult } from '@/features/auth/api/auth.service';
-
-interface RestaurantNameAvailabilityProps {
-  name: string;
-  className?: string;
-}
+import type { RestaurantNameAvailabilityProps } from '@/types/common';
 
 export function RestaurantNameAvailability({ name, className = '' }: RestaurantNameAvailabilityProps) {
   const t = useTranslations('auth');
@@ -29,7 +25,6 @@ export function RestaurantNameAvailability({ name, className = '' }: RestaurantN
         const res = await checkRestaurantName(trimmed);
         setResult(res);
       } catch {
-        // Silently ignore network check failures
         setResult(null);
       } finally {
         setChecking(false);
@@ -61,10 +56,10 @@ export function RestaurantNameAvailability({ name, className = '' }: RestaurantN
             {t('nameCollisionWarning', { name: result.existingRestaurant?.name || name })}
           </span>
         </div>
-        <p className='text-[11px] text-amber-800/90 dark:text-amber-300/90 pl-5 leading-relaxed'>
+        <p className='text-[11px] text-amber-800/90 dark:text-amber-300/90 ps-5 leading-relaxed'>
           {t('nameCollisionTip', { name: name.trim() })}
         </p>
-        <p className='text-[10px] font-mono text-muted-foreground pl-5 pt-0.5'>
+        <p className='text-[10px] font-mono text-muted-foreground ps-5 pt-0.5'>
           {t('nameSuggestedSlug', { slug: result.suggestedSlug })}
         </p>
       </div>

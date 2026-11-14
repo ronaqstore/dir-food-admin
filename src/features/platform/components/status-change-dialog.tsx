@@ -16,15 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useUpdatePlatformRestaurantStatus } from '../api/platform-query';
-import type { PlatformRestaurantStatus } from '../types';
-
-interface StatusChangeDialogProps {
-  restaurantId: string | null;
-  restaurantName: string;
-  targetStatus: PlatformRestaurantStatus | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { StatusChangeDialogProps } from '../types';
 
 export function StatusChangeDialog({
   restaurantId,
@@ -52,7 +44,7 @@ export function StatusChangeDialog({
     if (!restaurantId) return;
 
     if (isDestructive && !reason.trim()) {
-      toast.error('A reason is required when suspending or deactivating');
+      toast.error(t('reasonRequired'));
       return;
     }
 

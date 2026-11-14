@@ -11,9 +11,11 @@ import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { IconPhoto, IconUpload, IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
+import { TrialBadge } from '@/components/common/trial-badge';
+import { IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { isReservedPhoneNumber } from '@/lib/auth/phone';
+import { ProfileMediaSection } from './profile-media-section';
 import {
   useRestaurantProfile,
   useUpdateProfile,
@@ -38,7 +40,6 @@ export function ProfileTab() {
   const deleteImage = useDeleteRestaurantImage();
   const publishRestaurant = usePublishRestaurant();
 
-  // Form states
   const [name, setName] = React.useState('');
   const [cityId, setCityId] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -47,12 +48,8 @@ export function ProfileTab() {
   const [whatsappNumber, setWhatsappNumber] = React.useState('');
   const [minOrder, setMinOrder] = React.useState('');
 
-  // Availability states
   const [manualStatus, setManualStatus] = React.useState<ManualAvailabilityStatus>('AUTO');
   const [unavailableNote, setUnavailableNote] = React.useState('');
-
-  const logoInputRef = React.useRef<HTMLInputElement>(null);
-  const coverInputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (profile) {
@@ -75,7 +72,7 @@ export function ProfileTab() {
       (contactPhone.trim() && isReservedPhoneNumber(contactPhone)) ||
       (whatsappNumber.trim() && isReservedPhoneNumber(whatsappNumber))
     ) {
-      toast.error('This phone number is already in use');
+      toast.error(t('restaurantSettings.phoneInUse'));
       return;
     }
 
@@ -118,7 +115,7 @@ export function ProfileTab() {
     if (!file) return;
 
     if (file.size > 3 * 1024 * 1024) {
-      toast.error('Image must be less than 3MB');
+      toast.error(t('menuItems.imageSizeLimit'));
       return;
     }
 
@@ -169,7 +166,7 @@ export function ProfileTab() {
 
   return (
     <div className='space-y-8'>
-      {/* 1. Readiness / Launch Card (if PENDING) or Status Banner */}
+      {}
       {isPendingPublish ? (
         <div className='rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-xs'>
           <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
@@ -186,7 +183,7 @@ export function ProfileTab() {
             </div>
 
             <div>
-              <Button
+              <Button type='button'
                 onClick={handlePublish}
                 disabled={!readiness?.isReadyToPublish || isPending}
                 className='gap-2 shadow-xs'
@@ -206,7 +203,7 @@ export function ProfileTab() {
             </div>
           </div>
 
-          {/* Missing items checklist */}
+          {}
           {readiness?.missingPrerequisites && readiness.missingPrerequisites.length > 0 ? (
             <div className='mt-4 flex flex-wrap gap-2 pt-2 border-t border-primary/10'>
               {readiness.missingPrerequisites.map((prereq) => (
@@ -234,127 +231,22 @@ export function ProfileTab() {
             <span className='font-semibold text-sm'>{t('restaurantSettings.activeBadge')}</span>
           </div>
           {profile?.subscriptionEndsAt ? (
-            <span className='text-xs text-muted-foreground'>
-              {t('restaurantSettings.trialDaysRemaining', {
-                date: new Date(profile.subscriptionEndsAt).toLocaleDateString()
-              })}
-            </span>
+            <TrialBadge subscriptionEndsAt={profile.subscriptionEndsAt} />
           ) : null}
         </div>
       ) : null}
 
-      {/* 2. Visuals: Logo & Cover */}
-      <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-        <h3 className='text-base font-semibold text-foreground border-b pb-3'>
-          {t('restaurantSettings.mediaTitle')}
-        </h3>
+      {}
+      <ProfileMediaSection
+        logoUrl={profile?.logoUrl}
+        coverUrl={profile?.coverUrl}
+        isPending={isPending}
+        onUploadImage={handleUploadImage}
+        onDeleteImage={handleDeleteImage}
+        t={t}
+      />
 
-        <div className='grid gap-6 sm:grid-cols-2'>
-          {/* Logo */}
-          <div className='space-y-3'>
-            <Label>{t('restaurantSettings.logo')}</Label>
-            <input
-              ref={logoInputRef}
-              type='file'
-              accept='image/jpeg,image/png,image/webp'
-              className='hidden'
-              onChange={(e) => handleUploadImage(e, 'logo')}
-            />
-            <div className='flex items-center gap-4'>
-              <div className='relative size-20 shrink-0 overflow-hidden rounded-full border bg-muted flex items-center justify-center'>
-                {profile?.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={profile.logoUrl} alt='Logo' className='size-full object-cover' />
-                ) : (
-                  <IconPhoto className='size-8 text-muted-foreground/40' />
-                )}
-              </div>
-              <div className='flex flex-wrap gap-2'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() => logoInputRef.current?.click()}
-                  disabled={isPending}
-                  className='gap-1.5'
-                >
-                  <IconUpload className='size-3.5' />
-                  <span>
-                    {profile?.logoUrl
-                      ? t('restaurantSettings.changeLogo')
-                      : t('restaurantSettings.uploadLogo')}
-                  </span>
-                </Button>
-                {profile?.logoUrl ? (
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => handleDeleteImage('logo')}
-                    disabled={isPending}
-                    className='text-destructive hover:text-destructive'
-                  >
-                    {t('restaurantSettings.removePhoto')}
-                  </Button>
-                ) : null}
-              </div>
-            </div>
-          </div>
-
-          {/* Cover */}
-          <div className='space-y-3'>
-            <Label>{t('restaurantSettings.cover')}</Label>
-            <input
-              ref={coverInputRef}
-              type='file'
-              accept='image/jpeg,image/png,image/webp'
-              className='hidden'
-              onChange={(e) => handleUploadImage(e, 'cover')}
-            />
-            <div className='flex items-center gap-4'>
-              <div className='relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border bg-muted flex items-center justify-center'>
-                {profile?.coverUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={profile.coverUrl} alt='Cover' className='size-full object-cover' />
-                ) : (
-                  <IconPhoto className='size-8 text-muted-foreground/40' />
-                )}
-              </div>
-              <div className='flex flex-wrap gap-2'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() => coverInputRef.current?.click()}
-                  disabled={isPending}
-                  className='gap-1.5'
-                >
-                  <IconUpload className='size-3.5' />
-                  <span>
-                    {profile?.coverUrl
-                      ? t('restaurantSettings.changeCover')
-                      : t('restaurantSettings.uploadCover')}
-                  </span>
-                </Button>
-                {profile?.coverUrl ? (
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => handleDeleteImage('cover')}
-                    disabled={isPending}
-                    className='text-destructive hover:text-destructive'
-                  >
-                    {t('restaurantSettings.removePhoto')}
-                  </Button>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Availability Switch */}
+      {}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-5'>
         <div>
           <h3 className='text-base font-semibold text-foreground'>
@@ -445,7 +337,7 @@ export function ProfileTab() {
         </div>
       </div>
 
-      {/* 4. Store Profile Details */}
+      {}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
         <h3 className='text-base font-semibold text-foreground border-b pb-3'>
           {t('restaurantSettings.detailsTitle')}
@@ -498,8 +390,8 @@ export function ProfileTab() {
             <div className='space-y-1.5'>
               <Label htmlFor='min-order'>{t('restaurantSettings.minOrder')}</Label>
               <div className='relative'>
-                <span className='absolute start-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
-                  Rs.
+                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
+                  {t('common.currency')}
                 </span>
                 <Input
                   id='min-order'
@@ -518,14 +410,14 @@ export function ProfileTab() {
 
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='space-y-1.5'>
-              <Label htmlFor='restaurant-city'>District / City</Label>
+              <Label htmlFor='restaurant-city'>{t('restaurantSettings.districtLabel')}</Label>
               <SearchableSelect
                 id='restaurant-city'
                 value={cityId}
                 onChange={setCityId}
                 disabled={isPending}
-                placeholder='Select District (Default: Lower Dir)'
-                searchPlaceholder='Search district or city...'
+                placeholder={t('restaurantSettings.selectDistrictPlaceholder')}
+                searchPlaceholder={t('restaurantSettings.searchDistrictPlaceholder')}
                 options={
                   cities?.map((c) => ({
                     value: c.id,

@@ -16,17 +16,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
+import { WHATSAPP_BASE_URL } from '@/constants/api';
 import { toPaisa } from '@/lib/money';
 import { isReservedPhoneNumber } from '@/lib/auth/phone';
 import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
 import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import type { CreateRestaurantResponse } from '../types';
-
-interface CreateRestaurantDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { CreateRestaurantResponse, CreateRestaurantDialogProps } from '../types';
 
 export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantDialogProps) {
   const t = useTranslations('platformRestaurants');
@@ -71,7 +67,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
       isReservedPhoneNumber(contactPhone) ||
       (whatsappNumber.trim() && isReservedPhoneNumber(whatsappNumber))
     ) {
-      toast.error('This phone number is already in use');
+      toast.error(t('phoneInUse'));
       return;
     }
 
@@ -114,11 +110,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
   const userPhone = result?.user.phone;
   const userName = result?.user.name;
   const restaurantName = result?.restaurant.name;
-  const rawSetupLink = result?.setupLink;
-  const setupLink =
-    typeof rawSetupLink === 'object' && rawSetupLink !== null
-      ? (rawSetupLink as unknown as { setupUrl?: string }).setupUrl ?? ''
-      : (rawSetupLink ?? '');
+  const setupLink = result?.setupLink ?? '';
 
   const handleCopyLink = () => {
     if (!setupLink) return;
@@ -136,7 +128,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
   const whatsappMessageUrl = React.useMemo(() => {
     if (!cleanOwnerPhone || !userName || !restaurantName || !setupLink) return '';
     const msg = `Assalam-o-Alaikum ${userName}, your restaurant '${restaurantName}' has been created on Dir Food! Set up your password here to start taking orders: ${setupLink}`;
-    return `https://wa.me/${cleanOwnerPhone}?text=${encodeURIComponent(msg)}`;
+    return `${WHATSAPP_BASE_URL}/${cleanOwnerPhone}?text=${encodeURIComponent(msg)}`;
   }, [cleanOwnerPhone, userName, restaurantName, setupLink]);
 
   return (
@@ -165,7 +157,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   value={setupLink}
                   className='font-mono text-xs bg-background'
                 />
-                <Button size='sm' onClick={handleCopyLink} className='shrink-0 gap-1'>
+                <Button type='button' size='sm' onClick={handleCopyLink} className='shrink-0 gap-1'>
                   <Icons.clipboard className='size-4' />
                   {t('copyLink')}
                 </Button>
@@ -174,7 +166,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
             <DialogFooter className='flex-col sm:flex-row gap-2'>
               {whatsappMessageUrl && (
-                <Button
+                <Button type='button'
                   className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5'
                   render={<a href={whatsappMessageUrl} target='_blank' rel='noopener noreferrer' />}
                 >
@@ -182,7 +174,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   {t('sendViaWhatsApp')}
                 </Button>
               )}
-              <Button variant='outline' onClick={() => onOpenChange(false)}>
+              <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
                 {t('done')}
               </Button>
             </DialogFooter>
@@ -212,13 +204,13 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
               </div>
 
               <div className='space-y-1.5'>
-                <Label htmlFor='create-city'>District / City</Label>
+                <Label htmlFor='create-city'>{t('districtLabel')}</Label>
                 <SearchableSelect
                   id='create-city'
                   value={cityId}
                   onChange={setCityId}
-                  placeholder='Select District (Default: Lower Dir)'
-                  searchPlaceholder='Search district or city...'
+                  placeholder={t('selectDistrictPlaceholder')}
+                  searchPlaceholder={t('searchDistrictPlaceholder')}
                   options={
                     cities?.map((c) => ({
                       value: c.id,
@@ -268,7 +260,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   <Label htmlFor='create-cuisines'>{t('cuisinesCommaLabel')}</Label>
                   <Input
                     id='create-cuisines'
-                    placeholder='Desi, Karahi, BBQ'
+                    placeholder={t('cuisinesPlaceholder')}
                     value={cuisines}
                     onChange={(e) => setCuisines(e.target.value)}
                   />

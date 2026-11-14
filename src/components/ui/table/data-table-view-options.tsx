@@ -28,7 +28,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
     <Popover>
       <PopoverTrigger
         render={
-          <Button
+          <Button type='button'
             aria-label={t('table.toggleColumns')}
             variant='outline'
             size='sm'

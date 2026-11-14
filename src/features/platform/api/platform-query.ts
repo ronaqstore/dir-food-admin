@@ -3,19 +3,27 @@ import { appFetch } from '@/lib/api/app-fetch';
 import type {
   CreateRestaurantInput,
   CreateRestaurantResponse,
-  ExtendSubscriptionInput,
   MasterArea,
   CreateAreaInput,
-  UpdateAreaInput,
-  ApproveAreaInput,
   PlatformCity,
   CreateCityInput,
   PaginatedRestaurantsResponse,
   PlatformRestaurant,
   PlatformRestaurantDetail,
   QueryRestaurantsFilter,
-  UpdateRestaurantStatusInput
+  QueryAreasFilter,
+  PaginatedAreasResponse,
+  UpdateRestaurantStatusPayload,
+  ExtendSubscriptionPayload,
+  IssueSetupLinkResponse,
+  UpdateMasterAreaPayload,
+  MutationSuccessResponse,
+  ApproveMasterAreaPayload,
+  MergeMasterAreaPayload,
+  PlatformActivitySummary
 } from '../types';
+
+export type { PlatformActivitySummary };
 
 export const PLATFORM_RESTAURANTS_QUERY_KEY = ['platform-restaurants'] as const;
 
@@ -27,6 +35,21 @@ export function usePlatformRestaurants(filter?: QueryRestaurantsFilter) {
   if (filter?.status && filter.status !== 'ALL') {
     params.set('status', filter.status);
   }
+  if (filter?.subStatus && filter.subStatus !== 'ALL') {
+    params.set('subStatus', filter.subStatus);
+  }
+  if (filter?.cityId && filter.cityId !== 'ALL') {
+    params.set('cityId', filter.cityId);
+  }
+  if (filter?.sort) {
+    params.set('sort', filter.sort);
+  }
+  if (filter?.sortBy) {
+    params.set('sortBy', filter.sortBy);
+  }
+  if (filter?.sortOrder) {
+    params.set('sortOrder', filter.sortOrder);
+  }
 
   const qs = params.toString() ? `?${params.toString()}` : '';
 
@@ -36,7 +59,12 @@ export function usePlatformRestaurants(filter?: QueryRestaurantsFilter) {
       filter?.page,
       filter?.limit,
       filter?.q,
-      filter?.status
+      filter?.status,
+      filter?.subStatus,
+      filter?.cityId,
+      filter?.sort,
+      filter?.sortBy,
+      filter?.sortOrder
     ],
     queryFn: () => appFetch<PaginatedRestaurantsResponse>(`/api/admin/restaurants${qs}`)
   });
@@ -70,7 +98,7 @@ export function useUpdatePlatformRestaurantStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateRestaurantStatusInput }) =>
+    mutationFn: ({ id, input }: UpdateRestaurantStatusPayload) =>
       appFetch<PlatformRestaurant>(`/api/admin/restaurants/${id}/status`, {
         method: 'PATCH',
         body: JSON.stringify(input)
@@ -87,7 +115,7 @@ export function useExtendPlatformSubscription() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: ExtendSubscriptionInput }) =>
+    mutationFn: ({ id, input }: ExtendSubscriptionPayload) =>
       appFetch<PlatformRestaurant>(`/api/admin/restaurants/${id}/subscription/extend`, {
         method: 'POST',
         body: JSON.stringify(input)
@@ -102,13 +130,7 @@ export function useExtendPlatformSubscription() {
 export function useIssueSetupLink() {
   return useMutation({
     mutationFn: (id: string) =>
-      appFetch<{
-        setupLink?: string;
-        setupUrl?: string;
-        userId?: string;
-        userName?: string;
-        userPhone?: string;
-      }>(`/api/admin/restaurants/${id}/setup-link`, {
+      appFetch<IssueSetupLinkResponse>(`/api/admin/restaurants/${id}/setup-link`, {
         method: 'POST'
       })
   });
@@ -149,6 +171,46 @@ export function useMasterAreas(cityId?: string) {
   });
 }
 
+export function usePaginatedMasterAreas(filter?: QueryAreasFilter) {
+  const params = new URLSearchParams();
+  if (filter?.page) params.set('page', String(filter.page));
+  if (filter?.limit) params.set('limit', String(filter.limit));
+  if (filter?.q) params.set('q', filter.q);
+  if (filter?.cityId && filter.cityId !== 'ALL') {
+    params.set('cityId', filter.cityId);
+  }
+  if (filter?.needsReview !== undefined) {
+    params.set('needsReview', String(filter.needsReview));
+  }
+  if (filter?.sort) {
+    params.set('sort', filter.sort);
+  }
+  if (filter?.sortBy) {
+    params.set('sortBy', filter.sortBy);
+  }
+  if (filter?.sortOrder) {
+    params.set('sortOrder', filter.sortOrder);
+  }
+
+  const qs = params.toString() ? `?${params.toString()}` : '';
+
+  return useQuery({
+    queryKey: [
+      ...MASTER_AREAS_QUERY_KEY,
+      'paginated',
+      filter?.page,
+      filter?.limit,
+      filter?.q,
+      filter?.cityId,
+      filter?.needsReview,
+      filter?.sort,
+      filter?.sortBy,
+      filter?.sortOrder
+    ],
+    queryFn: () => appFetch<PaginatedAreasResponse>(`/api/admin/areas${qs}`)
+  });
+}
+
 export function useCreateMasterArea() {
   const queryClient = useQueryClient();
 
@@ -168,7 +230,7 @@ export function useUpdateMasterArea() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateAreaInput }) =>
+    mutationFn: ({ id, input }: UpdateMasterAreaPayload) =>
       appFetch<MasterArea>(`/api/admin/areas/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(input)
@@ -184,7 +246,7 @@ export function useDeleteMasterArea() {
 
   return useMutation({
     mutationFn: (id: string) =>
-      appFetch<{ success: boolean; message: string }>(`/api/admin/areas/${id}`, {
+      appFetch<MutationSuccessResponse>(`/api/admin/areas/${id}`, {
         method: 'DELETE'
       }),
     onSuccess: () => {
@@ -197,7 +259,7 @@ export function useApproveMasterArea() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input?: ApproveAreaInput }) =>
+    mutationFn: ({ id, input }: ApproveMasterAreaPayload) =>
       appFetch<MasterArea>(`/api/admin/areas/${id}/approve`, {
         method: 'POST',
         body: JSON.stringify(input || {})
@@ -212,8 +274,8 @@ export function useMergeMasterArea() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ sourceAreaId, targetAreaId }: { sourceAreaId: string; targetAreaId: string }) =>
-      appFetch<{ success: boolean; message: string }>(`/api/admin/areas/${sourceAreaId}/merge`, {
+    mutationFn: ({ sourceAreaId, targetAreaId }: MergeMasterAreaPayload) =>
+      appFetch<MutationSuccessResponse>(`/api/admin/areas/${sourceAreaId}/merge`, {
         method: 'POST',
         body: JSON.stringify({ targetAreaId })
       }),
@@ -221,16 +283,6 @@ export function useMergeMasterArea() {
       queryClient.invalidateQueries({ queryKey: MASTER_AREAS_QUERY_KEY });
     }
   });
-}
-
-export interface PlatformActivitySummary {
-  totalRestaurants: number;
-  pendingCount: number;
-  activeCount: number;
-  suspendedCount: number;
-  deactivatedCount: number;
-  intentsCreated: number;
-  intentsWhatsappOpened: number;
 }
 
 export function usePlatformActivity(range: '7d' | '30d' = '7d') {

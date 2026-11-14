@@ -37,6 +37,7 @@ const DISMISS_DAYS = 14;
 const MIN_VISITS = 2;
 
 function readDismissed(): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     const raw = localStorage.getItem(DISMISS_KEY);
     if (!raw) return false;
@@ -57,6 +58,7 @@ function resolveSurface(): Surface {
 let inMemoryAutoPrompt = false;
 
 function takeAutoPromptFlag(): boolean {
+  if (typeof window === 'undefined') return inMemoryAutoPrompt;
   try {
     if (sessionStorage.getItem(AUTO_PROMPT_KEY) !== '1') return inMemoryAutoPrompt;
     sessionStorage.removeItem(AUTO_PROMPT_KEY);
@@ -70,6 +72,10 @@ function takeAutoPromptFlag(): boolean {
 }
 
 function setAutoPromptFlag(): void {
+  if (typeof window === 'undefined') {
+    inMemoryAutoPrompt = true;
+    return;
+  }
   try {
     sessionStorage.setItem(AUTO_PROMPT_KEY, '1');
   } catch {
@@ -155,7 +161,8 @@ export function InstallPrompt({ variant = 'both', className }: InstallPromptProp
     return () => window.clearTimeout(timer);
   }, [eligible, standalone, variant]);
 
-  const dismissBanner = () => {
+  const handleDismissBanner = React.useCallback(() => {
+    if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(DISMISS_KEY, String(Date.now()));
     } catch {
@@ -165,7 +172,7 @@ export function InstallPrompt({ variant = 'both', className }: InstallPromptProp
     }
     setShowBanner(false);
     setEligible(false);
-  };
+  }, []);
 
   const openHelp = (reinstall: boolean) => {
     setNeedsReinstall(reinstall);
@@ -298,7 +305,7 @@ export function InstallPrompt({ variant = 'both', className }: InstallPromptProp
         <div
           role='region'
           aria-label={menuLabel}
-          className='border-border bg-card fixed inset-x-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-40 rounded-xl border p-3 shadow-lg sm:inset-x-auto sm:end-4 sm:bottom-4 sm:max-w-sm'
+          className='border-border bg-card fixed inset-x-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-40 rounded-xl border p-3 shadow-lg sm:inset-x-auto sm:inset-e-4 sm:bottom-4 sm:max-w-sm'
         >
           <p className='text-sm font-medium'>
             {alreadyInstalled ? t('pwa.removeAndNewIcon') : t('pwa.installApp')}
@@ -326,7 +333,7 @@ export function InstallPrompt({ variant = 'both', className }: InstallPromptProp
                   ? t('pwa.removeAndNewIcon')
                   : t('pwa.installApp')}
             </Button>
-            <Button type='button' size='sm' variant='ghost' onClick={dismissBanner}>
+            <Button type='button' size='sm' variant='ghost' onClick={handleDismissBanner}>
               {t('pwa.dismiss')}
             </Button>
           </div>

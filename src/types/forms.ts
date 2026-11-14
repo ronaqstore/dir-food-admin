@@ -2,7 +2,6 @@ import type * as React from 'react';
 import type { DropzoneProps } from 'react-dropzone';
 import type { Textarea } from '@/components/ui/textarea';
 import type { Input } from '@/components/ui/input';
-import type { ListFilters, Paginated } from './data-table';
 
 export interface BaseFieldProps {
   label: string;
@@ -96,37 +95,3 @@ export type TextFieldProps = BaseFieldProps &
   Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange' | 'onBlur'> & {
     startIcon?: IconComponent;
   };
-
-export interface NamedEntity {
-  id: string;
-  name: string;
-  is_active?: boolean;
-}
-
-export interface InfiniteEntitySelectProps<T extends NamedEntity> {
-  value: string;
-  onValueChange: (value: string, item: T | null) => void;
-  queryKey: readonly unknown[];
-  fetchPage: (filters: ListFilters) => Promise<Paginated<T>>;
-  placeholder?: string;
-  searchPlaceholder?: string;
-  emptyMessage?: string;
-  selectedLabel?: string;
-  activeOnly?: boolean;
-  disabled?: boolean;
-  className?: string;
-  extraItems?: NamedEntity[];
-}
-
-export interface FormEntitySelectProps<T extends NamedEntity> extends InfiniteEntitySelectProps<T> {
-  label: string;
-  required?: boolean;
-  name: string;
-  isInvalid: boolean;
-  errors: Array<{ message?: string } | undefined>;
-  onBlur?: () => void;
-}
-
-export interface SubFieldApi<T = string> {
-  handleChange: (val: T) => void;
-}

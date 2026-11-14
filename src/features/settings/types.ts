@@ -3,7 +3,6 @@ import type {
   PublishReadinessDTO,
   ManualAvailabilityStatus,
   DayScheduleDTO,
-  TimeRangeDTO,
   DeliveryAreaItemDTO
 } from '@/lib/api/types';
 
@@ -12,7 +11,6 @@ export type {
   PublishReadinessDTO,
   ManualAvailabilityStatus,
   DayScheduleDTO,
-  TimeRangeDTO,
   DeliveryAreaItemDTO
 };
 
@@ -23,7 +21,7 @@ export interface UpdateRestaurantProfileInput {
   addressText?: string;
   contactPhone?: string;
   whatsappNumber?: string;
-  minOrderAmount?: number; // in paisa
+  minOrderAmount?: number;
   cityId?: string;
 }
 
@@ -32,12 +30,14 @@ export interface UpdateAvailabilityInput {
   unavailableNote?: string;
 }
 
+export interface TimeRangeInput {
+  openTime: string;
+  closeTime: string;
+}
+
 export interface DayHoursInput {
   dayOfWeek: number;
-  ranges: Array<{
-    openTime: string;
-    closeTime: string;
-  }>;
+  ranges: TimeRangeInput[];
 }
 
 export interface UpdateHoursInput {
@@ -46,10 +46,60 @@ export interface UpdateHoursInput {
 
 export interface DeliveryAreaUpdateItem {
   areaId: string;
-  deliveryFee?: number | null; // in paisa
-  minOrderAmount?: number | null; // in paisa
+  deliveryFee?: number | null;
+  minOrderAmount?: number | null;
 }
 
 export interface UpdateDeliveryAreasInput {
   areas: DeliveryAreaUpdateItem[];
+}
+
+export interface RestaurantProfileQueryOptions {
+  enabled?: boolean;
+}
+
+export type RestaurantImageKind = 'logo' | 'cover';
+
+export interface UploadRestaurantImagePayload {
+  kind: RestaurantImageKind;
+  file: File;
+}
+
+export interface QuickAddAreaInput {
+  name: string;
+  deliveryFee?: number | null;
+  minOrderAmount?: number | null;
+}
+
+export interface MasterCityOption {
+  id: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+}
+
+export interface AreaRowState {
+  areaId: string;
+  name: string;
+  slug: string;
+  isServed: boolean;
+  feeInput: string;
+  minOrderInput: string;
+  isVerified?: boolean;
+}
+
+export interface ProfileMediaSectionProps {
+  logoUrl?: string | null;
+  coverUrl?: string | null;
+  isPending: boolean;
+  onUploadImage: (e: React.ChangeEvent<HTMLInputElement>, kind: RestaurantImageKind) => void;
+  onDeleteImage: (kind: RestaurantImageKind) => void;
+  t: (key: string) => string;
+}
+
+export interface DayScheduleRow {
+  dayOfWeek: number;
+  isOpen: boolean;
+  openTime: string;
+  closeTime: string;
 }

@@ -60,4 +60,14 @@ export interface OrderFilters {
   limit?: number;
   q?: string;
   status?: OrderIntentStatus | 'ALL';
+  sort?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface OrderDetailsDialogProps {
+  orderId: string | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  initialOrder?: OwnerOrderIntent | null;
 }

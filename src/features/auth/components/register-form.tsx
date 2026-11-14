@@ -55,10 +55,7 @@ export function RegisterForm() {
 
         await registerRestaurant(payload);
 
-        toast.success(
-          t('auth.registerSuccess') ??
-            'Restaurant registered successfully! Your account is pending admin approval.'
-        );
+        toast.success(t('auth.registerSuccess'));
 
         router.push('/login');
       } catch (err) {
@@ -95,7 +92,7 @@ export function RegisterForm() {
           ) : null}
 
           <FieldGroup className='gap-4'>
-            {/* Restaurant Name */}
+            {}
             <form.AppField
               name='restaurantName'
               children={(field) => (
@@ -111,20 +108,20 @@ export function RegisterForm() {
               )}
             />
 
-            {/* District / City */}
+            {}
             <form.AppField
               name='cityId'
               children={(field) => (
                 <div className='space-y-1.5'>
                   <label htmlFor='reg-city' className='text-sm font-medium text-foreground'>
-                    District / City
+                    {t('auth.districtLabel')}
                   </label>
                   <SearchableSelect
                     id='reg-city'
                     value={field.state.value || ''}
                     onChange={(val) => field.handleChange(val)}
-                    placeholder='Select District (Default: Lower Dir)'
-                    searchPlaceholder='Search district or city...'
+                    placeholder={t('auth.selectDistrictPlaceholder')}
+                    searchPlaceholder={t('auth.searchDistrictPlaceholder')}
                     options={
                       cities?.map((c) => ({
                         value: c.id,
@@ -139,7 +136,7 @@ export function RegisterForm() {
             />
 
             <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-              {/* Owner Name */}
+              {}
               <form.AppField
                 name='ownerName'
                 children={(field) => (
@@ -153,7 +150,7 @@ export function RegisterForm() {
                 )}
               />
 
-              {/* Owner Mobile Phone */}
+              {}
               <form.AppField
                 name='phone'
                 children={(field) => (
@@ -171,7 +168,7 @@ export function RegisterForm() {
             </div>
 
             <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-              {/* Password */}
+              {}
               <form.AppField
                 name='password'
                 children={(field) => (
@@ -186,7 +183,7 @@ export function RegisterForm() {
                 )}
               />
 
-              {/* WhatsApp Number (Optional) */}
+              {}
               <form.AppField
                 name='whatsappNumber'
                 children={(field) => (
@@ -195,14 +192,14 @@ export function RegisterForm() {
                     type='tel'
                     inputMode='numeric'
                     autoComplete='tel'
-                    placeholder='03001234567 (optional)'
+                    placeholder={t('auth.whatsappPlaceholder')}
                     startIcon={Icons.whatsapp}
                   />
                 )}
               />
             </div>
 
-            {/* Short Description */}
+            {}
             <form.AppField
               name='description'
               children={(field) => (

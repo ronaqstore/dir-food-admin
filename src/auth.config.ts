@@ -53,7 +53,6 @@ export const authConfig = {
         }
 
         try {
-          // 1. Platform Admin Login (Pakistani Mobile Number + Password)
           if (loginType === 'platform-admin') {
             const normalized = normalizePhone(rawIdentifier);
             if (!isValidPkMobile(normalized)) {
@@ -86,7 +85,6 @@ export const authConfig = {
             };
           }
 
-          // 2. Restaurant Owner Login (Pakistani Mobile Number + Password)
           const normalized = normalizePhone(rawIdentifier);
           if (!isValidPkMobile(normalized)) {
             return null;
@@ -111,6 +109,7 @@ export const authConfig = {
             restaurantSlug: response.restaurant.slug,
             restaurantStatus: response.restaurant.status,
             subscriptionStatus: response.restaurant.subscriptionStatus,
+            subscriptionEndsAt: response.restaurant.subscriptionEndsAt ?? null,
             accessToken: response.accessToken
           };
         } catch {
@@ -130,9 +129,9 @@ export const authConfig = {
       const typedToken = token as JwtTokenShape;
 
       if (user) {
-        const authenticatedUser = user as unknown as AuthenticatedUser & {
+        const authenticatedUser = user as (AuthenticatedUser & {
           accessToken?: string;
-        };
+        });
         typedToken.sub = authenticatedUser.id;
         typedToken.role = authenticatedUser.role;
         typedToken.phoneNumber = authenticatedUser.phoneNumber;
@@ -142,6 +141,7 @@ export const authConfig = {
         typedToken.restaurantSlug = authenticatedUser.restaurantSlug;
         typedToken.restaurantStatus = authenticatedUser.restaurantStatus;
         typedToken.subscriptionStatus = authenticatedUser.subscriptionStatus;
+        typedToken.subscriptionEndsAt = authenticatedUser.subscriptionEndsAt;
         typedToken.picture = authenticatedUser.avatarUrl;
         if (authenticatedUser.accessToken) {
           typedToken.accessToken = authenticatedUser.accessToken;
@@ -168,6 +168,7 @@ export const authConfig = {
         sessionUser.restaurantSlug = typedToken.restaurantSlug ?? null;
         sessionUser.restaurantStatus = typedToken.restaurantStatus ?? null;
         sessionUser.subscriptionStatus = typedToken.subscriptionStatus ?? null;
+        sessionUser.subscriptionEndsAt = typedToken.subscriptionEndsAt ?? null;
         sessionUser.avatarUrl =
           typeof typedToken.picture === 'string' ? typedToken.picture : undefined;
       }
@@ -180,5 +181,3 @@ export const authConfig = {
     }
   }
 } satisfies NextAuthConfig;
-
-export default authConfig;

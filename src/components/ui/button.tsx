@@ -44,10 +44,6 @@ const buttonVariants = cva(
 
 type ButtonProps = ButtonPrimitive.Props &
   VariantProps<typeof buttonVariants> & {
-    /**
-     * Shows the shared Spinner over the label (no layout shift).
-     * Prefer this over ad-hoc Icons.spinner in buttons.
-     */
     isLoading?: boolean;
   };
 
@@ -71,7 +67,6 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot='button'
-      // Form fillers inject attrs (e.g. fdprocessedid) before hydrate.
       suppressHydrationWarning
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
@@ -84,7 +79,7 @@ function Button({
     >
       {isLoading ? (
         <>
-          {/* Keep label in layout (invisible) so width/height never jump */}
+          {}
           <span className='invisible inline-flex items-center gap-[inherit]' aria-hidden>
             {children}
           </span>

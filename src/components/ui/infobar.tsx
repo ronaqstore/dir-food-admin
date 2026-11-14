@@ -87,20 +87,16 @@ function InfobarProvider({
   const [isPathnameChanging, setIsPathnameChanging] = React.useState(false);
   const pathname = usePathname();
 
-  // This is the internal state of the infobar.
-  // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === 'function' ? value(open) : value;
 
-      // On mobile, also update the mobile state for the Sheet component
       if (isMobile) {
         setOpenMobile(openState);
       }
 
-      // Handle desktop state
       if (setOpenProp) {
         setOpenProp(openState);
       } else {
@@ -110,22 +106,18 @@ function InfobarProvider({
     [setOpenProp, open, isMobile]
   );
 
-  // Helper to toggle the infobar.
   const toggleInfobar = React.useCallback(() => {
     setOpen((open) => !open);
   }, [setOpen]);
 
-  // Preserve the current infobar state when switching between mobile and desktop.
   React.useEffect(() => {
     if (isMobile) {
       setOpenMobile(open);
     } else {
       setOpen(openMobile);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only reconcile when the breakpoint changes
   }, [isMobile]);
 
-  // Adds a keyboard shortcut to toggle the infobar.
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === INFOBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
@@ -138,7 +130,6 @@ function InfobarProvider({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleInfobar]);
 
-  // Clear content and close infobar when pathname changes
   React.useEffect(() => {
     if (contentPathname !== null && contentPathname !== pathname) {
       setIsPathnameChanging(true);
@@ -152,10 +143,8 @@ function InfobarProvider({
 
       return () => clearTimeout(timer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- setOpen is a stable React state setter
   }, [pathname, contentPathname]);
 
-  // Update setContent to also track pathname
   const handleSetContent = React.useCallback(
     (newContent: InfobarContent | null) => {
       setContent(newContent);
@@ -164,11 +153,8 @@ function InfobarProvider({
     [pathname]
   );
 
-  // We add a state so that we can do data-state="expanded" or "collapsed".
-  // This makes it easier to style the infobar with Tailwind classes.
   const state = open ? 'expanded' : 'collapsed';
 
-  // Update context to use handleSetContent instead of setContent
   const contextValue = React.useMemo<InfobarContextProps>(
     () => ({
       state,
@@ -323,7 +309,7 @@ function InfobarTrigger({ className, onClick, ...props }: React.ComponentProps<t
   const t = useT();
 
   return (
-    <Button
+    <Button type='button'
       data-infobar='trigger'
       data-slot='infobar-trigger'
       variant='ghost'
@@ -346,7 +332,7 @@ function InfobarRail({ className, ...props }: React.ComponentProps<'button'>) {
   const t = useT();
 
   return (
-    <button
+    <button type='button'
       data-infobar='rail'
       data-slot='infobar-rail'
       aria-label={t('common.toggleInfobar')}
@@ -354,7 +340,7 @@ function InfobarRail({ className, ...props }: React.ComponentProps<'button'>) {
       onClick={toggleInfobar}
       title={t('common.toggleInfobar')}
       className={cn(
-        'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] sm:flex',
+        'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:inset-s-1/2 after:w-[2px] sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full',
@@ -478,8 +464,7 @@ function InfobarGroupAction({ className, render, ...props }: useRender.Component
         'data-slot': 'infobar-group-action',
         'data-infobar': 'group-action',
         className: cn(
-          'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground absolute top-3.5 end-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-          // Increases the hit area of the button on mobile.
+          'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground absolute top-3.5 inset-e-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
           'after:absolute after:-inset-2 md:after:hidden',
           'group-data-[collapsible=icon]:hidden',
           className
@@ -613,8 +598,7 @@ function InfobarMenuAction({
         'data-slot': 'infobar-menu-action',
         'data-infobar': 'menu-action',
         className: cn(
-          'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground absolute top-1.5 end-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-          // Increases the hit area of the button on mobile.
+          'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground absolute top-1.5 inset-e-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
           'after:absolute after:-inset-2 md:after:hidden',
           'peer-data-[size=sm]/menu-button:top-1',
           'peer-data-[size=default]/menu-button:top-1.5',
@@ -636,7 +620,7 @@ function InfobarMenuBadge({ className, ...props }: React.ComponentProps<'div'>) 
       data-slot='infobar-menu-badge'
       data-infobar='menu-badge'
       className={cn(
-        'text-sidebar-foreground pointer-events-none absolute end-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums select-none',
+        'text-sidebar-foreground pointer-events-none absolute inset-e-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums select-none',
         'peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground',
         'peer-data-[size=sm]/menu-button:top-1',
         'peer-data-[size=default]/menu-button:top-1.5',
@@ -656,7 +640,6 @@ function InfobarMenuSkeleton({
 }: React.ComponentProps<'div'> & {
   showIcon?: boolean;
 }) {
-  // Random width between 50 to 90%.
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);

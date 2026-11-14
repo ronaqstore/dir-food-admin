@@ -3,7 +3,6 @@ import { GeistMono } from 'geist/font/mono';
 
 import { cn } from '@/lib/utils';
 
-// Self-hosted fonts (no fonts.gstatic.com fetch during next/font compile).
 import '@fontsource-variable/inter';
 import '@fontsource-variable/outfit';
 import '@fontsource-variable/jetbrains-mono';

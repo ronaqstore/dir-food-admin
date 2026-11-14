@@ -20,28 +20,21 @@ import { TablePageBody } from '@/components/layout/table-page-body';
 import { Icons } from '@/components/icons';
 import { usePlatformRestaurants } from '../api/platform-query';
 import { ExtendSubscriptionDialog } from './extend-subscription-dialog';
-import type { PlatformRestaurant } from '../types';
-
-interface AnalyzedRestaurant extends PlatformRestaurant {
-  subStatus: 'NEVER' | 'ACTIVE' | 'EXPIRING' | 'EXPIRED';
-  daysLeft: number;
-  isTrial: boolean;
-}
+import type { PlatformRestaurant, AnalyzedRestaurant, RestaurantSubscriptionTarget } from '../types';
 
 export function SubscriptionsView() {
   const t = useTranslations('platformSubscriptions');
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
   const [perPage] = useQueryState('perPage', parseAsInteger.withDefault(10));
   const [name] = useQueryState('name', parseAsString);
+  const [sort] = useQueryState('sort', parseAsString);
   const [facetValues] = useQueryStates({
     subStatus: parseAsArrayOf(parseAsString, ',')
   });
 
-  const [extendTarget, setExtendTarget] = React.useState<{
-    id: string;
-    name: string;
-    subscriptionEndsAt?: string | null;
-  } | null>(null);
+  const selectedSubStatus = facetValues.subStatus?.[0];
+
+  const [extendTarget, setExtendTarget] = React.useState<RestaurantSubscriptionTarget | null>(null);
   const [isExtendOpen, setIsExtendOpen] = React.useState(false);
 
   const [currentTimestamp, setCurrentTimestamp] = React.useState<number | null>(null);
@@ -51,11 +44,17 @@ export function SubscriptionsView() {
   }, []);
 
   const { data: response, isLoading } = usePlatformRestaurants({
-    limit: 50,
-    q: name?.trim() || undefined
+    page,
+    limit: perPage,
+    q: name?.trim() || undefined,
+    subStatus: selectedSubStatus && selectedSubStatus !== 'ALL' ? selectedSubStatus : undefined,
+    sort: sort || undefined
   });
 
   const restaurants = React.useMemo(() => response?.data ?? [], [response?.data]);
+  const meta = response?.meta;
+  const pageCount = meta?.totalPages ?? 1;
+  const rowCount = meta?.total ?? 0;
 
   const analyzedRestaurants = React.useMemo<AnalyzedRestaurant[]>(() => {
     if (!currentTimestamp) return [];
@@ -93,12 +92,10 @@ export function SubscriptionsView() {
     });
   }, [restaurants, currentTimestamp]);
 
-  const activeCount = analyzedRestaurants.filter(
-    (r) => r.subStatus === 'ACTIVE' || r.subStatus === 'EXPIRING'
-  ).length;
-  const expiringCount = analyzedRestaurants.filter((r) => r.subStatus === 'EXPIRING').length;
-  const expiredCount = analyzedRestaurants.filter((r) => r.subStatus === 'EXPIRED').length;
-  const trialCount = analyzedRestaurants.filter((r) => r.isTrial).length;
+  const activeCount = meta?.subCounts?.active ?? 0;
+  const expiringCount = meta?.subCounts?.expiring ?? 0;
+  const expiredCount = meta?.subCounts?.expired ?? 0;
+  const trialCount = meta?.subCounts?.trial ?? 0;
 
   const handleOpenExtend = React.useCallback((restaurant: PlatformRestaurant) => {
     setExtendTarget({
@@ -108,27 +105,6 @@ export function SubscriptionsView() {
     });
     setIsExtendOpen(true);
   }, []);
-
-  const selectedSubStatus = facetValues.subStatus?.[0];
-
-  const filteredRestaurants = React.useMemo(() => {
-    if (!selectedSubStatus || selectedSubStatus === 'ALL') {
-      return analyzedRestaurants;
-    }
-    if (selectedSubStatus === 'ACTIVE') {
-      return analyzedRestaurants.filter((r) => r.subStatus === 'ACTIVE' || r.subStatus === 'EXPIRING');
-    }
-    if (selectedSubStatus === 'EXPIRING') {
-      return analyzedRestaurants.filter((r) => r.subStatus === 'EXPIRING');
-    }
-    if (selectedSubStatus === 'EXPIRED') {
-      return analyzedRestaurants.filter((r) => r.subStatus === 'EXPIRED');
-    }
-    if (selectedSubStatus === 'TRIAL') {
-      return analyzedRestaurants.filter((r) => r.isTrial);
-    }
-    return analyzedRestaurants;
-  }, [analyzedRestaurants, selectedSubStatus]);
 
   const columns = React.useMemo<ColumnDef<AnalyzedRestaurant>[]>(
     () => [
@@ -197,6 +173,7 @@ export function SubscriptionsView() {
       },
       {
         id: 'expiry',
+        accessorKey: 'subscriptionEndsAt',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t('colExpiry')} />
         ),
@@ -284,7 +261,7 @@ export function SubscriptionsView() {
               className='flex items-center justify-end gap-1.5'
               onClick={(e) => e.stopPropagation()}
             >
-              <Button
+              <Button type='button'
                 size='sm'
                 variant='outline'
                 className='h-7 text-xs gap-1'
@@ -394,24 +371,11 @@ export function SubscriptionsView() {
     [t]
   );
 
-  const pageCount = Math.max(1, Math.ceil(filteredRestaurants.length / perPage));
-
-  React.useEffect(() => {
-    if (page > pageCount && pageCount > 0) {
-      void setPage(1);
-    }
-  }, [page, pageCount, setPage]);
-
-  const paginatedRestaurants = React.useMemo(() => {
-    const start = (page - 1) * perPage;
-    return filteredRestaurants.slice(start, start + perPage);
-  }, [filteredRestaurants, page, perPage]);
-
   const { table } = useDataTable({
-    data: paginatedRestaurants,
+    data: analyzedRestaurants,
     columns,
     pageCount,
-    rowCount: filteredRestaurants.length,
+    rowCount,
     shallow: true,
     debounceMs: 400,
     initialState: {
@@ -490,7 +454,7 @@ export function SubscriptionsView() {
           detail={subscriptionDetail}
           quickFilters={subscriptionQuickFilters}
           isLoading={isLoading}
-          rowCount={filteredRestaurants.length}
+          rowCount={rowCount}
         />
       </TablePageBody>
 

@@ -1,52 +1,19 @@
 import { apiRequest } from '@/lib/api/client';
+import type {
+  SetupPasswordPayload,
+  SetupPasswordResponse,
+  RegisterRestaurantPayload,
+  RegisterRestaurantResponse,
+  CheckRestaurantNameResult
+} from '../types';
 
-export interface SetupPasswordPayload {
-  token: string;
-  password: string;
-}
-
-export interface SetupPasswordResponse {
-  message?: string;
-  success?: boolean;
-}
-
-export interface RegisterRestaurantPayload {
-  restaurantName: string;
-  ownerName: string;
-  phone: string;
-  password: string;
-  whatsappNumber?: string;
-  description?: string;
-  cuisines?: string[];
-  cityId?: string;
-}
-
-export interface RegisterRestaurantResponse {
-  user: {
-    id: string;
-    name: string;
-    phone: string;
-    role: string;
-    status: string;
-  };
-  restaurant: {
-    id: string;
-    name: string;
-    slug: string;
-    status: string;
-  };
-}
-
-export interface CheckRestaurantNameResult {
-  available: boolean;
-  baseSlug: string;
-  suggestedSlug: string;
-  collision: boolean;
-  existingRestaurant?: {
-    name: string;
-    addressText?: string | null;
-  };
-}
+export type {
+  SetupPasswordPayload,
+  SetupPasswordResponse,
+  RegisterRestaurantPayload,
+  RegisterRestaurantResponse,
+  CheckRestaurantNameResult
+};
 
 export async function checkRestaurantName(name: string): Promise<CheckRestaurantNameResult> {
   const query = new URLSearchParams({ name: name.trim() });

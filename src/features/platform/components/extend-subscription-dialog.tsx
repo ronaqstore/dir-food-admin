@@ -16,14 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useExtendPlatformSubscription } from '../api/platform-query';
-
-interface ExtendSubscriptionDialogProps {
-  restaurantId: string | null;
-  restaurantName: string;
-  currentExpiry?: string | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { ExtendSubscriptionDialogProps } from '../types';
 
 export function ExtendSubscriptionDialog({
   restaurantId,
@@ -50,7 +43,7 @@ export function ExtendSubscriptionDialog({
     if (!restaurantId) return;
     const daysToAdd = isCustom ? parseInt(customDays, 10) : selectedDays;
     if (isNaN(daysToAdd) || daysToAdd <= 0) {
-      toast.error('Please enter a valid number of days');
+      toast.error(t('validDaysRequired'));
       return;
     }
 
@@ -65,6 +58,16 @@ export function ExtendSubscriptionDialog({
       const message = err instanceof Error ? err.message : 'Failed to extend subscription';
       toast.error(message);
     }
+  };
+
+  const handleSelectPreset = (days: number) => {
+    setIsCustom(false);
+    setSelectedDays(days);
+  };
+
+  const handleCustomDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomDays(e.target.value);
+    setIsCustom(true);
   };
 
   return (
@@ -96,10 +99,7 @@ export function ExtendSubscriptionDialog({
                   type='button'
                   variant={!isCustom && selectedDays === preset.days ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => {
-                    setIsCustom(false);
-                    setSelectedDays(preset.days);
-                  }}
+                  onClick={() => handleSelectPreset(preset.days)}
                 >
                   {preset.label}
                 </Button>
@@ -117,25 +117,22 @@ export function ExtendSubscriptionDialog({
               id='custom-days-input'
               type='number'
               min='1'
-              placeholder='e.g. 15, 45, 180'
+              placeholder={t('customDaysPlaceholder')}
               value={customDays}
-              onChange={(e) => {
-                setCustomDays(e.target.value);
-                setIsCustom(true);
-              }}
+              onChange={handleCustomDaysChange}
             />
           </div>
         </div>
 
         <DialogFooter className='gap-2 sm:gap-0 pt-2'>
-          <Button
+          <Button type='button'
             variant='outline'
             onClick={() => onOpenChange(false)}
             disabled={extendMutation.isPending}
           >
             {t('cancel')}
           </Button>
-          <Button onClick={handleExtend} disabled={extendMutation.isPending}>
+          <Button type='button' onClick={handleExtend} disabled={extendMutation.isPending}>
             {extendMutation.isPending && <Spinner className='me-1.5 size-4' />}
             {extendMutation.isPending ? t('extending') : t('confirm')}
           </Button>

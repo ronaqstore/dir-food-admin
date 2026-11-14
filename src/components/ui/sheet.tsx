@@ -78,7 +78,7 @@ function SheetContent({
         {showCloseButton && (
           <SheetPrimitive.Close
             data-slot='sheet-close'
-            render={<Button variant='ghost' className='absolute top-3 end-3' size='icon-sm' />}
+            render={<Button type='button' variant='ghost' className='absolute top-3 inset-e-3' size='icon-sm' />}
           >
             <IconX />
             <span className='sr-only'>{resolvedCloseLabel}</span>

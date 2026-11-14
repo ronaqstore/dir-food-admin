@@ -3,15 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n/use-t';
 import { t as staticT } from '@/i18n/static-t';
-import type { NotFoundViewProps } from '@/types/common';
-
-interface NotFoundContentProps extends NotFoundViewProps {
-  t: (key: string) => string;
-}
+import type { NotFoundViewProps, NotFoundContentProps, NotFoundViewRootProps } from '@/types/common';
 
 function NotFoundContent({ onBack, onHome, t }: NotFoundContentProps) {
   return (
-    <div className='absolute top-1/2 start-1/2 mb-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center'>
+    <div className='absolute top-1/2 inset-s-1/2 mb-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center'>
       <span className='from-foreground bg-linear-to-b to-transparent bg-clip-text text-[10rem] leading-none font-extrabold text-transparent'>
         404
       </span>
@@ -42,7 +38,7 @@ export function NotFoundView({
   onBack,
   onHome,
   staticFallback = false
-}: NotFoundViewProps & { staticFallback?: boolean }) {
+}: NotFoundViewRootProps) {
   if (staticFallback) {
     return <StaticNotFoundView onBack={onBack} onHome={onHome} />;
   }

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -15,19 +16,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useApproveMasterArea } from '../api/platform-query';
-import type { MasterArea } from '../types';
-
-interface ApproveAreaDialogProps {
-  area: MasterArea | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { ApproveAreaDialogProps } from '../types';
 
 export function ApproveAreaDialog({
   area,
   open,
   onOpenChange
 }: ApproveAreaDialogProps) {
+  const t = useTranslations('platformAreas');
   const approveMutation = useApproveMasterArea();
   const [name, setName] = React.useState('');
   const [slug, setSlug] = React.useState('');
@@ -46,7 +42,7 @@ export function ApproveAreaDialog({
     e.preventDefault();
     if (!area) return;
     if (!name.trim()) {
-      toast.error('Area name cannot be empty');
+      toast.error(t('areaNameEmpty'));
       return;
     }
 
@@ -58,7 +54,7 @@ export function ApproveAreaDialog({
           slug: slug.trim() || undefined
         }
       });
-      toast.success(`Area "${name.trim()}" approved and published to storefront!`);
+      toast.success(t('areaApproved', { name: name.trim() }));
       onOpenChange(false);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to approve area';
@@ -73,31 +69,31 @@ export function ApproveAreaDialog({
       <DialogContent className='sm:max-w-md'>
         <form onSubmit={handleSubmit} className='space-y-4'>
           <DialogHeader>
-            <DialogTitle>Approve Area: &ldquo;{area.name}&rdquo;</DialogTitle>
+            <DialogTitle>{t('dialogApproveTitle', { name: area.name })}</DialogTitle>
             <DialogDescription>
-              Verify this area and publish it to the customer storefront discovery. You can clean up the spelling or slug before approving.
+              {t('dialogApproveDesc')}
             </DialogDescription>
           </DialogHeader>
 
           <div className='space-y-3 text-sm'>
             <div className='space-y-1.5'>
-              <Label htmlFor='approve-name'>Area Name *</Label>
+              <Label htmlFor='approve-name'>{t('areaName')}</Label>
               <Input
                 id='approve-name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder='e.g. Fizagat'
+                placeholder={t('areaNamePlaceholder')}
                 required
               />
             </div>
 
             <div className='space-y-1.5'>
-              <Label htmlFor='approve-slug'>URL Slug (optional)</Label>
+              <Label htmlFor='approve-slug'>{t('slug')}</Label>
               <Input
                 id='approve-slug'
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                placeholder='e.g. fizagat'
+                placeholder={t('slugPlaceholder')}
               />
             </div>
           </div>
@@ -109,11 +105,11 @@ export function ApproveAreaDialog({
               onClick={() => onOpenChange(false)}
               disabled={approveMutation.isPending}
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type='submit' disabled={approveMutation.isPending}>
-              {approveMutation.isPending && <Spinner className='mr-1.5 size-4' />}
-              Approve & Publish
+              {approveMutation.isPending && <Spinner className='me-1.5 size-4' />}
+              {t('approveAndPublish')}
             </Button>
           </DialogFooter>
         </form>
@@ -121,4 +117,3 @@ export function ApproveAreaDialog({
     </Dialog>
   );
 }
-

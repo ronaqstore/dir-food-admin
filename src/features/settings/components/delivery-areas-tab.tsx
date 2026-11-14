@@ -25,17 +25,7 @@ import {
   useCreateCustomDeliveryArea,
   useRestaurantProfile,
 } from '../api/restaurant-query';
-import type { DeliveryAreaItemDTO } from '../types';
-
-interface AreaRowState {
-  areaId: string;
-  name: string;
-  slug: string;
-  isServed: boolean;
-  feeInput: string;
-  minOrderInput: string;
-  isVerified?: boolean;
-}
+import type { DeliveryAreaItemDTO, AreaRowState } from '../types';
 
 export function DeliveryAreasTab() {
   const t = useTranslations();
@@ -54,7 +44,7 @@ export function DeliveryAreasTab() {
   const handleCreateArea = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAreaName.trim()) {
-      toast.error('Please enter an area name');
+      toast.error(t('restaurantSettings.enterAreaName'));
       return;
     }
 
@@ -64,7 +54,7 @@ export function DeliveryAreasTab() {
         deliveryFee: newAreaFee ? toPaisa(Number(newAreaFee)) : null,
         minOrderAmount: newAreaMinOrder ? toPaisa(Number(newAreaMinOrder)) : null,
       });
-      toast.success(`"${newAreaName.trim()}" added to your delivery areas!`);
+      toast.success(t('restaurantSettings.areaAddedSuccess', { name: newAreaName.trim() }));
       setIsAddOpen(false);
       setNewAreaName('');
       setNewAreaFee('');
@@ -136,17 +126,16 @@ export function DeliveryAreasTab() {
 
   return (
     <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-      {/* District Notice Banner */}
+      {}
       <div className='flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-foreground'>
         <div className='flex items-center gap-2'>
           <IconMapPin className='size-4 text-primary shrink-0' />
           <span>
-            Operating in District: <strong className='font-semibold text-primary'>{currentDistrictName}</strong>.
-            Delivery areas are scoped to your district so customers in {currentDistrictName} can order from you.
+            {t('restaurantSettings.operatingInDistrict')} <strong className='font-semibold text-primary'>{currentDistrictName}</strong>. {t('restaurantSettings.deliveryAreasScoped')}
           </span>
         </div>
         <span className='hidden sm:inline text-muted-foreground text-[11px]'>
-          (Change in Profile Settings)
+          {t('restaurantSettings.changeInProfile')}
         </span>
       </div>
 
@@ -162,7 +151,7 @@ export function DeliveryAreasTab() {
         <div className='flex items-center gap-3'>
           {rows.length > 5 && (
             <div className='relative w-full sm:w-56'>
-              <IconSearch className='absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
+              <IconSearch className='absolute inset-s-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -175,32 +164,32 @@ export function DeliveryAreasTab() {
             {t('restaurantSettings.areasServedCount', { served: servedCount, total: rows.length })}
           </Badge>
 
-          <Button
+          <Button type='button'
             size='sm'
             variant='outline'
             className='h-8 text-xs gap-1.5'
             onClick={() => setIsAddOpen(true)}
           >
             <IconPlus className='size-3.5' />
-            Add Missing Area
+            {t('restaurantSettings.addMissingArea')}
           </Button>
 
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogContent className='sm:max-w-md'>
               <form onSubmit={handleCreateArea}>
                 <DialogHeader>
-                  <DialogTitle>Add Delivery Area</DialogTitle>
+                  <DialogTitle>{t('restaurantSettings.dialogAddAreaTitle')}</DialogTitle>
                   <DialogDescription>
-                    Add a locality or neighborhood in your city. It will be enabled for your restaurant immediately.
+                    {t('restaurantSettings.dialogAddAreaDesc')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className='space-y-4 py-4'>
                   <div className='space-y-2'>
-                    <label htmlFor='new-custom-area-name' className='text-xs font-medium'>Area Name *</label>
+                    <label htmlFor='new-custom-area-name' className='text-xs font-medium'>{t('restaurantSettings.areaNameLabel')}</label>
                     <Input
                       id='new-custom-area-name'
                       required
-                      placeholder='e.g. Qambar, Shahi Khel, Khazana'
+                      placeholder={t('restaurantSettings.areaNamePlaceholder')}
                       value={newAreaName}
                       onChange={(e) => setNewAreaName(e.target.value)}
                       className='h-9 text-xs'
@@ -208,24 +197,24 @@ export function DeliveryAreasTab() {
                   </div>
                   <div className='grid grid-cols-2 gap-3'>
                     <div className='space-y-2'>
-                      <label htmlFor='new-custom-area-fee' className='text-xs font-medium'>Delivery Fee (Rs)</label>
+                      <label htmlFor='new-custom-area-fee' className='text-xs font-medium'>{t('restaurantSettings.deliveryFeeLabel')}</label>
                       <Input
                         id='new-custom-area-fee'
                         type='number'
                         min='0'
-                        placeholder='e.g. 100 (empty = WhatsApp)'
+                        placeholder={t('restaurantSettings.deliveryFeePlaceholder')}
                         value={newAreaFee}
                         onChange={(e) => setNewAreaFee(e.target.value)}
                         className='h-9 text-xs'
                       />
                     </div>
                     <div className='space-y-2'>
-                      <label htmlFor='new-custom-area-min-order' className='text-xs font-medium'>Min Order (Rs)</label>
+                      <label htmlFor='new-custom-area-min-order' className='text-xs font-medium'>{t('restaurantSettings.minOrderLabel')}</label>
                       <Input
                         id='new-custom-area-min-order'
                         type='number'
                         min='0'
-                        placeholder='Default'
+                        placeholder={t('restaurantSettings.defaultPlaceholder')}
                         value={newAreaMinOrder}
                         onChange={(e) => setNewAreaMinOrder(e.target.value)}
                         className='h-9 text-xs'
@@ -240,11 +229,11 @@ export function DeliveryAreasTab() {
                     onClick={() => setIsAddOpen(false)}
                     disabled={createCustomArea.isPending}
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </Button>
                   <Button type='submit' disabled={createCustomArea.isPending}>
                     {createCustomArea.isPending ? <Spinner className='size-4 me-2' /> : null}
-                    Add & Enable
+                    {t('restaurantSettings.addAndEnable')}
                   </Button>
                 </DialogFooter>
               </form>
@@ -280,7 +269,7 @@ export function DeliveryAreasTab() {
                     variant='outline'
                     className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
                   >
-                    Pending Verification
+                    {t('restaurantSettings.pendingVerification')}
                   </Badge>
                 )}
               </div>
@@ -293,8 +282,8 @@ export function DeliveryAreasTab() {
                     {t('restaurantSettings.deliveryFee')}:
                   </span>
                   <div className='relative w-32'>
-                    <span className='absolute start-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                      Rs.
+                    <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                      {t('common.currency')}
                     </span>
                     <Input
                       type='number'
@@ -314,8 +303,8 @@ export function DeliveryAreasTab() {
                     {t('restaurantSettings.areaMinOrder')}:
                   </span>
                   <div className='relative w-32'>
-                    <span className='absolute start-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                      Rs.
+                    <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                      {t('common.currency')}
                     </span>
                     <Input
                       type='number'
@@ -336,7 +325,7 @@ export function DeliveryAreasTab() {
       </div>
 
       <div className='flex justify-end pt-4 border-t'>
-        <Button onClick={handleSave} disabled={updateAreas.isPending}>
+        <Button type='button' onClick={handleSave} disabled={updateAreas.isPending}>
           {updateAreas.isPending ? (
             <>
               <Spinner className='me-2 size-4' />

@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function DashboardOverviewSkeleton() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-6'>
-      {/* Welcome & Status Header */}
+      {}
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div className='space-y-1.5'>
           <Skeleton className='h-8 w-48 rounded-lg' />
@@ -13,7 +13,7 @@ export function DashboardOverviewSkeleton() {
         <Skeleton className='h-7 w-28 rounded-full' />
       </div>
 
-      {/* 4 Key Metric Cards */}
+      {}
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className='border-border/60 shadow-sm'>
@@ -29,7 +29,7 @@ export function DashboardOverviewSkeleton() {
         ))}
       </div>
 
-      {/* Quick Action Shortcuts Card */}
+      {}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3 space-y-1.5'>
           <Skeleton className='h-5 w-32 rounded-md' />
@@ -43,7 +43,7 @@ export function DashboardOverviewSkeleton() {
         </CardContent>
       </Card>
 
-      {/* Recent Orders Preview Card */}
+      {}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
           <Skeleton className='h-5 w-36 rounded-md' />

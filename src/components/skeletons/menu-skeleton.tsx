@@ -6,10 +6,10 @@ export function MenuItemCardSkeleton() {
     <Card className='border-border/60 shadow-xs overflow-hidden'>
       <CardContent className='p-3.5 sm:p-4'>
         <div className='flex items-start gap-3 sm:gap-3.5'>
-          {/* Dish image thumbnail */}
+          {}
           <Skeleton className='size-16 sm:size-20 shrink-0 rounded-xl' />
 
-          {/* Info */}
+          {}
           <div className='flex min-w-0 flex-1 flex-col justify-between self-stretch space-y-2'>
             <div className='space-y-1.5'>
               <div className='flex items-center justify-between gap-2'>
@@ -55,7 +55,7 @@ export function MenuManagementSkeleton() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-28 sm:pb-12'>
       <div className='space-y-4'>
-        {/* Page Header */}
+        {}
         <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
           <div className='space-y-1.5'>
             <div className='flex items-center gap-2.5'>
@@ -67,7 +67,7 @@ export function MenuManagementSkeleton() {
           <Skeleton className='h-9 w-28 rounded-md' />
         </div>
 
-        {/* Filter bar */}
+        {}
         <div className='border-b pb-3 pt-1 space-y-3'>
           <div className='flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between'>
             <Skeleton className='h-9 w-full sm:max-w-md rounded-md' />
@@ -77,7 +77,7 @@ export function MenuManagementSkeleton() {
             </div>
           </div>
 
-          {/* Category Chips Bar */}
+          {}
           <div className='flex items-center gap-1.5 overflow-x-hidden pt-1'>
             <Skeleton className='h-7 w-16 shrink-0 rounded-full' />
             <Skeleton className='h-7 w-24 shrink-0 rounded-full' />
@@ -87,7 +87,7 @@ export function MenuManagementSkeleton() {
           </div>
         </div>
 
-        {/* Section 1 */}
+        {}
         <div className='space-y-3 pt-2'>
           <div className='flex items-center justify-between border-b pb-2'>
             <Skeleton className='h-5 w-32 rounded-md' />

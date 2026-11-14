@@ -11,7 +11,6 @@ function Input({ className, type, onClick, ...props }: React.ComponentProps<'inp
       try {
         e.currentTarget.showPicker?.();
       } catch {
-        // Ignored if already open or unsupported
       }
     }
     onClick?.(e);
@@ -21,7 +20,6 @@ function Input({ className, type, onClick, ...props }: React.ComponentProps<'inp
     <InputPrimitive
       type={type}
       data-slot='input'
-      // Password managers / form fillers inject attrs (e.g. fdprocessedid) before hydrate.
       suppressHydrationWarning
       onClick={handleClick}
       className={cn(

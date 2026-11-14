@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,13 +17,7 @@ import {
 import { formatPkr, fromPaisa, toPaisa } from '@/lib/money';
 import { cn } from '@/lib/utils';
 import type { MenuItemDTO } from '@/features/menu/types';
-
-interface DishComboboxProps {
-  value?: string;
-  onSelect: (dish: MenuItemDTO) => void;
-  dishes: MenuItemDTO[];
-  disabled?: boolean;
-}
+import type { DishComboboxProps, DishGroup } from '../types';
 
 function getDishPrice(dish: MenuItemDTO): number {
   if (dish.basePrice != null && dish.basePrice > 0) {
@@ -42,6 +38,7 @@ export function DishCombobox({
   dishes,
   disabled
 }: DishComboboxProps) {
+  const t = useTranslations('deals');
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
 
@@ -49,10 +46,9 @@ export function DishCombobox({
     return dishes.find((d) => d.id === value) || null;
   }, [dishes, value]);
 
-  // Group dishes by category with search filtering
   const filteredGroups = React.useMemo(() => {
     const q = search.toLowerCase().trim();
-    const map = new Map<string, { categoryName: string; items: MenuItemDTO[] }>();
+    const map = new Map<string, DishGroup>();
 
     for (const dish of dishes) {
       const catName = dish.category?.name || 'General Menu';
@@ -106,12 +102,15 @@ export function DishCombobox({
           {selectedDish ? (
             <>
               {selectedDish.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={selectedDish.imageUrl}
-                  alt=''
-                  className='size-5 rounded object-cover shrink-0 bg-muted'
-                />
+                <div className='relative size-5 rounded overflow-hidden shrink-0 bg-muted'>
+                  <Image
+                    src={selectedDish.imageUrl}
+                    alt=''
+                    fill
+                    unoptimized
+                    className='object-cover'
+                  />
+                </div>
               ) : null}
               <span className='font-medium text-foreground truncate min-w-0 flex-1'>
                 {selectedDish.name}
@@ -123,7 +122,7 @@ export function DishCombobox({
               ) : null}
             </>
           ) : (
-            <span className='truncate text-muted-foreground'>Select a dish from menu...</span>
+            <span className='truncate text-muted-foreground'>{t('selectDishPlaceholder')}</span>
           )}
         </span>
 
@@ -136,14 +135,14 @@ export function DishCombobox({
         sideOffset={4}
         className='z-50 w-[var(--radix-popover-trigger-width)] min-w-[280px] sm:min-w-[360px] max-w-[calc(100vw-2rem)] sm:max-w-[440px] p-0 shadow-lg border border-border bg-popover overflow-hidden'
       >
-        {/* Search Header */}
+        {}
         <div className='p-2 border-b border-border/70 bg-muted/20'>
           <div className='relative flex items-center'>
-            <IconSearch className='pointer-events-none absolute start-2.5 size-3.5 text-muted-foreground' />
+            <IconSearch className='pointer-events-none absolute inset-s-2.5 size-3.5 text-muted-foreground' />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder='Search dishes or categories...'
+              placeholder={t('searchDishesPlaceholder')}
               className='h-8 ps-8 pe-8 text-xs bg-background'
               autoFocus
             />
@@ -151,8 +150,8 @@ export function DishCombobox({
               <button
                 type='button'
                 onClick={() => setSearch('')}
-                className='absolute end-2.5 text-muted-foreground hover:text-foreground p-0.5'
-                aria-label='Clear search'
+                className='absolute inset-e-2.5 text-muted-foreground hover:text-foreground p-0.5'
+                aria-label={t('clearSearch')}
               >
                 <IconX className='size-3' />
               </button>
@@ -160,11 +159,11 @@ export function DishCombobox({
           </div>
         </div>
 
-        {/* Scrollable Dish List */}
+        {}
         <div className='max-h-64 overflow-y-auto p-1.5 space-y-2 text-xs'>
           {totalFilteredCount === 0 ? (
             <div className='py-8 text-center text-xs text-muted-foreground'>
-              No dishes found matching &ldquo;{search}&rdquo;
+              {t('noDishesFound', { query: search })}
             </div>
           ) : (
             filteredGroups.map((group) => (
@@ -194,12 +193,15 @@ export function DishCombobox({
                       >
                         <div className='flex items-center gap-2 min-w-0 flex-1'>
                           {dish.imageUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={dish.imageUrl}
-                              alt=''
-                              className='size-7 rounded object-cover shrink-0 bg-muted border border-border/60'
-                            />
+                            <div className='relative size-7 rounded overflow-hidden shrink-0 bg-muted border border-border/60'>
+                              <Image
+                                src={dish.imageUrl}
+                                alt=''
+                                fill
+                                unoptimized
+                                className='object-cover'
+                              />
+                            </div>
                           ) : (
                             <div className='size-7 rounded bg-muted flex items-center justify-center shrink-0 text-muted-foreground'>
                               <IconPhoto className='size-3.5 opacity-50' />

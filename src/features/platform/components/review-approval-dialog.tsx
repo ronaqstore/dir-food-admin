@@ -19,12 +19,7 @@ import {
   usePlatformRestaurantDetail,
   useUpdatePlatformRestaurantStatus
 } from '../api/platform-query';
-
-interface ReviewApprovalDialogProps {
-  restaurantId: string | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { ReviewApprovalDialogProps } from '../types';
 
 export function ReviewApprovalDialog({
   restaurantId,
@@ -65,7 +60,7 @@ export function ReviewApprovalDialog({
           <DialogDetailSkeleton />
         ) : (
           <div className='space-y-4 text-sm'>
-            {/* Restaurant Profile Summary */}
+            {}
             <div className='rounded-lg border bg-card p-3 shadow-xs space-y-1'>
               <div className='flex items-center justify-between'>
                 <span className='font-bold text-base text-foreground'>{restaurant.name}</span>
@@ -77,23 +72,23 @@ export function ReviewApprovalDialog({
                 </Badge>
               </div>
               <div className='text-xs text-muted-foreground'>
-                Slug: <span className='font-mono font-medium'>{restaurant.slug}</span>
+                {t('slugLabel')} <span className='font-mono font-medium'>{restaurant.slug}</span>
               </div>
               {restaurant.users && restaurant.users.length > 0 && (
                 <div className='text-xs text-muted-foreground pt-1'>
-                  Owner:{' '}
+                  {t('ownerLabel')}{' '}
                   <span className='font-medium text-foreground'>{restaurant.users[0].name}</span> (
                   {restaurant.users[0].phone})
                 </div>
               )}
             </div>
 
-            {/* Readiness Checklist */}
+            {}
             <div className='space-y-2'>
               <div className='font-semibold text-foreground'>{t('prerequisitesTitle')}</div>
 
               <div className='divide-y rounded-lg border bg-muted/20'>
-                {/* 1. WhatsApp */}
+                {}
                 <div className='flex items-center justify-between p-2.5'>
                   <span className='text-xs text-foreground'>{t('prereqWhatsapp')}</span>
                   {restaurant.whatsappNumber ? (
@@ -109,7 +104,7 @@ export function ReviewApprovalDialog({
                   )}
                 </div>
 
-                {/* 2. Hours */}
+                {}
                 <div className='flex items-center justify-between p-2.5'>
                   <span className='text-xs text-foreground'>{t('prereqHours')}</span>
                   {restaurant.hours && restaurant.hours.length > 0 ? (
@@ -125,7 +120,7 @@ export function ReviewApprovalDialog({
                   )}
                 </div>
 
-                {/* 3. Items */}
+                {}
                 <div className='flex items-center justify-between p-2.5'>
                   <span className='text-xs text-foreground'>{t('prereqMenuItems')}</span>
                   {(restaurant['_count']?.items ?? 0) > 0 ? (
@@ -141,7 +136,7 @@ export function ReviewApprovalDialog({
                   )}
                 </div>
 
-                {/* 4. Delivery Areas */}
+                {}
                 <div className='flex items-center justify-between p-2.5'>
                   <span className='text-xs text-foreground'>
                     {t('prereqDeliveryAreas')}
@@ -161,7 +156,7 @@ export function ReviewApprovalDialog({
               </div>
             </div>
 
-            {/* Warning if not ready */}
+            {}
             {!isReady && completeness?.missingPrerequisites && (
               <div className='rounded-lg border border-amber-500/40 bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'>
                 <div className='font-semibold mb-1 flex items-center gap-1.5'>
@@ -177,14 +172,14 @@ export function ReviewApprovalDialog({
             )}
 
             <DialogFooter className='gap-2 sm:gap-0 pt-2'>
-              <Button
+              <Button type='button'
                 variant='outline'
                 onClick={() => onOpenChange(false)}
                 disabled={statusMutation.isPending}
               >
                 {t('cancel')}
               </Button>
-              <Button
+              <Button type='button'
                 disabled={!isReady || statusMutation.isPending}
                 className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5'
                 onClick={handleApprove}

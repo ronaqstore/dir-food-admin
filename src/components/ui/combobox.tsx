@@ -140,7 +140,7 @@ function ComboboxItem({ className, children, ...props }: ComboboxPrimitive.Item.
       {children}
       <ComboboxPrimitive.ItemIndicator
         render={
-          <span className='pointer-events-none absolute end-2 flex size-4 items-center justify-center' />
+          <span className='pointer-events-none absolute inset-e-2 flex size-4 items-center justify-center' />
         }
       >
         <IconCheck className='pointer-events-none' />
@@ -228,7 +228,7 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
-          render={<Button variant='ghost' size='icon-xs' />}
+          render={<Button type='button' variant='ghost' size='icon-xs' />}
           className='-ms-1 opacity-50 hover:opacity-100'
           data-slot='combobox-chip-remove'
         >

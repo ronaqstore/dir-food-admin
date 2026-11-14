@@ -41,13 +41,12 @@ type PaginationLinkProps = {
 
 function PaginationLink({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) {
   return (
-    <Button
+    <Button type='button'
       variant={isActive ? 'outline' : 'ghost'}
       size={size}
       className={cn(className)}
       nativeButton={false}
       render={
-        // oxlint-disable-next-line jsx-a11y/anchor-has-content -- link text arrives via props from Button's render composition
         <a
           aria-current={isActive ? 'page' : undefined}
           data-slot='pagination-link'

@@ -52,10 +52,8 @@ export function DataTableSkeleton({
       aria-label='Loading table data'
       {...props}
     >
-      {/* =========================================================================
-          1. MOBILE VIEW SKELETON (Phone screens < 640px)
-          Card list layout matching MobileListItem
-         ========================================================================= */}
+      {
+}
       {showList ? (
         <div
           data-slot='mobile-skeleton'
@@ -64,13 +62,13 @@ export function DataTableSkeleton({
             mode === 'auto' ? 'block sm:hidden' : 'block'
           )}
         >
-          {/* Mobile Toolbar */}
+          {}
           <div className='flex items-center gap-2'>
             <Skeleton className='h-10 flex-1 rounded-md' />
             <Skeleton className='size-10 shrink-0 rounded-md' />
           </div>
 
-          {/* Mobile List Items */}
+          {}
           <div className='divide-border overflow-hidden rounded-lg border border-border bg-card divide-y'>
             {Array.from({ length: rowCount }).map((_, i) => (
               <div key={i} className='flex min-h-16 items-center justify-between gap-3 px-3 py-3'>
@@ -91,10 +89,8 @@ export function DataTableSkeleton({
         </div>
       ) : null}
 
-      {/* =========================================================================
-          2. TABLET / IPAD VIEW SKELETON (Small iPad / Tablet 640px - 1023px)
-          Compact table layout with fewer columns and compact pagination
-         ========================================================================= */}
+      {
+}
       {showCompact ? (
         <div
           data-slot='tablet-skeleton'
@@ -103,7 +99,7 @@ export function DataTableSkeleton({
             mode === 'auto' ? 'hidden sm:flex lg:hidden' : 'flex'
           )}
         >
-          {/* Tablet Toolbar */}
+          {}
           <div className='flex items-center justify-between gap-2'>
             <Skeleton className='h-10 w-64 rounded-md' />
             <div className='flex items-center gap-2'>
@@ -112,7 +108,7 @@ export function DataTableSkeleton({
             </div>
           </div>
 
-          {/* Compact Table */}
+          {}
           <div className='relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border bg-card'>
             <Table containerClassName='min-h-0 flex-1 overflow-hidden'>
               <TableHeader className='sticky top-0 z-10 bg-background shadow-[0_1px_0_0_var(--border)]'>
@@ -149,7 +145,7 @@ export function DataTableSkeleton({
             </Table>
           </div>
 
-          {/* Tablet Pagination */}
+          {}
           {withPagination ? (
             <div className='flex items-center justify-between px-1 py-1'>
               <Skeleton className='h-4 w-28' />
@@ -162,10 +158,8 @@ export function DataTableSkeleton({
         </div>
       ) : null}
 
-      {/* =========================================================================
-          3. LARGE SCREEN / DESKTOP VIEW SKELETON (>= 1024px)
-          Full multi-column table with full toolbar and pagination controls
-         ========================================================================= */}
+      {
+}
       {showFull ? (
         <div
           data-slot='desktop-skeleton'
@@ -174,7 +168,7 @@ export function DataTableSkeleton({
             mode === 'auto' ? 'hidden lg:flex' : 'flex'
           )}
         >
-          {/* Desktop Toolbar */}
+          {}
           <div className='flex items-center justify-between gap-4'>
             <div className='flex flex-1 items-center gap-2'>
               <Skeleton className='h-10 w-72 rounded-md' />
@@ -190,7 +184,7 @@ export function DataTableSkeleton({
             </div>
           </div>
 
-          {/* Full Desktop Table */}
+          {}
           <div className='relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border bg-card'>
             <Table containerClassName='min-h-0 flex-1 overflow-hidden'>
               <TableHeader className='sticky top-0 z-10 bg-background shadow-[0_1px_0_0_var(--border)]'>
@@ -243,7 +237,7 @@ export function DataTableSkeleton({
             </Table>
           </div>
 
-          {/* Full Desktop Pagination */}
+          {}
           {withPagination ? (
             <div className='flex items-center justify-between px-1 py-1'>
               <Skeleton className='h-4 w-40' />

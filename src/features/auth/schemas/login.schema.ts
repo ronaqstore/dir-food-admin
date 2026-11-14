@@ -10,5 +10,3 @@ export function createLoginSchema(t: (key: string) => string, minPasswordLength 
     password: z.string().min(minPasswordLength, t('auth.passwordRequired'))
   });
 }
-
-export type LoginSchemaType = z.infer<ReturnType<typeof createLoginSchema>>;

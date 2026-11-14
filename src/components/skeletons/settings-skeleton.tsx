@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function ProfileTabSkeleton() {
   return (
     <div className='space-y-8'>
-      {/* Banner Skeleton */}
+      {}
       <div className='rounded-xl border border-border/60 bg-muted/20 p-5 space-y-3'>
         <div className='flex items-center justify-between'>
           <div className='space-y-1.5'>
@@ -15,7 +15,7 @@ export function ProfileTabSkeleton() {
         </div>
       </div>
 
-      {/* Brand Images Card Skeleton */}
+      {}
       <Card className='border-border/60 shadow-xs'>
         <CardHeader className='space-y-1.5'>
           <Skeleton className='h-5 w-36 rounded-md' />
@@ -23,12 +23,12 @@ export function ProfileTabSkeleton() {
         </CardHeader>
         <CardContent className='space-y-6'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-            {/* Logo */}
+            {}
             <div className='space-y-2'>
               <Skeleton className='h-4 w-28 rounded-md' />
               <Skeleton className='h-36 w-36 rounded-2xl' />
             </div>
-            {/* Cover */}
+            {}
             <div className='space-y-2'>
               <Skeleton className='h-4 w-32 rounded-md' />
               <Skeleton className='h-36 w-full rounded-2xl' />
@@ -37,7 +37,7 @@ export function ProfileTabSkeleton() {
         </CardContent>
       </Card>
 
-      {/* Store Info Form Card Skeleton */}
+      {}
       <Card className='border-border/60 shadow-xs'>
         <CardHeader className='space-y-1.5'>
           <Skeleton className='h-5 w-40 rounded-md' />

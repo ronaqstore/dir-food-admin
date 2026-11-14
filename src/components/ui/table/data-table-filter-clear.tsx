@@ -3,11 +3,6 @@
 import * as React from 'react';
 import { Icons } from '@/components/icons';
 
-/**
- * Clear affordance rendered INSIDE a PopoverTrigger button. It must not be a
- * <button> (button-in-button is invalid HTML and breaks hydration), so it is a
- * div with button semantics and Enter/Space activation.
- */
 export function DataTableFilterClear({
   title,
   onReset

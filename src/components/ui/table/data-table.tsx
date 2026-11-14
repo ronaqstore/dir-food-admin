@@ -15,18 +15,12 @@ interface DataTableProps<TData> {
   actionBar?: ReactNode;
   children?: ReactNode;
   className?: string;
-  /** Optional overrides — otherwise auto-layout from column meta. */
   mobileItem?: MobileItemConfig<TData>;
   detail?: DetailConfig<TData> | Partial<DetailConfig<TData>>;
   quickFilters?: QuickFilterChip[];
   ledger?: LedgerListConfig<TData>;
 }
 
-/**
- * Compatibility entry: every list page uses ResponsiveDataTable under the hood.
- * Pass `toolbarAction` via `<DataTableToolbar>{action}</DataTableToolbar>` children,
- * or use ResponsiveDataTable directly.
- */
 export function DataTable<TData>({
   table,
   children,

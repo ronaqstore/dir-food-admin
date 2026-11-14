@@ -79,7 +79,7 @@ export function DataTablePagination<TData>({
           })}
         </div>
         <div className='flex items-center gap-1'>
-          <Button
+          <Button type='button'
             aria-label={t('table.firstPage')}
             variant='outline'
             size='icon'
@@ -89,7 +89,7 @@ export function DataTablePagination<TData>({
           >
             <Icons.chevronsLeft className='rtl:rotate-180' />
           </Button>
-          <Button
+          <Button type='button'
             aria-label={t('table.prevPage')}
             variant='outline'
             size='icon'
@@ -99,7 +99,7 @@ export function DataTablePagination<TData>({
           >
             <Icons.chevronLeft className='rtl:rotate-180' />
           </Button>
-          <Button
+          <Button type='button'
             aria-label={t('table.nextPage')}
             variant='outline'
             size='icon'
@@ -109,7 +109,7 @@ export function DataTablePagination<TData>({
           >
             <Icons.chevronRight className='rtl:rotate-180' />
           </Button>
-          <Button
+          <Button type='button'
             aria-label={t('table.lastPage')}
             variant='outline'
             size='icon'

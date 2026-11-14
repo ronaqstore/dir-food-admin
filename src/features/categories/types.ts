@@ -18,3 +18,14 @@ export interface UpdateCategoryInput {
 export interface ReorderCategoriesInput {
   ids: string[];
 }
+
+export interface UpdateCategoryMutationPayload {
+  id: string;
+  input: UpdateCategoryInput;
+}
+
+export interface CategoryDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  category?: CategoryWithCount | null;
+}

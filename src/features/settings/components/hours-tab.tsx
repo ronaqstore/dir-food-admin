@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { HoursTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { useOperatingHours, useUpdateOperatingHours } from '../api/restaurant-query';
-import type { DayHoursInput } from '../types';
+import type { DayHoursInput, DayScheduleRow } from '../types';
 
 const DAYS_OF_WEEK = [
   { index: 1, key: 'dayMonday' },
@@ -20,13 +20,6 @@ const DAYS_OF_WEEK = [
   { index: 6, key: 'daySaturday' },
   { index: 0, key: 'daySunday' }
 ] as const;
-
-interface DayScheduleRow {
-  dayOfWeek: number;
-  isOpen: boolean;
-  openTime: string;
-  closeTime: string;
-}
 
 export function HoursTab() {
   const t = useTranslations();
@@ -161,7 +154,7 @@ export function HoursTab() {
       </div>
 
       <div className='flex justify-end pt-4 border-t'>
-        <Button onClick={handleSave} disabled={updateHours.isPending}>
+        <Button type='button' onClick={handleSave} disabled={updateHours.isPending}>
           {updateHours.isPending ? (
             <>
               <Spinner className='me-2 size-4' />

@@ -26,13 +26,12 @@ export function InfoButton({
   const t = useT();
   const resolvedLabel = label ?? t('infoButton.showInformation');
 
-  // Set content on mount so the infobar has it ready, but don't force it open
   const contentRef = React.useRef(content);
   contentRef.current = content;
 
   React.useEffect(() => {
     setContent(contentRef.current);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick: React.ComponentProps<typeof Button>['onClick'] = (e) => {
     setContent(content);
@@ -41,7 +40,7 @@ export function InfoButton({
   };
 
   return (
-    <Button
+    <Button type='button'
       variant={variant}
       size={size}
       className={cn('shrink-0', className)}

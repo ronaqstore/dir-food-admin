@@ -29,7 +29,7 @@ export function PlatformOverview() {
 
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-6'>
-      {/* Platform Header */}
+      {}
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div>
           <h1 className='text-2xl sm:text-3xl font-bold tracking-tight text-foreground'>
@@ -49,9 +49,9 @@ export function PlatformOverview() {
         </div>
       </div>
 
-      {/* Platform Metric Cards */}
+      {}
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-        {/* Total Restaurants */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -71,7 +71,7 @@ export function PlatformOverview() {
           </CardContent>
         </Card>
 
-        {/* Pending Approvals */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -91,7 +91,7 @@ export function PlatformOverview() {
           </CardContent>
         </Card>
 
-        {/* Active Subscriptions */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -111,7 +111,7 @@ export function PlatformOverview() {
           </CardContent>
         </Card>
 
-        {/* Total Platform Users */}
+        {}
         <Card className='border-border/60 shadow-sm'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-xs sm:text-sm font-medium text-muted-foreground'>
@@ -133,7 +133,7 @@ export function PlatformOverview() {
       </div>
 
 
-      {/* Pending Approvals Widget */}
+      {}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
           <div className='flex items-center justify-between'>
@@ -161,7 +161,7 @@ export function PlatformOverview() {
           {isPendingLoading ? (
             <div className='flex items-center justify-center p-8 text-xs text-muted-foreground'>
               <Icons.spinner className='h-4 w-4 animate-spin me-2' />
-              <span>Loading...</span>
+              <span>{t('common.loading')}</span>
             </div>
           ) : pendingList.length === 0 ? (
             <div className='flex flex-col items-center justify-center p-8 text-center'>
@@ -170,7 +170,7 @@ export function PlatformOverview() {
               </div>
               <p className='text-sm font-semibold text-foreground'>{t('dashboard.noPendingApprovals')}</p>
               <p className='text-xs text-muted-foreground mt-0.5'>
-                All registered restaurants have been reviewed.
+                {t('dashboard.allRestaurantsReviewed')}
               </p>
             </div>
           ) : (
@@ -199,7 +199,7 @@ export function PlatformOverview() {
                       </p>
                     </div>
                     <div className='flex items-center gap-2 shrink-0'>
-                      <Button
+                      <Button type='button'
                         render={<Link href={`/dashboard/platform/restaurants?status=PENDING`} />}
                         variant='default'
                         size='sm'
@@ -208,7 +208,7 @@ export function PlatformOverview() {
                         <Icons.check className='me-1 size-3.5' />
                         <span>{t('dashboard.approve')}</span>
                       </Button>
-                      <Button
+                      <Button type='button'
                         render={<Link href={`/dashboard/platform/restaurants?status=PENDING`} />}
                         variant='outline'
                         size='sm'

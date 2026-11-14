@@ -18,14 +18,7 @@ import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { useCreateMasterArea, useUpdateMasterArea, usePlatformCities } from '../api/platform-query';
-import type { MasterArea } from '../types';
-
-interface MasterAreaDialogProps {
-  area?: MasterArea | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultCityId?: string;
-}
+import type { MasterAreaDialogProps } from '../types';
 
 export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: MasterAreaDialogProps) {
   const t = useTranslations('platformAreas');
@@ -61,7 +54,7 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      toast.error('Area name cannot be empty');
+      toast.error(t('areaNameEmpty'));
       return;
     }
 
@@ -109,13 +102,13 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
           <div className='space-y-3 text-sm'>
             {cities.length > 0 && (
               <div className='space-y-1.5'>
-                <Label htmlFor='area-city'>City / District *</Label>
+                <Label htmlFor='area-city'>{t('districtLabel')}</Label>
                 <SearchableSelect
                   id='area-city'
                   value={cityId}
                   onChange={setCityId}
-                  placeholder='Select District / City'
-                  searchPlaceholder='Search district...'
+                  placeholder={t('districtPlaceholder')}
+                  searchPlaceholder={t('searchDistrictPlaceholder')}
                   options={cities.map((c) => ({
                     value: c.id,
                     label: c.name,

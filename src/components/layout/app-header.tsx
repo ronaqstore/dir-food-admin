@@ -8,6 +8,7 @@ import SearchInput from '@/components/search-input';
 import { LocaleSwitcher } from './locale-switcher';
 import { ThemeSelector } from '@/components/themes/theme-selector';
 import { ThemeModeToggle } from '@/components/themes/theme-mode-toggle';
+import { TrialBadge } from '@/components/common/trial-badge';
 import { UserNav } from './user-nav';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
@@ -73,7 +74,7 @@ export function AppHeader() {
         <div className='hidden lg:block'>
           <ThemeSelector />
         </div>
-        <Separator orientation='vertical' className='hidden h-4 sm:block' />
+        <TrialBadge />
         <UserNav />
       </div>
     </header>

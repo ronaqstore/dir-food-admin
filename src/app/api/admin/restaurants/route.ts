@@ -3,7 +3,17 @@ import { proxyToBackend } from '@/lib/api/proxy';
 
 export async function GET(request: NextRequest) {
   return proxyToBackend(request, '/admin/restaurants', {
-    allowedParams: ['page', 'limit', 'q', 'status'],
+    allowedParams: [
+      'page',
+      'limit',
+      'q',
+      'status',
+      'subStatus',
+      'cityId',
+      'sort',
+      'sortBy',
+      'sortOrder'
+    ],
     rawResponse: true
   });
 }

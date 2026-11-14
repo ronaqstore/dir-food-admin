@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server';
 import { proxyToBackend } from '@/lib/api/proxy';
+import type { RouteIdContext } from '@/types/routes';
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function PATCH(request: NextRequest, context: RouteIdContext) {
+  const { id } = await context.params;
   return proxyToBackend(request, `/admin/areas/${id}`);
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function DELETE(request: NextRequest, context: RouteIdContext) {
+  const { id } = await context.params;
   return proxyToBackend(request, `/admin/areas/${id}`);
 }

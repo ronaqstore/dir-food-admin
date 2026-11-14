@@ -121,7 +121,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
 
   return (
     <Popover>
-      <PopoverTrigger render={<Button variant='outline' size='sm' className='border-dashed' />}>
+      <PopoverTrigger render={<Button type='button' variant='outline' size='sm' className='border-dashed' />}>
         {columnFilterValue ? (
           <DataTableFilterClear title={title} onReset={onReset} />
         ) : (
@@ -161,7 +161,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 className={cn('h-8 w-24', unit && 'pe-8')}
               />
               {unit && (
-                <span className='bg-accent text-muted-foreground absolute top-0 end-0 bottom-0 flex items-center rounded-e-md px-2 text-sm'>
+                <span className='bg-accent text-muted-foreground absolute top-0 inset-e-0 bottom-0 flex items-center rounded-e-md px-2 text-sm'>
                   {unit}
                 </span>
               )}
@@ -185,7 +185,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
                 className={cn('h-8 w-24', unit && 'pe-8')}
               />
               {unit && (
-                <span className='bg-accent text-muted-foreground absolute top-0 end-0 bottom-0 flex items-center rounded-e-md px-2 text-sm'>
+                <span className='bg-accent text-muted-foreground absolute top-0 inset-e-0 bottom-0 flex items-center rounded-e-md px-2 text-sm'>
                   {unit}
                 </span>
               )}
@@ -203,7 +203,7 @@ export function DataTableSliderFilter<TData>({ column, title }: DataTableSliderF
             onValueChange={onSliderValueChange}
           />
         </div>
-        <Button
+        <Button type='button'
           aria-label={t('table.clearColumnFilter', { title: title ?? column.id })}
           variant='outline'
           size='sm'

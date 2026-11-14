@@ -17,13 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { useCreateCategory, useUpdateCategory } from '../api/categories-query';
-import type { CategoryWithCount } from '../types';
-
-interface CategoryDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  category?: CategoryWithCount | null;
-}
+import type { CategoryDialogProps } from '../types';
 
 export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogProps) {
   const t = useTranslations();
@@ -87,6 +81,11 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
     }
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    if (error) setError(null);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-md'>
@@ -107,10 +106,7 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
               <Input
                 id='category-name'
                 value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (error) setError(null);
-                }}
+                onChange={handleNameChange}
                 placeholder={t('menuCategories.namePlaceholder')}
                 disabled={isPending}
                 autoFocus

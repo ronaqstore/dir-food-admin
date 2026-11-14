@@ -5,7 +5,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
@@ -22,24 +21,17 @@ import { TablePageBody } from '@/components/layout/table-page-body';
 import { Icons } from '@/components/icons';
 import {
   useMasterAreas,
+  usePaginatedMasterAreas,
   useUpdateMasterArea,
   useDeleteMasterArea,
-  usePlatformCities,
-  useCreatePlatformCity
+  usePlatformCities
 } from '../api/platform-query';
 import { MasterAreaDialog } from './master-area-dialog';
 import { ApproveAreaDialog } from './approve-area-dialog';
 import { MergeAreaDialog } from './merge-area-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { AddDistrictDialog } from './add-district-dialog';
+import { PlatformDistrictsBar } from './platform-districts-bar';
+import { PlatformAreasMetrics } from './platform-areas-metrics';
 import type { MasterArea } from '../types';
 
 export function PlatformSettingsView() {
@@ -47,6 +39,7 @@ export function PlatformSettingsView() {
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
   const [perPage] = useQueryState('perPage', parseAsInteger.withDefault(20));
   const [name] = useQueryState('name', parseAsString);
+  const [sort] = useQueryState('sort', parseAsString);
 
   const [selectedArea, setSelectedArea] = React.useState<MasterArea | null>(null);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
@@ -61,13 +54,25 @@ export function PlatformSettingsView() {
 
   const [selectedCityId, setSelectedCityId] = React.useState<string>('ALL');
   const [isAddCityOpen, setIsAddCityOpen] = React.useState(false);
-  const [newCityName, setNewCityName] = React.useState('');
 
   const { data: cities = [] } = usePlatformCities();
-  const createCityMutation = useCreatePlatformCity();
   const { data: allAreas = [], isLoading } = useMasterAreas();
   const updateMutation = useUpdateMasterArea();
   const deleteMutation = useDeleteMasterArea();
+
+  const { data: paginatedData, isLoading: isTableLoading } = usePaginatedMasterAreas({
+    page,
+    limit: perPage,
+    q: name?.trim() || undefined,
+    cityId: selectedCityId !== 'ALL' ? selectedCityId : undefined,
+    needsReview: filterNeedsReview || undefined,
+    sort: sort || undefined
+  });
+
+  const tableAreas = paginatedData?.data ?? [];
+  const meta = paginatedData?.meta;
+  const pageCount = meta?.totalPages ?? 1;
+  const rowCount = meta?.total ?? 0;
 
   const areas = React.useMemo(() => {
     let list = selectedCityId === 'ALL' ? allAreas : allAreas.filter((a) => a.cityId === selectedCityId);
@@ -86,19 +91,9 @@ export function PlatformSettingsView() {
     [cities, selectedCityId]
   );
 
-  const handleCreateCity = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCityName.trim()) return;
-    try {
-      const created = await createCityMutation.mutateAsync({ name: newCityName.trim() });
-      toast.success(`City/District "${newCityName.trim()}" created!`);
-      setSelectedCityId(created.id);
-      setNewCityName('');
-      setIsAddCityOpen(false);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to create district');
-    }
-  };
+  const handleToggleNeedsReview = React.useCallback(() => {
+    setFilterNeedsReview((prev) => !prev);
+  }, []);
 
   const totalAllAreas = allAreas.length;
   const totalAreas = selectedCityId === 'ALL' ? totalAllAreas : areas.length;
@@ -145,20 +140,20 @@ export function PlatformSettingsView() {
     async (area: MasterArea) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete "${area.name}"? This action cannot be undone.`
+          t('confirmDeleteArea', { name: area.name })
         )
       ) {
         return;
       }
       try {
         await deleteMutation.mutateAsync(area.id);
-        toast.success(`Area "${area.name}" deleted successfully`);
+        toast.success(t('areaDeleted', { name: area.name }));
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Failed to delete area';
         toast.error(msg);
       }
     },
-    [deleteMutation]
+    [deleteMutation, t]
   );
 
   const columns = React.useMemo<ColumnDef<MasterArea>[]>(
@@ -178,11 +173,11 @@ export function PlatformSettingsView() {
                   variant='outline'
                   className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 dark:border-amber-700 font-semibold'
                 >
-                  Needs Review
+                  {t('needsReview')}
                 </Badge>
               ) : row.original.isCustomCreated ? (
                 <Badge variant='outline' className='text-[10px] text-amber-600 border-amber-300 dark:text-amber-400'>
-                  Owner Created
+                  {t('ownerCreated')}
                 </Badge>
               ) : null}
             </div>
@@ -274,14 +269,14 @@ export function PlatformSettingsView() {
               onClick={(e) => e.stopPropagation()}
             >
               {isPendingReview && (
-                <Button
+                <Button type='button'
                   size='sm'
                   variant='outline'
                   className='gap-1 text-xs text-emerald-700 border-emerald-300 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/40 h-7 px-2'
                   onClick={() => handleOpenApprove(area)}
                 >
                   <Icons.circleCheck className='size-3 text-emerald-600' />
-                  Approve
+                  {t('approve')}
                 </Button>
               )}
               <RowActionsMenu
@@ -289,14 +284,14 @@ export function PlatformSettingsView() {
                   ...(isPendingReview
                     ? [
                         {
-                          label: 'Approve & Publish',
+                          label: t('approveAndPublish'),
                           icon: Icons.circleCheck,
                           onClick: () => handleOpenApprove(area)
                         }
                       ]
                     : []),
                   {
-                    label: 'Merge with Existing Area',
+                    label: t('mergeWithExistingArea'),
                     icon: Icons.galleryVerticalEnd,
                     onClick: () => handleOpenMerge(area)
                   },
@@ -306,7 +301,7 @@ export function PlatformSettingsView() {
                     onClick: () => handleOpenEdit(area)
                   },
                   {
-                    label: 'Delete Area',
+                    label: t('deleteArea'),
                     icon: Icons.trash,
                     variant: 'destructive',
                     onClick: () => handleDeleteArea(area)
@@ -385,32 +380,11 @@ export function PlatformSettingsView() {
     [t]
   );
 
-  const filteredAreas = React.useMemo(() => {
-    if (!name?.trim()) return areas;
-    const q = name.trim().toLowerCase();
-    return areas.filter(
-      (a) => a.name.toLowerCase().includes(q) || a.slug.toLowerCase().includes(q)
-    );
-  }, [areas, name]);
-
-  const pageCount = Math.max(1, Math.ceil(filteredAreas.length / perPage));
-
-  React.useEffect(() => {
-    if (page > pageCount && pageCount > 0) {
-      void setPage(1);
-    }
-  }, [page, pageCount, setPage]);
-
-  const paginatedAreas = React.useMemo(() => {
-    const start = (page - 1) * perPage;
-    return filteredAreas.slice(start, start + perPage);
-  }, [filteredAreas, page, perPage]);
-
   const { table } = useDataTable({
-    data: paginatedAreas,
+    data: tableAreas,
     columns,
     pageCount,
-    rowCount: filteredAreas.length,
+    rowCount,
     shallow: true,
     debounceMs: 400,
     initialState: {
@@ -429,135 +403,35 @@ export function PlatformSettingsView() {
           <p className='text-sm text-muted-foreground mt-0.5'>{t('subtitle')}</p>
         </div>
         <div className='flex items-center gap-2 self-start sm:self-auto'>
-          <Button variant='outline' onClick={() => setIsAddCityOpen(true)} className='gap-1.5'>
+          <Button type='button' variant='outline' onClick={() => setIsAddCityOpen(true)} className='gap-1.5'>
             <Icons.add className='size-4' />
-            Add District
+            {t('addDistrict')}
           </Button>
-          <Button onClick={handleOpenCreate} className='gap-1.5'>
+          <Button type='button' onClick={handleOpenCreate} className='gap-1.5'>
             <Icons.add className='size-4' />
             {t('addArea')}
           </Button>
         </div>
       </div>
 
-      <div className='grid shrink-0 grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3'>
-        <Card className='p-3 sm:p-4'>
-          <div className='flex items-center justify-between'>
-            <span className='text-xs sm:text-sm font-medium text-muted-foreground'>
-              {t('metricTotal')}
-            </span>
-            <Icons.building className='size-4 text-muted-foreground' />
-          </div>
-          <div className='text-xl sm:text-2xl font-bold font-mono mt-1'>{totalAreas}</div>
-          <p className='text-[11px] text-muted-foreground truncate'>
-            {selectedCity ? `Standard zones in ${selectedCity.name}` : t('metricTotalDesc')}
-          </p>
-        </Card>
+      <PlatformAreasMetrics
+        totalAreas={totalAreas}
+        selectedCityName={selectedCity?.name}
+        activeAreas={activeAreas}
+        totalCoverageLinks={totalCoverageLinks}
+        t={t}
+      />
 
-        <Card className='p-3 sm:p-4'>
-          <div className='flex items-center justify-between'>
-            <span className='text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-400'>
-              {t('metricActive')}
-            </span>
-            <Icons.circleCheck className='size-4 text-emerald-600 dark:text-emerald-400' />
-          </div>
-          <div className='text-xl sm:text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1'>
-            {activeAreas}
-          </div>
-          <p className='text-[11px] text-muted-foreground truncate'>{t('metricActiveDesc')}</p>
-        </Card>
-
-        <Card className='p-3 sm:p-4'>
-          <div className='flex items-center justify-between'>
-            <span className='text-xs sm:text-sm font-medium text-primary'>
-              {t('metricCoverage')}
-            </span>
-            <Icons.trendingUp className='size-4 text-primary' />
-          </div>
-          <div className='text-xl sm:text-2xl font-bold font-mono text-primary mt-1'>
-            {totalCoverageLinks}
-          </div>
-          <p className='text-[11px] text-muted-foreground truncate'>{t('metricCoverageDesc')}</p>
-        </Card>
-      </div>
-
-      <div className='flex flex-wrap items-center justify-between gap-2 shrink-0'>
-        {cities.length > 0 && (
-          <div className='flex items-center gap-2 overflow-x-auto pb-1'>
-            <span className='text-xs font-medium text-muted-foreground whitespace-nowrap'>District:</span>
-            <Button
-              size='sm'
-              variant={selectedCityId === 'ALL' ? 'default' : 'outline'}
-              className='h-7 text-xs rounded-full'
-              onClick={() => setSelectedCityId('ALL')}
-            >
-              <span>All Districts</span>
-              <span
-                className={`ms-1.5 rounded-full px-1.5 py-0.2 text-[10px] ${
-                  selectedCityId === 'ALL'
-                    ? 'bg-primary-foreground/20 text-primary-foreground font-bold'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                {totalAllAreas}
-              </span>
-            </Button>
-            {cities.map((c) => {
-              const count = allAreas.filter((a) => a.cityId === c.id).length;
-              const isSelected = selectedCityId === c.id;
-              return (
-                <Button
-                  key={c.id}
-                  size='sm'
-                  variant={isSelected ? 'default' : 'outline'}
-                  className='h-7 text-xs rounded-full'
-                  onClick={() => setSelectedCityId(c.id)}
-                >
-                  <span>{c.name}</span>
-                  <span
-                    className={`ms-1.5 rounded-full px-1.5 py-0.2 text-[10px] ${
-                      isSelected
-                        ? 'bg-primary-foreground/20 text-primary-foreground font-bold'
-                        : 'bg-muted text-muted-foreground'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </Button>
-              );
-            })}
-          </div>
-        )}
-
-        <div className='flex items-center gap-2 ms-auto'>
-          <Button
-            size='sm'
-            variant={filterNeedsReview ? 'default' : 'outline'}
-            className={`h-7 text-xs rounded-full gap-1.5 ${
-              filterNeedsReview
-                ? 'bg-amber-600 hover:bg-amber-700 text-white'
-                : totalNeedsReview > 0
-                ? 'border-amber-400 text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/40'
-                : ''
-            }`}
-            onClick={() => setFilterNeedsReview((prev) => !prev)}
-          >
-            <Icons.alertCircle className='size-3.5' />
-            <span>Needs Review</span>
-            <span
-              className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                filterNeedsReview
-                  ? 'bg-white/20 text-white'
-                  : totalNeedsReview > 0
-                  ? 'bg-amber-200 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
-                  : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              {totalNeedsReview}
-            </span>
-          </Button>
-        </div>
-      </div>
+      <PlatformDistrictsBar
+        cities={cities}
+        allAreas={allAreas}
+        selectedCityId={selectedCityId}
+        onSelectCityId={setSelectedCityId}
+        totalAllAreas={totalAllAreas}
+        filterNeedsReview={filterNeedsReview}
+        onToggleNeedsReview={handleToggleNeedsReview}
+        totalNeedsReview={totalNeedsReview}
+      />
 
       <TablePageBody>
         <ResponsiveDataTable
@@ -565,8 +439,8 @@ export function PlatformSettingsView() {
           mobileItem={areaMobileItem}
           detail={areaDetail}
           quickFilters={areaQuickFilters}
-          isLoading={isLoading}
-          rowCount={areas.length}
+          isLoading={isTableLoading || isLoading}
+          rowCount={rowCount}
         />
       </TablePageBody>
 
@@ -590,45 +464,11 @@ export function PlatformSettingsView() {
         onOpenChange={setIsMergeOpen}
       />
 
-      <Dialog open={isAddCityOpen} onOpenChange={setIsAddCityOpen}>
-        <DialogContent className='sm:max-w-md'>
-          <form onSubmit={handleCreateCity} className='space-y-4'>
-            <DialogHeader>
-              <DialogTitle>Add New District / City</DialogTitle>
-              <DialogDescription>
-                Create a new district (e.g. Swat, Peshawar, Mardan) to group restaurants and delivery areas.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className='space-y-3 text-sm'>
-              <div className='space-y-1.5'>
-                <Label htmlFor='city-name'>District / City Name *</Label>
-                <Input
-                  id='city-name'
-                  required
-                  placeholder='e.g. Swat, Peshawar, Mardan'
-                  value={newCityName}
-                  onChange={(e) => setNewCityName(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type='button'
-                variant='ghost'
-                onClick={() => setIsAddCityOpen(false)}
-                disabled={createCityMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' disabled={createCityMutation.isPending}>
-                Create District
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <AddDistrictDialog
+        open={isAddCityOpen}
+        onOpenChange={setIsAddCityOpen}
+        onCreated={setSelectedCityId}
+      />
     </div>
   );
 }

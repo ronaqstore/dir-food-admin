@@ -18,6 +18,8 @@ import {
   IconBuildingStore
 } from '@tabler/icons-react';
 import { useRestaurantProfile } from '../api/restaurant-query';
+import { WHATSAPP_BASE_URL } from '@/constants/api';
+import { env } from '@/config/env';
 import { QrCodeEncoder, QrEcc } from '@/lib/qr/qr-code';
 
 export function QrCodeTab() {
@@ -32,14 +34,14 @@ export function QrCodeTab() {
   }, [profile?.logoUrl]);
 
   const [storefrontBase, setStorefrontBase] = React.useState<string>(
-    () => (process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3013').replace(/\/+$/, '')
+    () => (env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3013').replace(/\/+$/, '')
   );
 
   React.useEffect(() => {
-    if (process.env.NEXT_PUBLIC_WEB_URL) {
-      setStorefrontBase(process.env.NEXT_PUBLIC_WEB_URL.replace(/\/+$/, ''));
+    if (env.NEXT_PUBLIC_WEB_URL) {
+      setStorefrontBase(env.NEXT_PUBLIC_WEB_URL.replace(/\/+$/, ''));
     } else if (typeof window !== 'undefined') {
-      setStorefrontBase(`${window.location.protocol}//${window.location.hostname}:3013`);
+      setStorefrontBase(window.location.protocol + '/' + '/' + window.location.hostname + ':3013');
     }
   }, []);
 
@@ -59,10 +61,10 @@ export function QrCodeTab() {
     try {
       await navigator.clipboard.writeText(menuUrl);
       setCopied(true);
-      toast.success(t('restaurantSettings.linkCopied') || 'Menu link copied to clipboard!');
+      toast.success(t('restaurantSettings.linkCopied'));
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Failed to copy to clipboard');
+      toast.error(t('restaurantSettings.failedCopyClipboard'));
     }
   };
 
@@ -71,7 +73,7 @@ export function QrCodeTab() {
     const text = encodeURIComponent(
       `Check out our food menu and order directly via WhatsApp on Dir Food:\n${menuUrl}`
     );
-    window.open(`https://wa.me/?text=${text}`, '_blank');
+    window.open(`${WHATSAPP_BASE_URL}/?text=${text}`, '_blank');
   };
 
   const handleDownloadPng = () => {
@@ -84,11 +86,9 @@ export function QrCodeTab() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, size, size);
 
-    // QR modules
     const qrSize = qrEncoder.size;
     const cellSize = (size - padding * 2) / qrSize;
 
@@ -106,7 +106,6 @@ export function QrCodeTab() {
       }
     }
 
-    // Trigger download
     const dataUrl = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataUrl;
@@ -132,7 +131,7 @@ export function QrCodeTab() {
 
   return (
     <div className='space-y-6'>
-      {/* Intro Header */}
+      {}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-4'>
         <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-4'>
           <div>
@@ -147,7 +146,7 @@ export function QrCodeTab() {
           </div>
         </div>
 
-        {/* Public Link Share Bar */}
+        {}
         <div className='space-y-2'>
           <label className='text-xs font-semibold text-foreground'>
             {t('restaurantSettings.publicMenuLink') || 'Your Public Menu Link'}
@@ -161,7 +160,7 @@ export function QrCodeTab() {
             </div>
 
             <div className='flex items-center gap-2 shrink-0'>
-              <Button
+              <Button type='button'
                 variant='outline'
                 size='sm'
                 onClick={handleCopyLink}
@@ -180,7 +179,7 @@ export function QrCodeTab() {
                 )}
               </Button>
 
-              <Button
+              <Button type='button'
                 variant='outline'
                 size='sm'
                 onClick={handleShareWhatsApp}
@@ -190,7 +189,7 @@ export function QrCodeTab() {
                 <span>{t('restaurantSettings.shareWhatsApp') || 'Share to WhatsApp'}</span>
               </Button>
 
-              <Button
+              <Button type='button'
                 variant='ghost'
                 size='sm'
                 nativeButton={false}
@@ -199,7 +198,7 @@ export function QrCodeTab() {
                     href={menuUrl}
                     target='_blank'
                     rel='noopener noreferrer'
-                    aria-label='Open Storefront'
+                    aria-label={t('restaurantSettings.openStorefront')}
                   />
                 }
                 className='text-xs text-muted-foreground'
@@ -211,15 +210,15 @@ export function QrCodeTab() {
         </div>
       </div>
 
-      {/* QR Code Standee Preview & Actions */}
+      {}
       <div className='grid grid-cols-1 md:grid-cols-12 gap-6 items-start'>
-        {/* Printable Standee Card */}
+        {}
         <div className='md:col-span-7 flex justify-center'>
           <div
             ref={printRef}
             className='w-full max-w-sm rounded-3xl border-2 border-border bg-card p-8 text-center shadow-md space-y-5 print:border-none print:shadow-none print:p-0'
           >
-            {/* Restaurant Branding */}
+            {}
             <div className='flex flex-col items-center gap-2.5'>
               <div className='flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary font-bold overflow-hidden shadow-xs'>
                 {profile.logoUrl && !logoError ? (
@@ -245,14 +244,14 @@ export function QrCodeTab() {
               </div>
             </div>
 
-            {/* QR Code Graphic */}
+            {}
             <div className='mx-auto flex size-56 items-center justify-center rounded-2xl border-4 border-foreground/10 bg-white p-3 shadow-inner'>
               {qrEncoder ? (
                 <svg
                   viewBox={qrViewBox}
                   className='size-full'
                   shapeRendering='crispEdges'
-                  aria-label='QR Code'
+                  aria-label={t('restaurantSettings.tabQrCode')}
                 >
                   <path d={qrSvgPath} fill='#0f172a' />
                 </svg>
@@ -261,24 +260,23 @@ export function QrCodeTab() {
               )}
             </div>
 
-            {/* Call to Action */}
+            {}
             <div className='space-y-1'>
               <p className='text-xs font-bold uppercase tracking-wider text-primary'>
-                {t('restaurantSettings.scanToOrder') || 'Scan with Camera'}
+                {t('restaurantSettings.scanToOrder')}
               </p>
               <p className='text-xs font-medium text-muted-foreground max-w-[240px] mx-auto'>
-                {t('restaurantSettings.scanInstructions') ||
-                  'Point your mobile camera at this QR code to view our full menu & order directly on WhatsApp'}
+                {t('restaurantSettings.scanInstructions')}
               </p>
             </div>
 
             <div className='pt-2 border-t text-[10px] text-muted-foreground font-semibold uppercase tracking-widest'>
-              Dir Food • Lower Dir
+              {t('restaurantSettings.platformBrandFooter')}
             </div>
           </div>
         </div>
 
-        {/* Action Panel */}
+        {}
         <div className='md:col-span-5 rounded-2xl border bg-card p-6 shadow-xs space-y-4'>
           <h4 className='text-sm font-bold text-foreground'>
             {t('restaurantSettings.qrActionsTitle') || 'Standee & Promotional Materials'}
@@ -289,7 +287,7 @@ export function QrCodeTab() {
           </p>
 
           <div className='space-y-2.5 pt-2'>
-            <Button
+            <Button type='button'
               onClick={handleDownloadPng}
               variant='default'
               className='w-full justify-start gap-2 text-xs font-semibold'
@@ -300,7 +298,7 @@ export function QrCodeTab() {
               </span>
             </Button>
 
-            <Button
+            <Button type='button'
               onClick={handlePrint}
               variant='outline'
               className='w-full justify-start gap-2 text-xs font-semibold'

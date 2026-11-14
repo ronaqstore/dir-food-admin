@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function SettingsLoading() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-12'>
-      {/* Title & tabs bar */}
+      {}
       <div className='space-y-4'>
         <div className='space-y-1.5'>
           <Skeleton className='h-8 w-44 rounded-lg' />

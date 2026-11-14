@@ -16,7 +16,7 @@ describe('QrCodeEncoder', () => {
     const url = 'http://localhost:3013/r/dir-hujra-restarents';
     const qr = QrCodeEncoder.encodeText(url, QrEcc.MEDIUM);
     assert.equal(qr.version, 4);
-    assert.equal(qr.size, 33); // 4 * 4 + 17
+    assert.equal(qr.size, 33);
     const svgPath = qr.toSvgPath();
     assert.ok(svgPath.length > 500);
   });
@@ -30,9 +30,7 @@ describe('QrCodeEncoder', () => {
 
   it('accurately reports finder pattern module states', () => {
     const qr = QrCodeEncoder.encodeText('https://dirfood.com', QrEcc.MEDIUM);
-    // Top-left finder pattern center is at (3, 3) which is dark
     assert.equal(qr.getModule(3, 3), true);
-    // Out of bounds returns false
     assert.equal(qr.getModule(-1, -1), false);
     assert.equal(qr.getModule(999, 999), false);
   });

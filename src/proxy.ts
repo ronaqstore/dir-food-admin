@@ -10,7 +10,6 @@ const handleI18nRouting = createIntlMiddleware(routing);
 function handleAuthRedirects(req: AuthenticatedNextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Clean up duplicated locale prefixes if any (e.g. /en/en/...)
   const repeatedLocalePrefix = pathname.match(/^\/(?:en|ur|ps)(?:\/(?:en|ur|ps))+(?=\/|$)/);
   if (repeatedLocalePrefix) {
     const url = req.nextUrl.clone();
@@ -48,7 +47,6 @@ function handleAuthRedirects(req: AuthenticatedNextRequest) {
     return handleI18nRouting(req);
   }
 
-  // 1. Protected dashboard routes require authentication
   if (startsWithDashboard && !isLoggedIn) {
     const url = req.nextUrl.clone();
     url.pathname = loginPath(locale);
@@ -56,12 +54,10 @@ function handleAuthRedirects(req: AuthenticatedNextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. Logged-in users should not see auth/login/register pages
   if (isAnyAuthPage && isLoggedIn) {
     return NextResponse.redirect(new URL(homePathForRole(role, locale), req.nextUrl));
   }
 
-  // 3. Role authorization within dashboard routes
   if (isLoggedIn && role) {
     const roleRedirect = redirectForRole(pathname, role);
     if (roleRedirect) {
@@ -69,7 +65,6 @@ function handleAuthRedirects(req: AuthenticatedNextRequest) {
     }
   }
 
-  // 4. Root URL redirects
   if (pathname === '/' || /^\/(en|ur|ps)\/?$/.test(pathname)) {
     if (isLoggedIn) {
       return NextResponse.redirect(new URL(homePathForRole(role, locale), req.nextUrl));
@@ -77,16 +72,14 @@ function handleAuthRedirects(req: AuthenticatedNextRequest) {
     return NextResponse.redirect(new URL(loginPath(locale), req.nextUrl));
   }
 
-  // 5. Bare dashboard URL redirects to role's home
   if (/^\/(en|ur|ps)\/dashboard\/?$/.test(pathname) && isLoggedIn) {
     return NextResponse.redirect(new URL(homePathForRole(role, locale), req.nextUrl));
   }
 
-  // 6. All other requests are routed via next-intl (handles locale prefixes for unlocalized paths)
   return handleI18nRouting(req);
 }
 
-export const proxy = auth((req: AuthenticatedNextRequest) => {
+const proxy = auth((req: AuthenticatedNextRequest) => {
   return handleAuthRedirects(req);
 }) as never as (req: NextRequest) => Promise<NextResponse<unknown>>;
 

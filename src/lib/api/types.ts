@@ -24,10 +24,15 @@ export interface ApiErrorBody {
 
 export type ApiResponseBodyError = ApiErrorBody;
 
+export interface ExtractedErrorInfo {
+  code: string;
+  message: string;
+}
+
 export function extractErrorInfo(
   body: ApiErrorBody | null | undefined,
   fallbackStatusText: string
-): { code: string; message: string } {
+): ExtractedErrorInfo {
   if (body?.error && typeof body.error === 'object') {
     const errObj = body.error;
     const detailList = Array.isArray(errObj.details)
@@ -90,13 +95,6 @@ export class ApiError extends Error {
       this.details = body.error.details;
     }
   }
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
 }
 
 export type RestaurantStatus = 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED';
@@ -227,50 +225,6 @@ export interface TimeRangeDTO {
 export interface DayScheduleDTO {
   dayOfWeek: number;
   ranges: TimeRangeDTO[];
-}
-
-export interface OrderIntentItemSnapshotDTO {
-  id: string;
-  menuItemId: string;
-  variantId: string | null;
-  itemNameSnapshot: string;
-  variantNameSnapshot: string | null;
-  unitPriceSnapshot: number;
-  quantity: number;
-  lineTotal: number;
-}
-
-export interface OrderIntentDTO {
-  id: string;
-  referenceCode: string;
-  status: 'WHATSAPP_HANDOFF_READY' | 'WHATSAPP_OPENED';
-  customerName: string | null;
-  customerPhone: string | null;
-  areaNameSnapshot: string;
-  landmark: string;
-  directions: string | null;
-  mapLat: number | null;
-  mapLng: number | null;
-  subtotalAmount: number;
-  deliveryFeeStatus: 'KNOWN' | 'TO_BE_CONFIRMED';
-  deliveryFeeAmount: number | null;
-  whatsappOpenedAt: string | null;
-  expiresAt: string;
-  isExpired?: boolean;
-  notConfirmed: boolean;
-  createdAt: string;
-  items?: OrderIntentItemSnapshotDTO[];
-}
-
-export interface RestaurantStatsDTO {
-  range: '7d' | '30d';
-  requestsCreated: number;
-  whatsappOpened: number;
-  topItems: Array<{
-    menuItemId: string;
-    name: string;
-    requestedQuantity: number;
-  }>;
 }
 
 export interface ProxyOptions {

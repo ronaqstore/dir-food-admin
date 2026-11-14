@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function DialogDetailSkeleton() {
   return (
     <div className='space-y-6 py-2'>
-      {/* Header & Status Badge */}
+      {}
       <div className='flex items-center justify-between gap-4'>
         <div className='space-y-1.5'>
           <Skeleton className='h-6 w-44 rounded-md' />
@@ -12,7 +12,7 @@ export function DialogDetailSkeleton() {
         <Skeleton className='h-6 w-24 rounded-full' />
       </div>
 
-      {/* Info Card Grid */}
+      {}
       <div className='rounded-xl border border-border/60 bg-muted/20 p-4 space-y-3'>
         <div className='grid grid-cols-2 gap-4'>
           <div className='space-y-1'>
@@ -26,7 +26,7 @@ export function DialogDetailSkeleton() {
         </div>
       </div>
 
-      {/* Item Rows */}
+      {}
       <div className='space-y-2 border-t border-border/60 pt-4'>
         {[1, 2, 3].map((i) => (
           <div key={i} className='flex items-center justify-between py-1.5'>
@@ -39,7 +39,7 @@ export function DialogDetailSkeleton() {
         ))}
       </div>
 
-      {/* Footer buttons */}
+      {}
       <div className='flex justify-end gap-2 border-t border-border/60 pt-4'>
         <Skeleton className='h-9 w-24 rounded-md' />
         <Skeleton className='h-9 w-32 rounded-md' />

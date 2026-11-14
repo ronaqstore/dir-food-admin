@@ -167,7 +167,7 @@ export function DataTableDateFilter<TData>({
 
   return (
     <Popover>
-      <PopoverTrigger render={<Button variant='outline' size='sm' className='border-dashed' />}>
+      <PopoverTrigger render={<Button type='button' variant='outline' size='sm' className='border-dashed' />}>
         {hasValue ? <DataTableFilterClear title={title} onReset={onReset} /> : <Icons.calendar />}
         {label}
       </PopoverTrigger>

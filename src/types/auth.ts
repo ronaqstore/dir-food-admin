@@ -1,7 +1,23 @@
-import type { AuthAccount, AuthAccountRole } from '@/lib/auth/accounts';
-import type { RestaurantStatus } from '@/lib/api/types';
+import type { RestaurantStatus, UserRole } from '@/lib/api/types';
 import type { Session } from 'next-auth';
 import type { NextRequest } from 'next/server';
+
+export type AuthAccountRole = UserRole;
+
+export interface AuthAccount {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  role: AuthAccountRole;
+  restaurantId: string | null;
+  restaurantName: string | null;
+  restaurantSlug?: string | null;
+  restaurantStatus?: RestaurantStatus | null;
+  subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
+  subscriptionEndsAt?: string | null;
+  avatarUrl?: string;
+}
 
 export type SessionRole = AuthAccountRole;
 
@@ -23,6 +39,7 @@ export interface JwtTokenShape {
   restaurantSlug?: string | null;
   restaurantStatus?: RestaurantStatus | null;
   subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
+  subscriptionEndsAt?: string | null;
   picture?: string;
   accessToken?: string;
   accessTokenExpiresAt?: number;
@@ -40,22 +57,13 @@ export type SessionUserShape = NonNullable<Session['user']> & {
   restaurantSlug?: string | null;
   restaurantStatus?: RestaurantStatus | null;
   subscriptionStatus?: 'VALID' | 'EXPIRED' | null;
+  subscriptionEndsAt?: string | null;
   avatarUrl?: string;
 };
 
 export type AuthenticatedNextRequest = NextRequest & {
   auth?: Session | null;
 };
-
-export interface SignInFormValues {
-  identifier: string;
-  password: string;
-}
-
-export interface SignInSearchParams {
-  callbackUrl?: string;
-  error?: string;
-}
 
 export interface LoginValues {
   phone: string;
