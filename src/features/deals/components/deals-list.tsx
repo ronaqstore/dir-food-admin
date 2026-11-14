@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { usePaginatedMenuItems, useUpdateMenuItem } from '@/features/menu/api/menu-query';
 import { DealBuilderDialog } from './deal-builder-dialog';
 import { DealCard, DealListItem } from './deal-cards';
+import { DealCardSkeleton, DealListRowSkeleton } from '@/components/skeletons/deals-skeleton';
 import type { MenuItemDTO } from '@/features/menu/types';
 
 export function DealsList() {
@@ -221,10 +222,19 @@ export function DealsList() {
 
       {}
       {isLoading ? (
-        <div className='flex items-center justify-center py-20 text-muted-foreground'>
-          <Spinner className='me-2 size-5' />
-          <span className='text-sm'>{t('loadingDeals')}</span>
-        </div>
+        viewMode === 'grid' ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 min-w-0'>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <DealCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className='rounded-lg border divide-y bg-card overflow-hidden min-w-0'>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <DealListRowSkeleton key={i} />
+            ))}
+          </div>
+        )
       ) : error ? (
         <div className='rounded-lg border border-destructive/20 bg-destructive/10 p-6 text-center space-y-2'>
           <p className='text-sm text-destructive font-medium'>{t('failedLoadDeals')}</p>
