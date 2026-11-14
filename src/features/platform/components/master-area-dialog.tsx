@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Spinner } from '@/components/ui/spinner';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { useCreateMasterArea, useUpdateMasterArea, usePlatformCities } from '../api/platform-query';
 import type { MasterAreaDialogProps } from '../types';
@@ -168,8 +167,7 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
               {t('cancel')}
             </Button>
             <Button type='submit' disabled={isPending}>
-              {isPending && <Spinner className='me-1.5 size-4' />}
-              {isPending ? t('saving') : t('saveArea')}
+              {t('saveArea')}
             </Button>
           </DialogFooter>
         </form>

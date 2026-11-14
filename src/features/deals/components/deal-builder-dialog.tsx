@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Spinner } from '@/components/ui/spinner';
 import { IconFlame } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { useCategories } from '@/features/categories/api/categories-query';
@@ -415,7 +414,6 @@ export function DealBuilderDialog({
               disabled={isPending}
               className='h-10 rounded-xl px-5 text-xs font-bold shadow-sm'
             >
-              {isPending ? <Spinner className='me-2 size-4' /> : null}
               {isEditing ? t('deals.updateButton') : t('deals.createButton')}
             </Button>
           </DialogFooter>

@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { TrialBadge } from '@/components/common/trial-badge';
@@ -188,17 +187,8 @@ export function ProfileTab() {
                 disabled={!readiness?.isReadyToPublish || isPending}
                 className='gap-2 shadow-xs'
               >
-                {publishRestaurant.isPending ? (
-                  <>
-                    <Spinner className='size-4' />
-                    <span>{t('restaurantSettings.publishing')}</span>
-                  </>
-                ) : (
-                  <>
-                    <IconRocket className='size-4' />
-                    <span>{t('restaurantSettings.publishButton')}</span>
-                  </>
-                )}
+                <IconRocket className='size-4' />
+                <span>{t('restaurantSettings.publishButton')}</span>
               </Button>
             </div>
           </div>
@@ -325,14 +315,7 @@ export function ProfileTab() {
 
         <div className='flex justify-end'>
           <Button type='button' onClick={handleSaveAvailability} disabled={isPending} size='sm'>
-            {updateAvailability.isPending ? (
-              <>
-                <Spinner className='me-2 size-4' />
-                {t('common.saving')}
-              </>
-            ) : (
-              t('common.save')
-            )}
+            {t('common.save')}
           </Button>
         </div>
       </div>
@@ -454,14 +437,7 @@ export function ProfileTab() {
 
           <div className='flex justify-end pt-2'>
             <Button type='submit' disabled={isPending}>
-              {updateProfile.isPending ? (
-                <>
-                  <Spinner className='me-2 size-4' />
-                  {t('common.saving')}
-                </>
-              ) : (
-                t('restaurantSettings.saveProfile')
-              )}
+              {t('restaurantSettings.saveProfile')}
             </Button>
           </div>
         </form>

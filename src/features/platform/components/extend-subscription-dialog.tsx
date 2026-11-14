@@ -14,7 +14,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import { useExtendPlatformSubscription } from '../api/platform-query';
 import type { ExtendSubscriptionDialogProps } from '../types';
 
@@ -133,8 +132,7 @@ export function ExtendSubscriptionDialog({
             {t('cancel')}
           </Button>
           <Button type='button' onClick={handleExtend} disabled={extendMutation.isPending}>
-            {extendMutation.isPending && <Spinner className='me-1.5 size-4' />}
-            {extendMutation.isPending ? t('extending') : t('confirm')}
+            {t('confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Spinner } from '@/components/ui/spinner';
 import { useCreateCategory, useUpdateCategory } from '../api/categories-query';
 import type { CategoryDialogProps } from '../types';
 
@@ -145,14 +144,7 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
               {t('common.cancel')}
             </Button>
             <Button type='submit' disabled={isPending || !name.trim()}>
-              {isPending ? (
-                <>
-                  <Spinner className='me-2 size-4' aria-hidden />
-                  {t('common.saving')}
-                </>
-              ) : (
-                t('common.save')
-              )}
+              {t('common.save')}
             </Button>
           </DialogFooter>
         </form>

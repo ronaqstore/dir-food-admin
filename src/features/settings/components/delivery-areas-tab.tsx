@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
 import { DeliveryAreasTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconMapPin, IconSearch, IconPlus } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
@@ -232,7 +231,6 @@ export function DeliveryAreasTab() {
                     {t('common.cancel')}
                   </Button>
                   <Button type='submit' disabled={createCustomArea.isPending}>
-                    {createCustomArea.isPending ? <Spinner className='size-4 me-2' /> : null}
                     {t('restaurantSettings.addAndEnable')}
                   </Button>
                 </DialogFooter>
@@ -326,14 +324,7 @@ export function DeliveryAreasTab() {
 
       <div className='flex justify-end pt-4 border-t'>
         <Button type='button' onClick={handleSave} disabled={updateAreas.isPending}>
-          {updateAreas.isPending ? (
-            <>
-              <Spinner className='me-2 size-4' />
-              {t('common.saving')}
-            </>
-          ) : (
-            t('restaurantSettings.saveAreas')
-          )}
+          {t('restaurantSettings.saveAreas')}
         </Button>
       </div>
     </div>

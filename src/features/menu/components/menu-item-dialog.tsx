@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Spinner } from '@/components/ui/spinner';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { IconToolsKitchen2 } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
@@ -440,14 +439,7 @@ export function MenuItemDialog({
               disabled={isPending}
               className='h-10 rounded-xl px-5 text-xs font-semibold shadow-xs'
             >
-              {isPending ? (
-                <>
-                  <Spinner className='me-2 size-4' aria-hidden />
-                  <span>{t('common.saving')}</span>
-                </>
-              ) : (
-                <span>{t('common.save')}</span>
-              )}
+              <span>{t('common.save')}</span>
             </Button>
           </DialogFooter>
         </form>

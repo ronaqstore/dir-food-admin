@@ -14,7 +14,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { WHATSAPP_BASE_URL } from '@/constants/api';
 import { toPaisa } from '@/lib/money';
@@ -317,7 +316,6 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                 {t('cancel')}
               </Button>
               <Button type='submit' disabled={createMutation.isPending}>
-                {createMutation.isPending && <Spinner className='me-1.5 size-4' />}
                 {t('addRestaurant')}
               </Button>
             </DialogFooter>

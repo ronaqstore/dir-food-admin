@@ -14,7 +14,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import { useUpdatePlatformRestaurantStatus } from '../api/platform-query';
 import type { StatusChangeDialogProps } from '../types';
 
@@ -110,8 +109,7 @@ export function StatusChangeDialog({
               variant={isDestructive ? 'destructive' : 'default'}
               disabled={statusMutation.isPending}
             >
-              {statusMutation.isPending && <Spinner className='me-1.5 size-4' />}
-              {statusMutation.isPending ? t('updating') : t('confirm')}
+              {t('confirm')}
             </Button>
           </DialogFooter>
         </form>

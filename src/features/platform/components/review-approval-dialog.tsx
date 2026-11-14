@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
 import { DialogDetailSkeleton } from '@/components/skeletons/dialog-skeleton';
 import { Icons } from '@/components/icons';
 import {
@@ -184,7 +183,6 @@ export function ReviewApprovalDialog({
                 className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5'
                 onClick={handleApprove}
               >
-                {statusMutation.isPending && <Spinner className='size-4' />}
                 <Icons.circleCheck className='size-4' />
                 {t('approveButton')}
               </Button>

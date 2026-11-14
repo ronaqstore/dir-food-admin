@@ -18,7 +18,6 @@ import { Link } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
 import { Icons } from '@/components/icons';
 import { STOREFRONT_BASE_URL, WHATSAPP_BASE_URL } from '@/constants/api';
 import { env } from '@/config/env';
@@ -266,17 +265,8 @@ export function OwnerOverview() {
                 size='sm'
                 className='gap-1.5 shadow-xs text-xs h-8 px-3'
               >
-                {publishRestaurant.isPending ? (
-                  <>
-                    <Spinner className='size-3.5' />
-                    <span>{t('dashboard.publishing')}</span>
-                  </>
-                ) : (
-                  <>
-                    <IconRocket className='size-3.5' />
-                    <span>{t('dashboard.publishCtaShort')}</span>
-                  </>
-                )}
+                <IconRocket className='size-3.5' />
+                <span>{t('dashboard.publishCtaShort')}</span>
               </Button>
             </div>
           </div>

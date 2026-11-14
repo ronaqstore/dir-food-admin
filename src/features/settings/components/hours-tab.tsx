@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Spinner } from '@/components/ui/spinner';
 import { HoursTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { useOperatingHours, useUpdateOperatingHours } from '../api/restaurant-query';
 import type { DayHoursInput, DayScheduleRow } from '../types';
@@ -155,14 +154,7 @@ export function HoursTab() {
 
       <div className='flex justify-end pt-4 border-t'>
         <Button type='button' onClick={handleSave} disabled={updateHours.isPending}>
-          {updateHours.isPending ? (
-            <>
-              <Spinner className='me-2 size-4' />
-              {t('common.saving')}
-            </>
-          ) : (
-            t('restaurantSettings.saveHours')
-          )}
+          {t('restaurantSettings.saveHours')}
         </Button>
       </div>
     </div>

@@ -14,7 +14,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { Spinner } from '@/components/ui/spinner';
 import { useMergeMasterArea } from '../api/platform-query';
 import type { MergeAreaDialogProps } from '../types';
 
@@ -138,7 +137,6 @@ export function MergeAreaDialog({
               type='submit'
               disabled={mergeMutation.isPending || !targetAreaId || candidateTargetAreas.length === 0}
             >
-              {mergeMutation.isPending && <Spinner className='me-1.5 size-4' />}
               {t('confirmMerge')}
             </Button>
           </DialogFooter>

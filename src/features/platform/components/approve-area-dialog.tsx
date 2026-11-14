@@ -14,7 +14,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import { useApproveMasterArea } from '../api/platform-query';
 import type { ApproveAreaDialogProps } from '../types';
 
@@ -108,7 +107,6 @@ export function ApproveAreaDialog({
               {t('cancel')}
             </Button>
             <Button type='submit' disabled={approveMutation.isPending}>
-              {approveMutation.isPending && <Spinner className='me-1.5 size-4' />}
               {t('approveAndPublish')}
             </Button>
           </DialogFooter>
