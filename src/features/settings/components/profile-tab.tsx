@@ -38,6 +38,18 @@ import {
 } from '../api/restaurant-query';
 import type { ManualAvailabilityStatus } from '../types';
 
+const AVAILABLE_CUISINES = [
+  'Fast Food',
+  'Karahi',
+  'BBQ',
+  'Biryani',
+  'Pizza',
+  'Burgers',
+  'Chai & Cafe',
+  'Traditional',
+  'Kabab'
+];
+
 export function ProfileTab() {
   const t = useTranslations();
   const { data: profile, isLoading } = useRestaurantProfile();
@@ -57,6 +69,7 @@ export function ProfileTab() {
   const [contactPhone, setContactPhone] = React.useState('');
   const [whatsappNumber, setWhatsappNumber] = React.useState('');
   const [minOrder, setMinOrder] = React.useState('');
+  const [cuisines, setCuisines] = React.useState<string[]>([]);
 
   const [manualStatus, setManualStatus] = React.useState<ManualAvailabilityStatus>('AUTO');
   const [unavailableNote, setUnavailableNote] = React.useState('');
@@ -70,6 +83,7 @@ export function ProfileTab() {
       setContactPhone(formatPkMobile(profile.contactPhone || ''));
       setWhatsappNumber(formatPkMobile(profile.whatsappNumber || ''));
       setMinOrder(profile.minOrderAmount != null ? String(fromPaisa(profile.minOrderAmount)) : '');
+      setCuisines(profile.cuisines || []);
       setManualStatus(profile.manualStatus || 'AUTO');
       setUnavailableNote(profile.unavailableNote || '');
     }
@@ -104,7 +118,8 @@ export function ProfileTab() {
         addressText: addressText.trim() || undefined,
         contactPhone: contactPhone.trim() || undefined,
         whatsappNumber: whatsappNumber.trim() || undefined,
-        minOrderAmount: minOrder ? toPaisa(Number(minOrder)) : undefined
+        minOrderAmount: minOrder ? toPaisa(Number(minOrder)) : undefined,
+        cuisines
       });
       toast.success(t('restaurantSettings.profileSaved'));
       void refetchReadiness();
@@ -389,6 +404,45 @@ export function ProfileTab() {
                 disabled={isPending}
                 className='text-xs h-9'
               />
+            </div>
+          </div>
+
+          <div className='space-y-2'>
+            <div className='flex items-center justify-between'>
+              <Label className='text-xs font-semibold'>
+                {t('restaurantSettings.cuisinesLabel')}
+              </Label>
+              <span className='text-[11px] text-muted-foreground'>
+                {t('restaurantSettings.cuisinesHint')}
+              </span>
+            </div>
+            <div className='flex flex-wrap gap-1.5'>
+              {AVAILABLE_CUISINES.map((item) => {
+                const isSelected = cuisines.includes(item);
+                return (
+                  <button
+                    key={item}
+                    type='button'
+                    disabled={isPending}
+                    onClick={() =>
+                      setCuisines((prev) =>
+                        prev.includes(item)
+                          ? prev.filter((c) => c !== item)
+                          : prev.length < 5
+                            ? [...prev, item]
+                            : prev
+                      )
+                    }
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
+                      isSelected
+                        ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
+                        : 'border border-border bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

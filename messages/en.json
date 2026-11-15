@@ -2602,7 +2602,9 @@
     "addAndEnable": "Add & Enable",
     "pendingVerification": "Pending Verification",
     "copyHoursToAll": "Copy hours to all open days",
-    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)"
+    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)",
+    "cuisinesLabel": "Cuisines / Specialties",
+    "cuisinesHint": "Select up to 5 cuisines your restaurant serves"
   },
   "orders": {
     "title": "Orders & Inquiries",
