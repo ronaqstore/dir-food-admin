@@ -97,6 +97,16 @@ export interface ProfileMediaSectionProps {
   t: (key: string) => string;
 }
 
+export interface ProfileAvailabilitySectionProps {
+  manualStatus: ManualAvailabilityStatus;
+  setManualStatus: (status: ManualAvailabilityStatus) => void;
+  unavailableNote: string;
+  setUnavailableNote: (note: string) => void;
+  onSaveAvailability: () => void;
+  isPending: boolean;
+  t: (key: string) => string;
+}
+
 export interface DayScheduleRow {
   dayOfWeek: number;
   isOpen: boolean;

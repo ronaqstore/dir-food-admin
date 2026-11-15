@@ -6,7 +6,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { IconCheck } from '@tabler/icons-react';
+import { Badge } from '@/components/ui/badge';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { HoursTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { useOperatingHours, useUpdateOperatingHours } from '../api/restaurant-query';
 import type { DayHoursInput, DayScheduleRow } from '../types';
@@ -61,6 +62,13 @@ export function HoursTab() {
     setDays((prev) => prev.map((d) => (d.dayOfWeek === dayOfWeek ? { ...d, [field]: value } : d)));
   };
 
+  const handleCopyHoursToAll = (sourceOpen: string, sourceClose: string) => {
+    setDays((prev) =>
+      prev.map((d) => (d.isOpen ? { ...d, openTime: sourceOpen, closeTime: sourceClose } : d))
+    );
+    toast.success(t('restaurantSettings.hoursSaved'));
+  };
+
   const handleSave = async () => {
     const payload: DayHoursInput[] = days.map((d) => ({
       dayOfWeek: d.dayOfWeek,
@@ -89,7 +97,7 @@ export function HoursTab() {
         <p className='text-xs text-muted-foreground'>{t('restaurantSettings.hoursDescription')}</p>
       </div>
 
-      <div className='divide-y divide-border'>
+      <div className='divide-y divide-border/60'>
         {DAYS_OF_WEEK.map((d) => {
           const dayRow = days.find((r) => r.dayOfWeek === d.index) || {
             dayOfWeek: d.index,
@@ -101,9 +109,9 @@ export function HoursTab() {
           return (
             <div
               key={d.index}
-              className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between'
+              className='flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between'
             >
-              <div className='flex items-center gap-4 min-w-40'>
+              <div className='flex items-center gap-3.5 min-w-[170px]'>
                 <Switch
                   checked={dayRow.isOpen}
                   onCheckedChange={(checked) => handleToggleDay(d.index, checked)}
@@ -113,12 +121,22 @@ export function HoursTab() {
                 <span className='font-semibold text-sm text-foreground'>
                   {t(`restaurantSettings.${d.key}`)}
                 </span>
+                <Badge
+                  variant='outline'
+                  className={`text-[10px] px-1.5 py-0 font-medium ${
+                    dayRow.isOpen
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                      : 'border-muted text-muted-foreground bg-muted/40'
+                  }`}
+                >
+                  {dayRow.isOpen ? t('restaurantSettings.open') : t('restaurantSettings.closed')}
+                </Badge>
               </div>
 
               {dayRow.isOpen ? (
-                <div className='flex items-center gap-3 animate-in fade-in-50'>
+                <div className='flex items-center gap-2 sm:gap-3 ps-11 sm:ps-0 animate-in fade-in-50'>
                   <div className='flex items-center gap-1.5'>
-                    <span className='text-xs text-muted-foreground'>
+                    <span className='text-[11px] text-muted-foreground'>
                       {t('restaurantSettings.openTime')}:
                     </span>
                     <Input
@@ -131,7 +149,7 @@ export function HoursTab() {
                   </div>
                   <span className='text-muted-foreground text-xs'>—</span>
                   <div className='flex items-center gap-1.5'>
-                    <span className='text-xs text-muted-foreground'>
+                    <span className='text-[11px] text-muted-foreground'>
                       {t('restaurantSettings.closeTime')}:
                     </span>
                     <Input
@@ -142,9 +160,20 @@ export function HoursTab() {
                       className='h-8 w-28 text-xs'
                     />
                   </div>
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => handleCopyHoursToAll(dayRow.openTime, dayRow.closeTime)}
+                    className='size-7 text-muted-foreground hover:text-foreground'
+                    title={t('restaurantSettings.copyHoursToAll')}
+                    aria-label={t('restaurantSettings.copyHoursToAll')}
+                  >
+                    <IconCopy className='size-3.5' />
+                  </Button>
                 </div>
               ) : (
-                <span className='text-xs text-muted-foreground font-medium py-1'>
+                <span className='text-xs text-muted-foreground italic ps-11 sm:ps-0 py-1'>
                   {t('restaurantSettings.closed')}
                 </span>
               )}
@@ -153,8 +182,13 @@ export function HoursTab() {
         })}
       </div>
 
-      <div className='flex justify-end pt-4 border-t'>
-        <Button type='button' onClick={handleSave} disabled={updateHours.isPending} className='gap-1.5'>
+      <div className='flex justify-end pt-3 border-t'>
+        <Button
+          type='button'
+          onClick={handleSave}
+          disabled={updateHours.isPending}
+          className='gap-1.5 shadow-xs px-5'
+        >
           <IconCheck className='size-4' />
           <span>{t('restaurantSettings.saveHours')}</span>
         </Button>

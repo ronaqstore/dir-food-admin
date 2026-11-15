@@ -121,19 +121,19 @@ export function DeliveryAreasTab() {
 
   return (
     <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-      <div className='flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-foreground'>
+      <div className='flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/40 px-4 py-3 text-xs text-foreground shadow-2xs'>
         <div className='flex items-center gap-2'>
           <IconMapPin className='size-4 text-primary shrink-0' />
           <span>
-            {t('restaurantSettings.operatingInDistrict')} <strong className='font-semibold text-primary'>{currentDistrictName}</strong>. {t('restaurantSettings.deliveryAreasScoped')}
+            {t('restaurantSettings.operatingInDistrict')} <strong className='font-semibold text-foreground'>{currentDistrictName}</strong>. {t('restaurantSettings.deliveryAreasScoped')}
           </span>
         </div>
-        <span className='hidden sm:inline text-muted-foreground text-[11px]'>
+        <span className='hidden sm:inline text-muted-foreground text-[11px] font-medium'>
           {t('restaurantSettings.changeInProfile')}
         </span>
       </div>
 
-      <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b pb-4'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b pb-4'>
         <div>
           <h3 className='text-base font-semibold text-foreground'>
             {t('restaurantSettings.deliveryTitle')}
@@ -142,30 +142,31 @@ export function DeliveryAreasTab() {
             {t('restaurantSettings.deliveryDescription')}
           </p>
         </div>
-        <div className='flex items-center gap-3'>
-          {rows.length > 5 && (
-            <div className='relative w-full sm:w-56'>
-              <IconSearch className='absolute inset-s-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
+        <div className='flex flex-wrap items-center gap-2.5'>
+          {rows.length > 3 && (
+            <div className='relative w-full sm:w-48'>
+              <IconSearch className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground' />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('restaurantSettings.searchAreasPlaceholder')}
-                className='ps-9 h-8 text-xs'
+                className='ps-8 h-8 text-xs'
               />
             </div>
           )}
-          <Badge variant='secondary' className='w-fit text-xs font-normal whitespace-nowrap'>
+          <Badge variant='secondary' className='text-xs font-normal whitespace-nowrap h-8 px-2.5'>
             {t('restaurantSettings.areasServedCount', { served: servedCount, total: rows.length })}
           </Badge>
 
-          <Button type='button'
+          <Button
+            type='button'
             size='sm'
             variant='outline'
             className='h-8 text-xs gap-1.5'
             onClick={() => setIsAddOpen(true)}
           >
             <IconPlus className='size-3.5' />
-            {t('restaurantSettings.addMissingArea')}
+            <span>{t('restaurantSettings.addMissingArea')}</span>
           </Button>
 
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
@@ -245,11 +246,13 @@ export function DeliveryAreasTab() {
       {isLoading ? (
         <DeliveryAreasListSkeleton />
       ) : (
-        <div className='divide-y divide-border'>
+        <div className='divide-y divide-border/60'>
           {filteredRows.map((row) => (
             <div
               key={row.areaId}
-              className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between hover:bg-muted/30 transition-colors rounded-lg px-2'
+              className={`flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between transition-colors rounded-xl px-2.5 ${
+                row.isServed ? 'bg-muted/30 border border-border/50' : 'hover:bg-muted/20'
+              }`}
             >
               <div className='flex items-center gap-3'>
                 <Switch
@@ -267,6 +270,16 @@ export function DeliveryAreasTab() {
                   >
                     {row.name}
                   </span>
+                  <Badge
+                    variant='outline'
+                    className={`text-[10px] px-1.5 py-0 font-medium ${
+                      row.isServed
+                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                        : 'border-muted text-muted-foreground bg-muted/40'
+                    }`}
+                  >
+                    {row.isServed ? t('restaurantSettings.servedArea') : t('restaurantSettings.closed')}
+                  </Badge>
                   {row.isVerified === false && (
                     <Badge
                       variant='outline'
@@ -279,13 +292,13 @@ export function DeliveryAreasTab() {
               </div>
 
               {row.isServed ? (
-                <div className='flex flex-wrap items-center gap-4 ps-11 sm:ps-0 animate-in fade-in-50'>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                <div className='flex flex-wrap items-center gap-3 ps-11 sm:ps-0 animate-in fade-in-50'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
                       {t('restaurantSettings.deliveryFee')}:
                     </span>
-                    <div className='relative w-32'>
-                      <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                    <div className='relative w-28'>
+                      <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
                         {t('common.currency')}
                       </span>
                       <Input
@@ -296,17 +309,17 @@ export function DeliveryAreasTab() {
                         onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
                         placeholder={t('restaurantSettings.feePlaceholder')}
                         disabled={updateAreas.isPending}
-                        className='h-8 ps-9 text-xs'
+                        className='h-8 ps-8 text-xs'
                       />
                     </div>
                   </div>
 
-                  <div className='flex items-center gap-2'>
-                    <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
                       {t('restaurantSettings.areaMinOrder')}:
                     </span>
-                    <div className='relative w-32'>
-                      <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                    <div className='relative w-28'>
+                      <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
                         {t('common.currency')}
                       </span>
                       <Input
@@ -317,7 +330,7 @@ export function DeliveryAreasTab() {
                         onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
                         placeholder={t('restaurantSettings.defaultPlaceholder')}
                         disabled={updateAreas.isPending}
-                        className='h-8 ps-9 text-xs'
+                        className='h-8 ps-8 text-xs'
                       />
                     </div>
                   </div>
@@ -328,8 +341,13 @@ export function DeliveryAreasTab() {
         </div>
       )}
 
-      <div className='flex justify-end pt-4 border-t'>
-        <Button type='button' onClick={handleSave} disabled={updateAreas.isPending} className='gap-1.5'>
+      <div className='flex justify-end pt-3 border-t'>
+        <Button
+          type='button'
+          onClick={handleSave}
+          disabled={updateAreas.isPending}
+          className='gap-1.5 shadow-xs px-5'
+        >
           <IconCheck className='size-4' />
           <span>{t('restaurantSettings.saveAreas')}</span>
         </Button>

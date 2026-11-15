@@ -41,7 +41,7 @@ export function QrCodeTab() {
     if (env.NEXT_PUBLIC_WEB_URL) {
       setStorefrontBase(env.NEXT_PUBLIC_WEB_URL.replace(/\/+$/, ''));
     } else if (typeof window !== 'undefined') {
-      setStorefrontBase(window.location.protocol + '/' + '/' + window.location.hostname + ':3013');
+      setStorefrontBase(window.location.protocol + '//' + window.location.hostname + ':3013');
     }
   }, []);
 
@@ -99,22 +99,22 @@ export function QrCodeTab() {
           ctx.fillRect(
             padding + x * cellSize,
             padding + y * cellSize,
-            cellSize + 0.5,
-            cellSize + 0.5
+            Math.ceil(cellSize),
+            Math.ceil(cellSize)
           );
         }
       }
     }
 
-    const dataUrl = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = `${profile.slug}-qr-code.png`;
-    a.click();
+    const link = document.createElement('a');
+    link.download = `${profile.slug}-menu-qr.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
     toast.success(t('restaurantSettings.qrDownloaded'));
   };
 
   const handlePrint = () => {
+    if (!printRef.current) return;
     window.print();
   };
 
@@ -131,25 +131,20 @@ export function QrCodeTab() {
 
   return (
     <div className='space-y-6'>
-      {}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-4'>
-        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-4'>
-          <div>
-            <h3 className='text-base font-semibold text-foreground flex items-center gap-2'>
-              <IconQrcode className='size-5 text-primary' />
-              <span>{t('restaurantSettings.qrTitle') || 'Menu Link & Table QR Code'}</span>
-            </h3>
-            <p className='text-xs text-muted-foreground mt-0.5'>
-              {t('restaurantSettings.qrDescription') ||
-                'Share your online menu on WhatsApp status or print table QR standees for your dine-in customers.'}
-            </p>
-          </div>
+        <div className='border-b pb-4 space-y-1'>
+          <h3 className='text-base font-semibold text-foreground flex items-center gap-2'>
+            <IconQrcode className='size-5 text-primary' />
+            <span>{t('restaurantSettings.qrTitle')}</span>
+          </h3>
+          <p className='text-xs text-muted-foreground'>
+            {t('restaurantSettings.qrDescription')}
+          </p>
         </div>
 
-        {}
         <div className='space-y-2'>
           <label className='text-xs font-semibold text-foreground'>
-            {t('restaurantSettings.publicMenuLink') || 'Your Public Menu Link'}
+            {t('restaurantSettings.publicMenuLink')}
           </label>
           <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2'>
             <div
@@ -160,7 +155,8 @@ export function QrCodeTab() {
             </div>
 
             <div className='flex items-center gap-2 shrink-0'>
-              <Button type='button'
+              <Button
+                type='button'
                 variant='outline'
                 size='sm'
                 onClick={handleCopyLink}
@@ -169,27 +165,29 @@ export function QrCodeTab() {
                 {copied ? (
                   <>
                     <IconCheck className='size-3.5 text-emerald-600' />
-                    <span>{t('restaurantSettings.copied') || 'Copied'}</span>
+                    <span>{t('restaurantSettings.copied')}</span>
                   </>
                 ) : (
                   <>
                     <IconCopy className='size-3.5' />
-                    <span>{t('restaurantSettings.copyLink') || 'Copy Link'}</span>
+                    <span>{t('restaurantSettings.copyLink')}</span>
                   </>
                 )}
               </Button>
 
-              <Button type='button'
+              <Button
+                type='button'
                 variant='outline'
                 size='sm'
                 onClick={handleShareWhatsApp}
                 className='gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700'
               >
                 <IconBrandWhatsapp className='size-4' />
-                <span>{t('restaurantSettings.shareWhatsApp') || 'Share to WhatsApp'}</span>
+                <span>{t('restaurantSettings.shareWhatsApp')}</span>
               </Button>
 
-              <Button type='button'
+              <Button
+                type='button'
                 variant='ghost'
                 size='sm'
                 nativeButton={false}
@@ -210,15 +208,12 @@ export function QrCodeTab() {
         </div>
       </div>
 
-      {}
       <div className='grid grid-cols-1 md:grid-cols-12 gap-6 items-start'>
-        {}
-        <div className='md:col-span-7 flex justify-center'>
+        <div className='md:col-span-6 flex justify-center'>
           <div
             ref={printRef}
-            className='w-full max-w-sm rounded-3xl border-2 border-border bg-card p-8 text-center shadow-md space-y-5 print:border-none print:shadow-none print:p-0'
+            className='w-full max-w-sm rounded-3xl border-2 border-border/80 bg-card p-8 text-center shadow-md space-y-5 print:border-none print:shadow-none print:p-0'
           >
-            {}
             <div className='flex flex-col items-center gap-2.5'>
               <div className='flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary font-bold overflow-hidden shadow-xs'>
                 {profile.logoUrl && !logoError ? (
@@ -244,7 +239,6 @@ export function QrCodeTab() {
               </div>
             </div>
 
-            {}
             <div className='mx-auto flex size-56 items-center justify-center rounded-2xl border-4 border-foreground/10 bg-white p-3 shadow-inner'>
               {qrEncoder ? (
                 <svg
@@ -260,12 +254,11 @@ export function QrCodeTab() {
               )}
             </div>
 
-            {}
             <div className='space-y-1'>
               <p className='text-xs font-bold uppercase tracking-wider text-primary'>
                 {t('restaurantSettings.scanToOrder')}
               </p>
-              <p className='text-xs font-medium text-muted-foreground max-w-[240px] mx-auto'>
+              <p className='text-xs font-medium text-muted-foreground max-w-[240px] mx-auto leading-relaxed'>
                 {t('restaurantSettings.scanInstructions')}
               </p>
             </div>
@@ -276,45 +269,41 @@ export function QrCodeTab() {
           </div>
         </div>
 
-        {}
-        <div className='md:col-span-5 rounded-2xl border bg-card p-6 shadow-xs space-y-4'>
+        <div className='md:col-span-6 rounded-2xl border bg-card p-6 shadow-xs space-y-4'>
           <h4 className='text-sm font-bold text-foreground'>
-            {t('restaurantSettings.qrActionsTitle') || 'Standee & Promotional Materials'}
+            {t('restaurantSettings.qrActionsTitle')}
           </h4>
-          <p className='text-xs text-muted-foreground'>
-            {t('restaurantSettings.qrActionsDesc') ||
-              'Display this QR code on dining tables, packaging boxes, counter standees, or receipts so diners can re-order quickly from home.'}
+          <p className='text-xs text-muted-foreground leading-relaxed'>
+            {t('restaurantSettings.qrActionsDesc')}
           </p>
 
           <div className='space-y-2.5 pt-2'>
-            <Button type='button'
+            <Button
+              type='button'
               onClick={handleDownloadPng}
-              variant='default'
               className='w-full justify-start gap-2 text-xs font-semibold'
             >
               <IconDownload className='size-4' />
-              <span>
-                {t('restaurantSettings.downloadPng') || 'Download High-Res PNG (1024×1024)'}
-              </span>
+              <span>{t('restaurantSettings.downloadPng')}</span>
             </Button>
 
-            <Button type='button'
+            <Button
+              type='button'
               onClick={handlePrint}
               variant='outline'
               className='w-full justify-start gap-2 text-xs font-semibold'
             >
               <IconPrinter className='size-4' />
-              <span>{t('restaurantSettings.printStandee') || 'Print Table Standee'}</span>
+              <span>{t('restaurantSettings.printStandee')}</span>
             </Button>
           </div>
 
-          <div className='rounded-xl bg-muted/40 p-3 text-[11px] text-muted-foreground border space-y-1'>
-            <p className='font-semibold text-foreground'>
-              {t('restaurantSettings.tipTitle') || '💡 Marketing Tip for Lower Dir'}
+          <div className='rounded-xl bg-muted/40 p-3.5 text-xs text-muted-foreground border space-y-1 mt-4'>
+            <p className='font-semibold text-foreground text-xs'>
+              {t('restaurantSettings.tipTitle')}
             </p>
-            <p>
-              {t('restaurantSettings.tipDesc') ||
-                'Post your QR code & menu link on your WhatsApp Status every afternoon before lunch or dinner time to receive direct incoming orders!'}
+            <p className='leading-relaxed text-[11px]'>
+              {t('restaurantSettings.tipDesc')}
             </p>
           </div>
         </div>

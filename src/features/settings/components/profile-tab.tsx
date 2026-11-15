@@ -11,10 +11,17 @@ import { Badge } from '@/components/ui/badge';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { TrialBadge } from '@/components/common/trial-badge';
-import { IconCheck, IconAlertCircle, IconRocket } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconAlertCircle,
+  IconRocket,
+  IconBrandWhatsapp,
+  IconMapPin
+} from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import { isReservedPhoneNumber } from '@/lib/auth/phone';
 import { ProfileMediaSection } from './profile-media-section';
+import { ProfileAvailabilitySection } from './profile-availability-section';
 import {
   useRestaurantProfile,
   useUpdateProfile,
@@ -164,8 +171,7 @@ export function ProfileTab() {
   const isActive = profile?.status === 'ACTIVE';
 
   return (
-    <div className='space-y-8'>
-      {}
+    <div className='space-y-6'>
       {isPendingPublish ? (
         <div className='rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-xs'>
           <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
@@ -182,7 +188,8 @@ export function ProfileTab() {
             </div>
 
             <div>
-              <Button type='button'
+              <Button
+                type='button'
                 onClick={handlePublish}
                 disabled={!readiness?.isReadyToPublish || isPending}
                 className='gap-2 shadow-xs'
@@ -193,7 +200,6 @@ export function ProfileTab() {
             </div>
           </div>
 
-          {}
           {readiness?.missingPrerequisites && readiness.missingPrerequisites.length > 0 ? (
             <div className='mt-4 flex flex-wrap gap-2 pt-2 border-t border-primary/10'>
               {readiness.missingPrerequisites.map((prereq) => (
@@ -215,9 +221,9 @@ export function ProfileTab() {
           ) : null}
         </div>
       ) : isActive ? (
-        <div className='flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-emerald-700 dark:text-emerald-400'>
-          <div className='flex items-center gap-2'>
-            <IconCheck className='size-5 text-emerald-600' />
+        <div className='flex items-center justify-between rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-emerald-800 dark:text-emerald-300 text-xs shadow-2xs'>
+          <div className='flex items-center gap-2.5'>
+            <span className='flex size-2 rounded-full bg-emerald-500 animate-pulse' />
             <span className='font-semibold text-sm'>{t('restaurantSettings.activeBadge')}</span>
           </div>
           {profile?.subscriptionEndsAt ? (
@@ -226,7 +232,6 @@ export function ProfileTab() {
         </div>
       ) : null}
 
-      {}
       <ProfileMediaSection
         logoUrl={profile?.logoUrl}
         coverUrl={profile?.coverUrl}
@@ -236,128 +241,64 @@ export function ProfileTab() {
         t={t}
       />
 
-      {}
-      <div className='rounded-xl border bg-card p-6 shadow-xs space-y-5'>
-        <div>
-          <h3 className='text-base font-semibold text-foreground'>
-            {t('restaurantSettings.availabilityTitle')}
-          </h3>
-          <p className='text-xs text-muted-foreground'>
-            {t('restaurantSettings.availabilityDescription')}
-          </p>
-        </div>
+      <ProfileAvailabilitySection
+        manualStatus={manualStatus}
+        setManualStatus={setManualStatus}
+        unavailableNote={unavailableNote}
+        setUnavailableNote={setUnavailableNote}
+        onSaveAvailability={handleSaveAvailability}
+        isPending={isPending}
+        t={t}
+      />
 
-        <div className='grid gap-3 sm:grid-cols-3'>
-          <button
-            type='button'
-            onClick={() => setManualStatus('AUTO')}
-            className={`rounded-lg border p-4 text-start transition-all cursor-pointer ${
-              manualStatus === 'AUTO'
-                ? 'border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500'
-                : 'border-border hover:bg-muted/50'
-            }`}
-          >
-            <p className='text-sm font-semibold text-foreground'>
-              {t('restaurantSettings.statusAuto')}
-            </p>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {t('restaurantSettings.statusAutoDesc')}
-            </p>
-          </button>
-
-          <button
-            type='button'
-            onClick={() => setManualStatus('CLOSED')}
-            className={`rounded-lg border p-4 text-start transition-all cursor-pointer ${
-              manualStatus === 'CLOSED'
-                ? 'border-destructive bg-destructive/10 ring-1 ring-destructive'
-                : 'border-border hover:bg-muted/50'
-            }`}
-          >
-            <p className='text-sm font-semibold text-destructive'>
-              {t('restaurantSettings.statusClosed')}
-            </p>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {t('restaurantSettings.statusClosedDesc')}
-            </p>
-          </button>
-
-          <button
-            type='button'
-            onClick={() => setManualStatus('TEMP_UNAVAILABLE')}
-            className={`rounded-lg border p-4 text-start transition-all cursor-pointer ${
-              manualStatus === 'TEMP_UNAVAILABLE'
-                ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500'
-                : 'border-border hover:bg-muted/50'
-            }`}
-          >
-            <p className='text-sm font-semibold text-amber-600 dark:text-amber-400'>
-              {t('restaurantSettings.statusTemp')}
-            </p>
-            <p className='text-xs text-muted-foreground mt-1'>
-              {t('restaurantSettings.statusTempDesc')}
-            </p>
-          </button>
-        </div>
-
-        {manualStatus !== 'AUTO' ? (
-          <div className='space-y-1.5 animate-in fade-in-50'>
-            <Label htmlFor='unavailable-note'>{t('restaurantSettings.unavailableNote')}</Label>
-            <Input
-              id='unavailable-note'
-              value={unavailableNote}
-              onChange={(e) => setUnavailableNote(e.target.value)}
-              placeholder={t('restaurantSettings.unavailableNotePlaceholder')}
-              maxLength={200}
-            />
-          </div>
-        ) : null}
-
-        <div className='flex justify-end'>
-          <Button type='button' onClick={handleSaveAvailability} disabled={isPending} size='sm' className='gap-1.5'>
-            <IconCheck className='size-4' />
-            <span>{t('common.save')}</span>
-          </Button>
-        </div>
-      </div>
-
-      {}
       <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-        <h3 className='text-base font-semibold text-foreground border-b pb-3'>
-          {t('restaurantSettings.detailsTitle')}
-        </h3>
+        <div className='border-b pb-3 space-y-1'>
+          <h3 className='text-base font-semibold text-foreground'>
+            {t('restaurantSettings.detailsTitle')}
+          </h3>
+        </div>
 
-        <form onSubmit={handleSaveProfile} className='space-y-4'>
+        <form onSubmit={handleSaveProfile} className='space-y-5'>
           <div className='grid gap-4 sm:grid-cols-2'>
             <div className='space-y-1.5'>
-              <Label htmlFor='store-name'>{t('restaurantSettings.name')}</Label>
+              <Label htmlFor='store-name' className='text-xs font-semibold'>
+                {t('restaurantSettings.name')}
+                <span className='text-destructive ms-1'>*</span>
+              </Label>
               <Input
                 id='store-name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={isPending}
                 required
+                className='text-xs h-9'
               />
             </div>
 
             <div className='space-y-1.5'>
-              <Label htmlFor='contact-phone'>{t('restaurantSettings.contactPhone')}</Label>
+              <Label htmlFor='contact-phone' className='text-xs font-semibold'>
+                {t('restaurantSettings.contactPhone')}
+              </Label>
               <Input
                 id='contact-phone'
                 value={contactPhone}
                 onChange={(e) => setContactPhone(e.target.value)}
                 placeholder='03001234567'
                 disabled={isPending}
+                className='text-xs h-9'
               />
             </div>
           </div>
 
           <div className='grid gap-4 sm:grid-cols-2'>
             <div className='space-y-1.5'>
-              <Label htmlFor='whatsapp-number'>
-                {t('restaurantSettings.whatsappNumber')}
-                <span className='text-destructive ms-1'>*</span>
-              </Label>
+              <div className='flex items-center gap-1.5'>
+                <IconBrandWhatsapp className='size-3.5 text-emerald-600' />
+                <Label htmlFor='whatsapp-number' className='text-xs font-semibold'>
+                  {t('restaurantSettings.whatsappNumber')}
+                  <span className='text-destructive ms-1'>*</span>
+                </Label>
+              </div>
               <Input
                 id='whatsapp-number'
                 value={whatsappNumber}
@@ -365,16 +306,19 @@ export function ProfileTab() {
                 placeholder='03001234567'
                 disabled={isPending}
                 required
+                className='text-xs h-9'
               />
-              <p className='text-xs text-muted-foreground'>
+              <p className='text-[11px] text-muted-foreground leading-normal'>
                 {t('restaurantSettings.whatsappHint')}
               </p>
             </div>
 
             <div className='space-y-1.5'>
-              <Label htmlFor='min-order'>{t('restaurantSettings.minOrder')}</Label>
+              <Label htmlFor='min-order' className='text-xs font-semibold'>
+                {t('restaurantSettings.minOrder')}
+              </Label>
               <div className='relative'>
-                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium'>
+                <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
                   {t('common.currency')}
                 </span>
                 <Input
@@ -386,7 +330,7 @@ export function ProfileTab() {
                   onChange={(e) => setMinOrder(e.target.value)}
                   placeholder={t('restaurantSettings.minOrderPlaceholder')}
                   disabled={isPending}
-                  className='ps-11'
+                  className='ps-9 text-xs h-9'
                 />
               </div>
             </div>
@@ -394,7 +338,12 @@ export function ProfileTab() {
 
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='space-y-1.5'>
-              <Label htmlFor='restaurant-city'>{t('restaurantSettings.districtLabel')}</Label>
+              <div className='flex items-center gap-1.5'>
+                <IconMapPin className='size-3.5 text-primary' />
+                <Label htmlFor='restaurant-city' className='text-xs font-semibold'>
+                  {t('restaurantSettings.districtLabel')}
+                </Label>
+              </div>
               <SearchableSelect
                 id='restaurant-city'
                 value={cityId}
@@ -414,30 +363,36 @@ export function ProfileTab() {
             </div>
 
             <div className='space-y-1.5'>
-              <Label htmlFor='address-text'>{t('restaurantSettings.address')}</Label>
+              <Label htmlFor='address-text' className='text-xs font-semibold'>
+                {t('restaurantSettings.address')}
+              </Label>
               <Input
                 id='address-text'
                 value={addressText}
                 onChange={(e) => setAddressText(e.target.value)}
                 placeholder={t('restaurantSettings.addressPlaceholder')}
                 disabled={isPending}
+                className='text-xs h-9'
               />
             </div>
           </div>
 
           <div className='space-y-1.5'>
-            <Label htmlFor='store-description'>{t('restaurantSettings.descriptionLabel')}</Label>
+            <Label htmlFor='store-description' className='text-xs font-semibold'>
+              {t('restaurantSettings.descriptionLabel')}
+            </Label>
             <Textarea
               id='store-description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               disabled={isPending}
+              className='text-xs leading-relaxed resize-none'
             />
           </div>
 
-          <div className='flex justify-end pt-2'>
-            <Button type='submit' disabled={isPending} className='gap-1.5'>
+          <div className='flex justify-end pt-3 border-t'>
+            <Button type='submit' disabled={isPending} className='gap-1.5 shadow-xs px-5'>
               <IconCheck className='size-4' />
               <span>{t('restaurantSettings.saveProfile')}</span>
             </Button>

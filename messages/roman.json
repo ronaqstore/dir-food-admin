@@ -2600,7 +2600,8 @@
     "deliveryFeePlaceholder": "maslan 100 (khali = WhatsApp)",
     "minOrderLabel": "Kam az kam order (Rs)",
     "addAndEnable": "Shamil aur faal karein",
-    "pendingVerification": "Tasdeeq zer-e-iltiwa hai"
+    "pendingVerification": "Tasdeeq zer-e-iltiwa hai",
+    "copyHoursToAll": "Tamam open days k lye copy krein"
   },
   "orders": {
     "title": "Orders & Inquiries",

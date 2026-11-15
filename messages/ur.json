@@ -2600,7 +2600,8 @@
     "deliveryFeePlaceholder": "مثلاً 100 (خالی = واٹس ایپ)",
     "minOrderLabel": "کم از کم آرڈر (روپے)",
     "addAndEnable": "شامل اور فعال کریں",
-    "pendingVerification": "تصدیق زیر التواء ہے"
+    "pendingVerification": "تصدیق زیر التواء ہے",
+    "copyHoursToAll": "تمام کھلے دنوں کے لیے اوقات کاپی کریں"
   },
   "orders": {
     "title": "آرڈرز اور واٹس ایپ استفسارات",

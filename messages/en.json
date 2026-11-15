@@ -2600,7 +2600,8 @@
     "deliveryFeePlaceholder": "e.g. 100 (empty = WhatsApp)",
     "minOrderLabel": "Min Order (Rs)",
     "addAndEnable": "Add & Enable",
-    "pendingVerification": "Pending Verification"
+    "pendingVerification": "Pending Verification",
+    "copyHoursToAll": "Copy hours to all open days"
   },
   "orders": {
     "title": "Orders & Inquiries",

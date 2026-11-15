@@ -2600,7 +2600,8 @@
     "deliveryFeePlaceholder": "مثلاً 100 (خالي = واټس اپ)",
     "minOrderLabel": "لږترلږه امر (روپۍ)",
     "addAndEnable": "اضافه او فعال کړئ",
-    "pendingVerification": "تایید پاتې دی"
+    "pendingVerification": "تایید پاتې دی",
+    "copyHoursToAll": "ټولو خلاصو ورځو ته ساعتونه کاپي کړئ"
   },
   "orders": {
     "title": "آرډرونه او واټس‌اپ پوښتنې",
