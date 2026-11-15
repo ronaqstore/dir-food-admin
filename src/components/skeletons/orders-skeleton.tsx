@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function OrdersListSkeleton() {
   return (
     <div className='flex flex-1 flex-col space-y-4'>
-      {}
       <div className='hidden md:flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border/60 bg-card shadow-xs'>
         <div className='border-b border-border/60 bg-muted/40 p-3'>
           <div className='flex items-center justify-between'>
@@ -40,7 +39,6 @@ export function OrdersListSkeleton() {
         </div>
       </div>
 
-      {}
       <div className='grid gap-3 md:hidden min-h-0 flex-1 overflow-y-auto overscroll-y-contain'>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className='p-4 shadow-xs border-border/60 space-y-3'>

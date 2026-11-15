@@ -8,8 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import {
   MenuItemCardSkeleton,
-  MenuItemListRowSkeleton,
-  MenuManagementSkeleton
+  MenuItemListRowSkeleton
 } from '@/components/skeletons/menu-skeleton';
 import {
   IconPlus,
@@ -188,10 +187,6 @@ export function MenuList() {
 
   const hasNoCategories = !isCategoriesLoading && (!categories || categories.length === 0);
 
-  if (isCategoriesLoading && !categories) {
-    return <MenuManagementSkeleton />;
-  }
-
   if (error && !items.length && !categories) {
     return (
       <div className='flex h-64 flex-col items-center justify-center gap-3 text-center'>
@@ -208,7 +203,6 @@ export function MenuList() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-28 sm:pb-12 scroll-smooth'>
       <div className='space-y-4'>
-        {}
         <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
           <div>
             <div className='flex items-center gap-2.5'>
@@ -242,14 +236,12 @@ export function MenuList() {
           </div>
         </div>
 
-        {}
         {hasNoCategories ? (
           <div className='rounded-lg border border-amber-500/20 bg-amber-500/10 p-4 text-amber-800 dark:text-amber-300 flex items-center justify-between'>
             <p className='text-sm'>{t('menuItems.noCategoryWarning')}</p>
           </div>
         ) : null}
 
-        {}
         <MenuHeaderControls
           search={search}
           onSearchChange={setSearch}
@@ -269,8 +261,7 @@ export function MenuList() {
           t={t}
         />
 
-        {}
-        {isItemsLoading ? (
+        {isItemsLoading || isCategoriesLoading ? (
           viewMode === 'grid' ? (
             <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in-50 duration-200'>
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -334,7 +325,6 @@ export function MenuList() {
                   id={`cat-section-${category.id}`}
                   className='space-y-3 scroll-mt-28'
                 >
-                  {}
                   <div className='flex items-center justify-between border-b pb-2 pt-1'>
                     <div className='flex items-center gap-2'>
                       <h2 className='text-base sm:text-lg font-bold text-foreground'>
@@ -415,7 +405,6 @@ export function MenuList() {
           </div>
         )}
 
-        {}
         <div ref={sentinelRef} className='py-4'>
           {isFetchingNextPage && (
             <div className='space-y-4'>
@@ -449,7 +438,6 @@ export function MenuList() {
         </div>
       </div>
 
-      {}
       <MenuMobileSheet
         open={mobileCategorySheetOpen}
         onOpenChange={setMobileCategorySheetOpen}

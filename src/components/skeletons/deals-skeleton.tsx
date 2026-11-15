@@ -83,7 +83,6 @@ export function DealsListSkeleton() {
           <Skeleton className='h-7 w-36 rounded-md' />
           <Skeleton className='h-4 w-64 rounded-md' />
         </div>
-        <Skeleton className='h-9 w-28 rounded-md shrink-0 self-start sm:self-auto' />
       </div>
 
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border bg-card p-3 min-w-0'>

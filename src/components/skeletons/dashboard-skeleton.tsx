@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function DashboardOverviewSkeleton() {
   return (
     <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-6'>
-      {}
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div className='space-y-1.5'>
           <Skeleton className='h-8 w-48 rounded-lg' />
@@ -13,7 +12,6 @@ export function DashboardOverviewSkeleton() {
         <Skeleton className='h-7 w-28 rounded-full' />
       </div>
 
-      {}
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className='border-border/60 shadow-sm'>
@@ -29,21 +27,6 @@ export function DashboardOverviewSkeleton() {
         ))}
       </div>
 
-      {}
-      <Card className='border-border/60 shadow-sm'>
-        <CardHeader className='pb-3 space-y-1.5'>
-          <Skeleton className='h-5 w-32 rounded-md' />
-          <Skeleton className='h-3.5 w-60 rounded-md' />
-        </CardHeader>
-        <CardContent className='flex flex-wrap gap-2.5'>
-          <Skeleton className='h-9 w-32 rounded-md' />
-          <Skeleton className='h-9 w-36 rounded-md' />
-          <Skeleton className='h-9 w-40 rounded-md' />
-          <Skeleton className='h-9 w-28 rounded-md' />
-        </CardContent>
-      </Card>
-
-      {}
       <Card className='border-border/60 shadow-sm'>
         <CardHeader className='pb-3'>
           <Skeleton className='h-5 w-36 rounded-md' />

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { DeliveryAreasTabSkeleton } from '@/components/skeletons/settings-skeleton';
+import { DeliveryAreasListSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconMapPin, IconSearch, IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
 import {
@@ -116,16 +116,11 @@ export function DeliveryAreasTab() {
     }
   };
 
-  if (isLoading) {
-    return <DeliveryAreasTabSkeleton />;
-  }
-
   const servedCount = rows.filter((r) => r.isServed).length;
   const currentDistrictName = profile?.city?.name ?? 'Lower Dir';
 
   return (
     <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-      {}
       <div className='flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-foreground'>
         <div className='flex items-center gap-2'>
           <IconMapPin className='size-4 text-primary shrink-0' />
@@ -247,87 +242,91 @@ export function DeliveryAreasTab() {
         </div>
       </div>
 
-      <div className='divide-y divide-border'>
-        {filteredRows.map((row) => (
-          <div
-            key={row.areaId}
-            className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between hover:bg-muted/30 transition-colors rounded-lg px-2'
-          >
-            <div className='flex items-center gap-3'>
-              <Switch
-                checked={row.isServed}
-                onCheckedChange={(checked) => handleToggleServed(row.areaId, checked)}
-                disabled={updateAreas.isPending}
-                aria-label={row.name}
-              />
-              <div className='flex items-center gap-2'>
-                <IconMapPin
-                  className={`size-4 ${row.isServed ? 'text-primary' : 'text-muted-foreground'}`}
+      {isLoading ? (
+        <DeliveryAreasListSkeleton />
+      ) : (
+        <div className='divide-y divide-border'>
+          {filteredRows.map((row) => (
+            <div
+              key={row.areaId}
+              className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between hover:bg-muted/30 transition-colors rounded-lg px-2'
+            >
+              <div className='flex items-center gap-3'>
+                <Switch
+                  checked={row.isServed}
+                  onCheckedChange={(checked) => handleToggleServed(row.areaId, checked)}
+                  disabled={updateAreas.isPending}
+                  aria-label={row.name}
                 />
-                <span
-                  className={`text-sm font-semibold ${row.isServed ? 'text-foreground' : 'text-muted-foreground'}`}
-                >
-                  {row.name}
-                </span>
-                {row.isVerified === false && (
-                  <Badge
-                    variant='outline'
-                    className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
+                <div className='flex items-center gap-2'>
+                  <IconMapPin
+                    className={`size-4 ${row.isServed ? 'text-primary' : 'text-muted-foreground'}`}
+                  />
+                  <span
+                    className={`text-sm font-semibold ${row.isServed ? 'text-foreground' : 'text-muted-foreground'}`}
                   >
-                    {t('restaurantSettings.pendingVerification')}
-                  </Badge>
-                )}
+                    {row.name}
+                  </span>
+                  {row.isVerified === false && (
+                    <Badge
+                      variant='outline'
+                      className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
+                    >
+                      {t('restaurantSettings.pendingVerification')}
+                    </Badge>
+                  )}
+                </div>
               </div>
+
+              {row.isServed ? (
+                <div className='flex flex-wrap items-center gap-4 ps-11 sm:ps-0 animate-in fade-in-50'>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                      {t('restaurantSettings.deliveryFee')}:
+                    </span>
+                    <div className='relative w-32'>
+                      <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                        {t('common.currency')}
+                      </span>
+                      <Input
+                        type='number'
+                        min='0'
+                        step='1'
+                        value={row.feeInput}
+                        onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
+                        placeholder={t('restaurantSettings.feePlaceholder')}
+                        disabled={updateAreas.isPending}
+                        className='h-8 ps-9 text-xs'
+                      />
+                    </div>
+                  </div>
+
+                  <div className='flex items-center gap-2'>
+                    <span className='text-xs text-muted-foreground whitespace-nowrap'>
+                      {t('restaurantSettings.areaMinOrder')}:
+                    </span>
+                    <div className='relative w-32'>
+                      <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                        {t('common.currency')}
+                      </span>
+                      <Input
+                        type='number'
+                        min='0'
+                        step='1'
+                        value={row.minOrderInput}
+                        onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
+                        placeholder={t('restaurantSettings.defaultPlaceholder')}
+                        disabled={updateAreas.isPending}
+                        className='h-8 ps-9 text-xs'
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
-
-            {row.isServed ? (
-              <div className='flex flex-wrap items-center gap-4 ps-11 sm:ps-0 animate-in fade-in-50'>
-                <div className='flex items-center gap-2'>
-                  <span className='text-xs text-muted-foreground whitespace-nowrap'>
-                    {t('restaurantSettings.deliveryFee')}:
-                  </span>
-                  <div className='relative w-32'>
-                    <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                      {t('common.currency')}
-                    </span>
-                    <Input
-                      type='number'
-                      min='0'
-                      step='1'
-                      value={row.feeInput}
-                      onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
-                      placeholder={t('restaurantSettings.feePlaceholder')}
-                      disabled={updateAreas.isPending}
-                      className='h-8 ps-9 text-xs'
-                    />
-                  </div>
-                </div>
-
-                <div className='flex items-center gap-2'>
-                  <span className='text-xs text-muted-foreground whitespace-nowrap'>
-                    {t('restaurantSettings.areaMinOrder')}:
-                  </span>
-                  <div className='relative w-32'>
-                    <span className='absolute inset-s-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                      {t('common.currency')}
-                    </span>
-                    <Input
-                      type='number'
-                      min='0'
-                      step='1'
-                      value={row.minOrderInput}
-                      onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
-                      placeholder={t('restaurantSettings.defaultPlaceholder')}
-                      disabled={updateAreas.isPending}
-                      className='h-8 ps-9 text-xs'
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className='flex justify-end pt-4 border-t'>
         <Button type='button' onClick={handleSave} disabled={updateAreas.isPending} className='gap-1.5'>

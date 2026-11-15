@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { CategoryListSkeleton } from '@/components/skeletons/categories-skeleton';
+import { CategoryRowsSkeleton } from '@/components/skeletons/categories-skeleton';
 import {
   IconPlus,
   IconPencil,
@@ -75,23 +75,6 @@ export function CategoryList() {
     }
   };
 
-  if (isLoading) {
-    return <CategoryListSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <div className='flex h-64 flex-col items-center justify-center gap-3 text-center'>
-        <p className='text-sm text-destructive font-medium'>
-          {error instanceof Error ? error.message : t('common.unexpectedError')}
-        </p>
-        <Button type='button' variant='outline' size='sm' onClick={() => refetch()}>
-          {t('common.tryAgain')}
-        </Button>
-      </div>
-    );
-  }
-
   const items = categories ?? [];
 
   return (
@@ -111,7 +94,18 @@ export function CategoryList() {
         </div>
       </div>
 
-      {items.length === 0 ? (
+      {isLoading ? (
+        <CategoryRowsSkeleton />
+      ) : error ? (
+        <div className='flex h-64 flex-col items-center justify-center gap-3 text-center'>
+          <p className='text-sm text-destructive font-medium'>
+            {error instanceof Error ? error.message : t('common.unexpectedError')}
+          </p>
+          <Button type='button' variant='outline' size='sm' onClick={() => refetch()}>
+            {t('common.tryAgain')}
+          </Button>
+        </div>
+      ) : items.length === 0 ? (
         <div className='flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50'>
           <div className='flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary mb-4'>
             <IconFolder className='size-7' />
