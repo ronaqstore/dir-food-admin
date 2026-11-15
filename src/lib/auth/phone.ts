@@ -9,9 +9,29 @@ export function normalizePhone(phone: string): string {
     digits = `0${digits.slice(4)}`;
   } else if (digits.startsWith('92') && digits.length >= 12) {
     digits = `0${digits.slice(2)}`;
+  } else if (digits.length === 10 && digits.startsWith('3')) {
+    digits = `0${digits}`;
   }
 
   return digits;
+}
+
+export function formatPkMobile(phone: string): string {
+  if (!phone) {
+    return '';
+  }
+  return normalizePhone(phone);
+}
+
+export function isExactPkMobile(phone: string): boolean {
+  if (!phone) {
+    return false;
+  }
+  return /^03\d{9}$/.test(phone.trim());
+}
+
+export function sanitizePkMobileInput(value: string): string {
+  return value.replace(/\D/g, '').slice(0, 11);
 }
 
 export function isValidPkMobile(phone: string): boolean {
@@ -19,7 +39,7 @@ export function isValidPkMobile(phone: string): boolean {
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
     return true;
   }
-  return /^03\d{9}$/.test(normalizePhone(phone));
+  return isExactPkMobile(phone);
 }
 
 export const RESERVED_PHONE_NUMBERS = [

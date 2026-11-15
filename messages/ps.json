@@ -2601,7 +2601,8 @@
     "minOrderLabel": "لږترلږه امر (روپۍ)",
     "addAndEnable": "اضافه او فعال کړئ",
     "pendingVerification": "تایید پاتې دی",
-    "copyHoursToAll": "ټولو خلاصو ورځو ته ساعتونه کاپي کړئ"
+    "copyHoursToAll": "ټولو خلاصو ورځو ته ساعتونه کاپي کړئ",
+    "invalidPhone": "د ۱۱ عدده ګرځنده شمیره دننه کړئ (د بیلګې په توګه 03029825213)"
   },
   "orders": {
     "title": "آرډرونه او واټس‌اپ پوښتنې",
@@ -2768,7 +2769,8 @@
     "districtLabel": "ولسوالی / ښار",
     "selectDistrictPlaceholder": "ولسوالی وټاکئ (اصلي: کوز دیر)",
     "searchDistrictPlaceholder": "ولسوالی یا ښار لټول...",
-    "cuisinesPlaceholder": "دیسی، کڑاهی، بی بی کیو"
+    "cuisinesPlaceholder": "دیسی، کڑاهی، بی بی کیو",
+    "invalidPhone": "د ۱۱ عدده ګرځنده شمیره دننه کړئ (د بیلګې په توګه 03029825213)"
   },
   "platformSubscriptions": {
     "title": "شراکتونه او بیلینګ",

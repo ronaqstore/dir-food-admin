@@ -18,7 +18,7 @@ import { Icons } from '@/components/icons';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { WHATSAPP_BASE_URL } from '@/constants/api';
 import { toPaisa } from '@/lib/money';
-import { isReservedPhoneNumber } from '@/lib/auth/phone';
+import { isReservedPhoneNumber, isExactPkMobile, sanitizePkMobileInput } from '@/lib/auth/phone';
 import { useCreatePlatformRestaurant, usePlatformCities } from '../api/platform-query';
 import { RestaurantNameAvailability } from '@/components/common/restaurant-name-availability';
 import { SearchableSelect } from '@/components/ui/searchable-select';
@@ -59,6 +59,16 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
 
     if (!name.trim() || !contactPhone.trim() || !ownerName.trim() || !ownerPhone.trim()) {
       toast.error(t('fillRequiredFields'));
+      return;
+    }
+
+    if (!isExactPkMobile(contactPhone) || !isExactPkMobile(ownerPhone)) {
+      toast.error(t('invalidPhone'));
+      return;
+    }
+
+    if (whatsappNumber.trim() && !isExactPkMobile(whatsappNumber)) {
+      toast.error(t('invalidPhone'));
       return;
     }
 
@@ -229,9 +239,13 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                     id='create-contact'
                     required
                     placeholder='03001234567'
+                    maxLength={11}
                     value={contactPhone}
-                    onChange={(e) => setContactPhone(e.target.value)}
+                    onChange={(e) => setContactPhone(sanitizePkMobileInput(e.target.value))}
                   />
+                  {contactPhone && !isExactPkMobile(contactPhone) ? (
+                    <p className='text-[11px] text-destructive'>{t('invalidPhone')}</p>
+                  ) : null}
                 </div>
 
                 <div className='space-y-1.5'>
@@ -239,9 +253,13 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   <Input
                     id='create-wa'
                     placeholder='03001234567'
+                    maxLength={11}
                     value={whatsappNumber}
-                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    onChange={(e) => setWhatsappNumber(sanitizePkMobileInput(e.target.value))}
                   />
+                  {whatsappNumber && !isExactPkMobile(whatsappNumber) ? (
+                    <p className='text-[11px] text-destructive'>{t('invalidPhone')}</p>
+                  ) : null}
                 </div>
               </div>
 
@@ -300,9 +318,13 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                     id='create-owner-phone'
                     required
                     placeholder='03001234567'
+                    maxLength={11}
                     value={ownerPhone}
-                    onChange={(e) => setOwnerPhone(e.target.value)}
+                    onChange={(e) => setOwnerPhone(sanitizePkMobileInput(e.target.value))}
                   />
+                  {ownerPhone && !isExactPkMobile(ownerPhone) ? (
+                    <p className='text-[11px] text-destructive'>{t('invalidPhone')}</p>
+                  ) : null}
                 </div>
               </div>
             </div>

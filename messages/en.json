@@ -2601,7 +2601,8 @@
     "minOrderLabel": "Min Order (Rs)",
     "addAndEnable": "Add & Enable",
     "pendingVerification": "Pending Verification",
-    "copyHoursToAll": "Copy hours to all open days"
+    "copyHoursToAll": "Copy hours to all open days",
+    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)"
   },
   "orders": {
     "title": "Orders & Inquiries",
@@ -2768,7 +2769,8 @@
     "districtLabel": "District / City",
     "selectDistrictPlaceholder": "Select District (Default: Lower Dir)",
     "searchDistrictPlaceholder": "Search district or city...",
-    "cuisinesPlaceholder": "Desi, Karahi, BBQ"
+    "cuisinesPlaceholder": "Desi, Karahi, BBQ",
+    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)"
   },
   "platformSubscriptions": {
     "title": "Subscriptions & Billing",

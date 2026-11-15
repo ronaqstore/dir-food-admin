@@ -2601,7 +2601,8 @@
     "minOrderLabel": "Kam az kam order (Rs)",
     "addAndEnable": "Shamil aur faal karein",
     "pendingVerification": "Tasdeeq zer-e-iltiwa hai",
-    "copyHoursToAll": "Tamam open days k lye copy krein"
+    "copyHoursToAll": "Tamam open days k lye copy krein",
+    "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)"
   },
   "orders": {
     "title": "Orders & Inquiries",
@@ -2768,7 +2769,8 @@
     "districtLabel": "Zila / Shehar",
     "selectDistrictPlaceholder": "Zila muntakhab karein (Default: Lower Dir)",
     "searchDistrictPlaceholder": "Zila ya shehar talash karein...",
-    "cuisinesPlaceholder": "Desi, Karahi, BBQ"
+    "cuisinesPlaceholder": "Desi, Karahi, BBQ",
+    "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)"
   },
   "platformSubscriptions": {
     "title": "Subscriptions & Billing",

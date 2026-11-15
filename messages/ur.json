@@ -2601,7 +2601,8 @@
     "minOrderLabel": "کم از کم آرڈر (روپے)",
     "addAndEnable": "شامل اور فعال کریں",
     "pendingVerification": "تصدیق زیر التواء ہے",
-    "copyHoursToAll": "تمام کھلے دنوں کے لیے اوقات کاپی کریں"
+    "copyHoursToAll": "تمام کھلے دنوں کے لیے اوقات کاپی کریں",
+    "invalidPhone": "11 ہندسوں کا موبائل نمبر درج کریں (مثلاً 03029825213)"
   },
   "orders": {
     "title": "آرڈرز اور واٹس ایپ استفسارات",
@@ -2768,7 +2769,8 @@
     "districtLabel": "ضلع / شہر",
     "selectDistrictPlaceholder": "ضلع منتخب کریں (ڈیفالٹ: دیر پائیں)",
     "searchDistrictPlaceholder": "ضلع یا شہر تلاش کریں...",
-    "cuisinesPlaceholder": "دیسی، کڑاہی، بی بی کیو"
+    "cuisinesPlaceholder": "دیسی، کڑاہی، بی بی کیو",
+    "invalidPhone": "11 ہندسوں کا موبائل نمبر درج کریں (مثلاً 03029825213)"
   },
   "platformSubscriptions": {
     "title": "سبسکرپشنز اور بلنگ",

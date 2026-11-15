@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { SearchableSelect } from '@/components/ui/searchable-select';
-import { TrialBadge } from '@/components/common/trial-badge';
 import {
   IconCheck,
   IconAlertCircle,
@@ -19,7 +18,12 @@ import {
   IconMapPin
 } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
-import { isReservedPhoneNumber } from '@/lib/auth/phone';
+import {
+  isReservedPhoneNumber,
+  formatPkMobile,
+  isExactPkMobile,
+  sanitizePkMobileInput
+} from '@/lib/auth/phone';
 import { ProfileMediaSection } from './profile-media-section';
 import { ProfileAvailabilitySection } from './profile-availability-section';
 import {
@@ -63,8 +67,8 @@ export function ProfileTab() {
       setCityId(profile.cityId || '');
       setDescription(profile.description || '');
       setAddressText(profile.addressText || '');
-      setContactPhone(profile.contactPhone || '');
-      setWhatsappNumber(profile.whatsappNumber || '');
+      setContactPhone(formatPkMobile(profile.contactPhone || ''));
+      setWhatsappNumber(formatPkMobile(profile.whatsappNumber || ''));
       setMinOrder(profile.minOrderAmount != null ? String(fromPaisa(profile.minOrderAmount)) : '');
       setManualStatus(profile.manualStatus || 'AUTO');
       setUnavailableNote(profile.unavailableNote || '');
@@ -73,6 +77,16 @@ export function ProfileTab() {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isExactPkMobile(whatsappNumber)) {
+      toast.error(t('restaurantSettings.invalidPhone'));
+      return;
+    }
+
+    if (contactPhone.trim() && !isExactPkMobile(contactPhone)) {
+      toast.error(t('restaurantSettings.invalidPhone'));
+      return;
+    }
 
     if (
       (contactPhone.trim() && isReservedPhoneNumber(contactPhone)) ||
@@ -168,7 +182,6 @@ export function ProfileTab() {
     publishRestaurant.isPending;
 
   const isPendingPublish = profile?.status === 'PENDING';
-  const isActive = profile?.status === 'ACTIVE';
 
   return (
     <div className='space-y-6'>
@@ -218,16 +231,6 @@ export function ProfileTab() {
               <IconCheck className='size-4' />
               <span>{t('restaurantSettings.readyToPublish')}</span>
             </div>
-          ) : null}
-        </div>
-      ) : isActive ? (
-        <div className='flex items-center justify-between rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-emerald-800 dark:text-emerald-300 text-xs shadow-2xs'>
-          <div className='flex items-center gap-2.5'>
-            <span className='flex size-2 rounded-full bg-emerald-500 animate-pulse' />
-            <span className='font-semibold text-sm'>{t('restaurantSettings.activeBadge')}</span>
-          </div>
-          {profile?.subscriptionEndsAt ? (
-            <TrialBadge subscriptionEndsAt={profile.subscriptionEndsAt} />
           ) : null}
         </div>
       ) : null}
@@ -282,11 +285,17 @@ export function ProfileTab() {
               <Input
                 id='contact-phone'
                 value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
+                onChange={(e) => setContactPhone(sanitizePkMobileInput(e.target.value))}
                 placeholder='03001234567'
+                maxLength={11}
                 disabled={isPending}
                 className='text-xs h-9'
               />
+              {contactPhone && !isExactPkMobile(contactPhone) ? (
+                <p className='text-[11px] text-destructive'>
+                  {t('restaurantSettings.invalidPhone')}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -302,12 +311,18 @@ export function ProfileTab() {
               <Input
                 id='whatsapp-number'
                 value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
+                onChange={(e) => setWhatsappNumber(sanitizePkMobileInput(e.target.value))}
                 placeholder='03001234567'
+                maxLength={11}
                 disabled={isPending}
                 required
                 className='text-xs h-9'
               />
+              {whatsappNumber && !isExactPkMobile(whatsappNumber) ? (
+                <p className='text-[11px] text-destructive'>
+                  {t('restaurantSettings.invalidPhone')}
+                </p>
+              ) : null}
               <p className='text-[11px] text-muted-foreground leading-normal'>
                 {t('restaurantSettings.whatsappHint')}
               </p>
