@@ -151,6 +151,15 @@ export interface FoodCardProps {
   t: (key: string) => string;
 }
 
+export interface FoodTableViewProps {
+  items: MenuItemDTO[];
+  categories?: MenuCategoryDTO[];
+  onEdit: (item: MenuItemDTO) => void;
+  onToggleAvailability: (item: MenuItemDTO) => void;
+  isPending: boolean;
+  t: (key: string) => string;
+}
+
 export interface MenuHeaderControlsProps {
   search: string;
   onSearchChange: (val: string) => void;

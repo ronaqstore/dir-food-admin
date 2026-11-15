@@ -11,16 +11,14 @@ import {
 } from '@/components/skeletons/menu-skeleton';
 import {
   IconPlus,
-  IconSalad,
-  IconChevronDown,
-  IconChevronUp
+  IconSalad
 } from '@tabler/icons-react';
 import { useCategories } from '@/features/categories/api/categories-query';
 import { usePaginatedMenuItems, useUpdateMenuItem } from '../api/menu-query';
 import { parseSortParam } from '../lib/sort-utils';
 import { StandardPagination } from '@/components/ui/standard-pagination';
 import { MenuItemDialog } from './menu-item-dialog';
-import { FoodCard, FoodListItem } from './menu-item-cards';
+import { FoodCard, FoodTableView } from './menu-item-cards';
 import { MenuHeaderControls } from './menu-header-controls';
 import { MenuMobileSheet } from './menu-mobile-sheet';
 import type { MenuItemDTO, ViewMode, StatusFilter } from '../types';
@@ -34,7 +32,6 @@ export function MenuList() {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editingItem, setEditingItem] = React.useState<MenuItemDTO | null>(null);
-  const [collapsedCategories, setCollapsedCategories] = React.useState<Record<string, boolean>>({});
   const [mobileCategorySheetOpen, setMobileCategorySheetOpen] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(20);
@@ -105,13 +102,6 @@ export function MenuList() {
     }
   };
 
-  const toggleCategoryCollapse = (catId: string) => {
-    setCollapsedCategories((prev) => ({
-      ...prev,
-      [catId]: !prev[catId]
-    }));
-  };
-
   const handleResetFilters = () => {
     setSearch('');
     setStatusFilter('all');
@@ -170,22 +160,6 @@ export function MenuList() {
   const soldOutCount = Math.max(0, items.length - availableCount);
 
   const filteredItems = items;
-
-  const isGroupedView = selectedCategory === 'all' && !debouncedSearch && sortBy === 'default';
-  const groupedByCategory = React.useMemo(() => {
-    if (!isGroupedView || !categories) return [];
-
-    return categories
-      .map((cat) => {
-        const catItems = filteredItems.filter((item) => item.categoryId === cat.id);
-        return {
-          category: cat,
-          items: catItems
-        };
-      })
-      .filter((group) => group.items.length > 0);
-  }, [isGroupedView, categories, filteredItems]);
-
   const hasNoCategories = !isCategoriesLoading && (!categories || categories.length === 0);
 
   const renderFoodCard = (item: MenuItemDTO) => (
@@ -265,8 +239,8 @@ export function MenuList() {
       <div className='min-w-0 space-y-4'>
         {isItemsLoading ? (
           viewMode === 'grid' ? (
-            <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <MenuItemCardSkeleton key={i} />
               ))}
             </div>
@@ -306,71 +280,19 @@ export function MenuList() {
               </Button>
             )}
           </div>
-        ) : isGroupedView && groupedByCategory.length > 0 ? (
-          <div className='space-y-6'>
-            {groupedByCategory.map(({ category, items: catItems }) => {
-              const isCollapsed = collapsedCategories[category.id] ?? false;
-
-              return (
-                <section key={category.id} className='space-y-3'>
-                  <div className='flex items-center justify-between border-b pb-1.5'>
-                    <div className='flex items-center gap-2'>
-                      <h2 className='text-sm font-semibold text-foreground tracking-tight'>
-                        {category.name}
-                      </h2>
-                      <span className='text-xs font-mono text-muted-foreground'>
-                        ({catItems.length})
-                      </span>
-                    </div>
-
-                    <Button
-                      type='button'
-                      variant='ghost'
-                      size='sm'
-                      className='h-7 px-2 text-xs text-muted-foreground hover:text-foreground'
-                      onClick={() => toggleCategoryCollapse(category.id)}
-                    >
-                      {isCollapsed ? (
-                        <div className='flex items-center gap-1'>
-                          <span>{t('menuItems.expand')}</span>
-                          <IconChevronDown className='size-3.5' />
-                        </div>
-                      ) : (
-                        <div className='flex items-center gap-1'>
-                          <span>{t('menuItems.collapse')}</span>
-                          <IconChevronUp className='size-3.5' />
-                        </div>
-                      )}
-                    </Button>
-                  </div>
-
-                  {!isCollapsed && (
-                    <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
-                      {catItems.map(renderFoodCard)}
-                    </div>
-                  )}
-                </section>
-              );
-            })}
-          </div>
         ) : viewMode === 'grid' ? (
-          <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {filteredItems.map(renderFoodCard)}
           </div>
         ) : (
-          <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y'>
-            {filteredItems.map((item) => (
-              <FoodListItem
-                key={item.id}
-                item={item}
-                categories={categories}
-                onEdit={handleOpenEdit}
-                onToggleAvailability={handleToggleAvailability}
-                isPending={updateItem.isPending}
-                t={t}
-              />
-            ))}
-          </div>
+          <FoodTableView
+            items={filteredItems}
+            categories={categories}
+            onEdit={handleOpenEdit}
+            onToggleAvailability={handleToggleAvailability}
+            isPending={updateItem.isPending}
+            t={t}
+          />
         )}
 
         {totalServerCount > 0 ? (

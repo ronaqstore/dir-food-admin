@@ -16,3 +16,8 @@ export function parseSortParam(sortBy: string): ParsedSort {
       return {};
   }
 }
+
+export function calcDiscountPct(basePrice?: number | null, originalPrice?: number | null): number {
+  if (!basePrice || !originalPrice || originalPrice <= basePrice) return 0;
+  return Math.round(((originalPrice - basePrice) / originalPrice) * 100);
+}
