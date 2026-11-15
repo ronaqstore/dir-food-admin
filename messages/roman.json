@@ -186,7 +186,7 @@
     "tables": "Tables & QR",
     "restaurants": "Restaurants",
     "settings": "Settings",
-    "platformOverview": "Platform Overview",
+    "platformOverview": "Overview",
     "adminBadge": "Admin",
     "ownerBadge": "Owner",
     "platformAdminBrand": "Dir Food Admin"
@@ -1271,7 +1271,7 @@
     "onTrial": "On Trial",
     "expired": "Expired",
     "monthlyRevenue": "Monthly Revenue",
-    "platformOverview": "Platform overview",
+    "platformOverview": "Overview",
     "platformOverviewDescription": "Manage shops, subscriptions, and platform settings.",
     "manageShopsSubscriptions": "Manage shops and subscriptions across the platform.",
     "assignPlan": "Assign plan",

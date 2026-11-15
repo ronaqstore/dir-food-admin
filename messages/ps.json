@@ -186,7 +186,7 @@
     "tables": "میزونه او QR",
     "restaurants": "رستورانتونه",
     "settings": "تنظیمات",
-    "platformOverview": "د پلیټ فارم لنډیز",
+    "platformOverview": "کتنه",
     "adminBadge": "اډمین",
     "ownerBadge": "مالک",
     "platformAdminBrand": "دیر فوډ اډمین"
@@ -1271,7 +1271,7 @@
     "onTrial": "ازمېیله",
     "expired": "ختم شوی",
     "monthlyRevenue": "میاشتنۍ عاید",
-    "platformOverview": "د پلیټ فارم کتنه",
+    "platformOverview": "کتنه",
     "platformOverviewDescription": "دوکانونه، ګډونونه او د پلیټ فارم تنظیمونه اداره کړئ.",
     "manageShopsSubscriptions": "د پلیټ فارم په دوکانونه او ګډونونو اداره کړئ.",
     "assignPlan": "پلان تفویض کړئ",
