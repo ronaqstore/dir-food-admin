@@ -29,3 +29,22 @@ export interface CategoryDialogProps {
   onOpenChange: (open: boolean) => void;
   category?: CategoryWithCount | null;
 }
+
+export interface CategoriesFilter {
+  search?: string;
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface CategoriesResponse {
+  data: CategoryWithCount[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages?: number;
+  };
+}

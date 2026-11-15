@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
 import {
   MenuItemCardSkeleton,
   MenuItemListRowSkeleton
@@ -17,7 +16,9 @@ import {
   IconChevronUp
 } from '@tabler/icons-react';
 import { useCategories } from '@/features/categories/api/categories-query';
-import { useInfiniteMenuItems, useUpdateMenuItem } from '../api/menu-query';
+import { usePaginatedMenuItems, useUpdateMenuItem } from '../api/menu-query';
+import { parseSortParam } from '../lib/sort-utils';
+import { StandardPagination } from '@/components/ui/standard-pagination';
 import { MenuItemDialog } from './menu-item-dialog';
 import { FoodCard, FoodListItem } from './menu-item-cards';
 import { MenuHeaderControls } from './menu-header-controls';
@@ -35,28 +36,33 @@ export function MenuList() {
   const [editingItem, setEditingItem] = React.useState<MenuItemDTO | null>(null);
   const [collapsedCategories, setCollapsedCategories] = React.useState<Record<string, boolean>>({});
   const [mobileCategorySheetOpen, setMobileCategorySheetOpen] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(20);
+  const [sortBy, setSortBy] = React.useState('default');
 
   const categoryPillsRef = React.useRef<HTMLDivElement>(null);
-  const sentinelRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search.trim());
+      setPage(1);
     }, 300);
     return () => clearTimeout(timer);
   }, [search]);
 
+  const { sortBy: backendSortBy, sortOrder: backendSortOrder } = React.useMemo(
+    () => parseSortParam(sortBy),
+    [sortBy]
+  );
+
   const { data: categories, isLoading: isCategoriesLoading } = useCategories();
   const {
-    data,
+    data: paginatedData,
     isLoading: isItemsLoading,
     isFetching,
     error,
-    refetch,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage
-  } = useInfiniteMenuItems({
+    refetch
+  } = usePaginatedMenuItems({
     categoryId: selectedCategory !== 'all' ? selectedCategory : undefined,
     search: debouncedSearch || undefined,
     isAvailable:
@@ -65,33 +71,16 @@ export function MenuList() {
         : statusFilter === 'soldOut'
           ? false
           : undefined,
-    limit: 24
+    page,
+    limit: pageSize,
+    sortBy: backendSortBy,
+    sortOrder: backendSortOrder
   });
 
   const updateItem = useUpdateMenuItem();
 
-  React.useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el || !hasNextPage || isFetchingNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1, rootMargin: '250px' }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  const items = React.useMemo(() => {
-    return data?.pages.flatMap((page) => page.data) ?? [];
-  }, [data]);
-
-  const totalServerCount = data?.pages[0]?.meta?.total ?? items.length;
+  const items = paginatedData?.data ?? [];
+  const totalServerCount = paginatedData?.meta?.total ?? items.length;
 
   const handleOpenCreate = () => {
     setEditingItem(null);
@@ -127,6 +116,39 @@ export function MenuList() {
     setSearch('');
     setStatusFilter('all');
     setSelectedCategory('all');
+    setSortBy('default');
+    setPage(1);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    setPage(1);
+  };
+
+  const handleStatusFilterChange = (val: StatusFilter) => {
+    setStatusFilter(val);
+    setPage(1);
+  };
+
+  const handleSortChange = (val: string | null) => {
+    if (val != null) {
+      setSortBy(val);
+      setPage(1);
+    }
+  };
+
+  const handleSelectCategory = (catId: string) => {
+    setSelectedCategory(catId);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
   };
 
   const categoryCounts = React.useMemo(() => {
@@ -144,33 +166,12 @@ export function MenuList() {
   }, [categories, totalServerCount]);
 
   const totalCount = totalServerCount;
-  const availableCount = items?.filter((i) => i.isAvailable).length || 0;
-  const soldOutCount = Math.max(0, totalCount - availableCount);
+  const availableCount = items.filter((i) => i.isAvailable).length;
+  const soldOutCount = Math.max(0, items.length - availableCount);
 
-  const filteredItems = React.useMemo(() => {
-    if (!items) return [];
+  const filteredItems = items;
 
-    return items.filter((item) => {
-      if (selectedCategory !== 'all' && item.categoryId !== selectedCategory) {
-        return false;
-      }
-
-      if (statusFilter === 'available' && !item.isAvailable) return false;
-      if (statusFilter === 'soldOut' && item.isAvailable) return false;
-
-      if (search.trim()) {
-        const lower = search.toLowerCase();
-        const matchesName = item.name.toLowerCase().includes(lower);
-        const matchesDesc = item.description?.toLowerCase().includes(lower);
-        const matchesCat = item.category?.name.toLowerCase().includes(lower);
-        if (!matchesName && !matchesDesc && !matchesCat) return false;
-      }
-
-      return true;
-    });
-  }, [items, selectedCategory, statusFilter, search]);
-
-  const isGroupedView = selectedCategory === 'all' && !search.trim();
+  const isGroupedView = selectedCategory === 'all' && !debouncedSearch && sortBy === 'default';
   const groupedByCategory = React.useMemo(() => {
     if (!isGroupedView || !categories) return [];
 
@@ -187,6 +188,18 @@ export function MenuList() {
 
   const hasNoCategories = !isCategoriesLoading && (!categories || categories.length === 0);
 
+  const renderFoodCard = (item: MenuItemDTO) => (
+    <FoodCard
+      key={item.id}
+      item={item}
+      categories={categories}
+      onEdit={handleOpenEdit}
+      onToggleAvailability={handleToggleAvailability}
+      isPending={updateItem.isPending}
+      t={t}
+    />
+  );
+
   if (error && !items.length && !categories) {
     return (
       <div className='flex h-64 flex-col items-center justify-center gap-3 text-center'>
@@ -201,146 +214,121 @@ export function MenuList() {
   }
 
   return (
-    <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-28 sm:pb-12 scroll-smooth'>
-      <div className='space-y-4'>
-        <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-          <div>
-            <div className='flex items-center gap-2.5'>
-              <h1 className='text-xl sm:text-2xl font-bold tracking-tight text-foreground'>
-                {t('menuItems.title')}
-              </h1>
-              <Badge variant='secondary' className='text-xs font-semibold'>
-                {allCategoriesTotal}
-              </Badge>
-              {isFetching && !isItemsLoading && (
-                <span className='inline-flex items-center gap-1 text-[11px] text-muted-foreground animate-in fade-in-50'>
-                  <Spinner className='size-3 text-primary animate-spin' />
-                </span>
-              )}
-            </div>
-            <p className='text-xs sm:text-sm text-muted-foreground mt-0.5'>
-              {t('menuItems.description')}
-            </p>
-          </div>
-
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-4 overflow-y-auto overscroll-y-contain pb-8'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+        <div>
           <div className='flex items-center gap-2'>
-            <Button type='button'
-              onClick={handleOpenCreate}
-              disabled={hasNoCategories}
-              className='gap-1.5 shadow-sm'
-              size='sm'
-            >
-              <IconPlus className='size-4' />
-              <span>{t('menuItems.newItem')}</span>
-            </Button>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+              {t('menuItems.title')}
+            </h1>
+            <Badge variant='secondary' className='text-xs font-mono font-normal'>
+              {totalServerCount}
+            </Badge>
           </div>
+          <p className='text-xs text-muted-foreground mt-0.5'>{t('menuItems.description')}</p>
         </div>
 
-        {hasNoCategories ? (
-          <div className='rounded-lg border border-amber-500/20 bg-amber-500/10 p-4 text-amber-800 dark:text-amber-300 flex items-center justify-between'>
-            <p className='text-sm'>{t('menuItems.noCategoryWarning')}</p>
-          </div>
-        ) : null}
+        <div className='flex items-center gap-2'>
+          <Button
+            type='button'
+            onClick={handleOpenCreate}
+            disabled={hasNoCategories}
+            className='gap-1.5'
+          >
+            <IconPlus className='size-4' />
+            <span>{t('menuItems.newItem')}</span>
+          </Button>
+        </div>
+      </div>
 
-        <MenuHeaderControls
-          search={search}
-          onSearchChange={setSearch}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          totalCount={totalCount}
-          availableCount={availableCount}
-          soldOutCount={soldOutCount}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          categories={categories}
-          categoryCounts={categoryCounts}
-          allCategoriesTotal={allCategoriesTotal}
-          categoryPillsRef={categoryPillsRef}
-          t={t}
-        />
+      <MenuHeaderControls
+        search={search}
+        onSearchChange={handleSearchChange}
+        statusFilter={statusFilter}
+        onStatusFilterChange={handleStatusFilterChange}
+        sortBy={sortBy}
+        onSortChange={handleSortChange}
+        totalCount={totalCount}
+        availableCount={availableCount}
+        soldOutCount={soldOutCount}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        selectedCategory={selectedCategory}
+        onSelectCategory={handleSelectCategory}
+        categories={categories}
+        categoryCounts={categoryCounts}
+        allCategoriesTotal={allCategoriesTotal}
+        categoryPillsRef={categoryPillsRef}
+        t={t}
+      />
 
-        {isItemsLoading || isCategoriesLoading ? (
+      <div className='min-w-0 space-y-4'>
+        {isItemsLoading ? (
           viewMode === 'grid' ? (
-            <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in-50 duration-200'>
+            <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <MenuItemCardSkeleton key={i} />
               ))}
             </div>
           ) : (
-            <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y animate-in fade-in-50 duration-200'>
+            <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y'>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <MenuItemListRowSkeleton key={i} />
               ))}
             </div>
           )
-        ) : error ? (
-          <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed border-destructive/30 p-8 text-center animate-in fade-in-50 bg-destructive/5'>
-            <p className='text-sm text-destructive font-medium mb-3'>
-              {error instanceof Error ? error.message : t('common.unexpectedError')}
-            </p>
-            <Button type='button' variant='outline' size='sm' onClick={() => refetch()}>
-              {t('common.tryAgain')}
-            </Button>
-          </div>
         ) : filteredItems.length === 0 ? (
-          <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50 bg-card/40'>
-            <div className='flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary mb-4'>
-              <IconSalad className='size-7' />
+          <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50'>
+            <div className='flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-3'>
+              <IconSalad className='size-6' />
             </div>
             <h3 className='text-base font-semibold text-foreground mb-1'>
-              {search || statusFilter !== 'all'
-                ? t('menuItems.noFilteredMatches')
-                : t('menuItems.emptyTitle')}
+              {t('menuItems.emptyTitle')}
             </h3>
-            <p className='text-xs text-muted-foreground max-w-sm mb-5'>
-              {search || statusFilter !== 'all'
-                ? t('common.reloadPage')
+            <p className='text-xs text-muted-foreground max-w-sm mb-4'>
+              {search || statusFilter !== 'all' || selectedCategory !== 'all'
+                ? t('menuItems.noFilteredMatches')
                 : t('menuItems.emptyDescription')}
             </p>
-            {search || statusFilter !== 'all' ? (
-              <Button type='button'
-                variant='outline'
-                size='sm'
-                onClick={handleResetFilters}
-              >
+            {search || statusFilter !== 'all' || selectedCategory !== 'all' ? (
+              <Button type='button' variant='outline' size='sm' onClick={handleResetFilters}>
                 {t('menuItems.resetFilters')}
               </Button>
             ) : (
-              <Button type='button' onClick={handleOpenCreate} disabled={hasNoCategories} className='gap-1.5' size='sm'>
+              <Button
+                type='button'
+                onClick={handleOpenCreate}
+                disabled={hasNoCategories}
+                className='gap-1.5'
+              >
                 <IconPlus className='size-4' />
                 <span>{t('menuItems.newItem')}</span>
               </Button>
             )}
           </div>
-        ) : isGroupedView && viewMode === 'grid' ? (
-          <div className='space-y-8'>
+        ) : isGroupedView && groupedByCategory.length > 0 ? (
+          <div className='space-y-6'>
             {groupedByCategory.map(({ category, items: catItems }) => {
-              const isCollapsed = Boolean(collapsedCategories[category.id]);
+              const isCollapsed = collapsedCategories[category.id] ?? false;
 
               return (
-                <section
-                  key={category.id}
-                  id={`cat-section-${category.id}`}
-                  className='space-y-3 scroll-mt-28'
-                >
-                  <div className='flex items-center justify-between border-b pb-2 pt-1'>
+                <section key={category.id} className='space-y-3'>
+                  <div className='flex items-center justify-between border-b pb-1.5'>
                     <div className='flex items-center gap-2'>
-                      <h2 className='text-base sm:text-lg font-bold text-foreground'>
+                      <h2 className='text-sm font-semibold text-foreground tracking-tight'>
                         {category.name}
                       </h2>
-                      <Badge variant='outline' className='text-xs font-medium'>
-                        {catItems.length}
-                      </Badge>
+                      <span className='text-xs font-mono text-muted-foreground'>
+                        ({catItems.length})
+                      </span>
                     </div>
 
-                    <Button type='button'
+                    <Button
+                      type='button'
                       variant='ghost'
                       size='sm'
-                      onClick={() => toggleCategoryCollapse(category.id)}
                       className='h-7 px-2 text-xs text-muted-foreground hover:text-foreground'
-                      aria-label={isCollapsed ? t('menuItems.expand') : t('menuItems.collapse')}
+                      onClick={() => toggleCategoryCollapse(category.id)}
                     >
                       {isCollapsed ? (
                         <div className='flex items-center gap-1'>
@@ -358,17 +346,7 @@ export function MenuList() {
 
                   {!isCollapsed && (
                     <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
-                      {catItems.map((item) => (
-                        <FoodCard
-                          key={item.id}
-                          item={item}
-                          categories={categories}
-                          onEdit={handleOpenEdit}
-                          onToggleAvailability={handleToggleAvailability}
-                          isPending={updateItem.isPending}
-                          t={t}
-                        />
-                      ))}
+                      {catItems.map(renderFoodCard)}
                     </div>
                   )}
                 </section>
@@ -377,17 +355,7 @@ export function MenuList() {
           </div>
         ) : viewMode === 'grid' ? (
           <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
-            {filteredItems.map((item) => (
-              <FoodCard
-                key={item.id}
-                item={item}
-                categories={categories}
-                onEdit={handleOpenEdit}
-                onToggleAvailability={handleToggleAvailability}
-                isPending={updateItem.isPending}
-                t={t}
-              />
-            ))}
+            {filteredItems.map(renderFoodCard)}
           </div>
         ) : (
           <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y'>
@@ -405,37 +373,19 @@ export function MenuList() {
           </div>
         )}
 
-        <div ref={sentinelRef} className='py-4'>
-          {isFetchingNextPage && (
-            <div className='space-y-4'>
-              <div className='flex items-center justify-center gap-2 text-xs text-muted-foreground'>
-                <Spinner className='size-4 text-primary' />
-                <span>{t('menuItems.loadingMore')}</span>
-              </div>
-              {viewMode === 'grid' ? (
-                <div className='grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3'>
-                  {[1, 2, 3].map((i) => (
-                    <MenuItemCardSkeleton key={i} />
-                  ))}
-                </div>
-              ) : (
-                <div className='rounded-xl border bg-card/60 divide-y overflow-hidden'>
-                  {[1, 2, 3].map((i) => (
-                    <MenuItemListRowSkeleton key={i} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {!hasNextPage && items.length > 0 && totalServerCount > 24 && (
-            <div className='text-center py-4'>
-              <p className='text-xs text-muted-foreground'>
-                {t('menuItems.endOfMenu')} • {t('menuItems.dishesProgress', { count: items.length, total: totalServerCount })}
-              </p>
-            </div>
-          )}
-        </div>
+        {totalServerCount > 0 ? (
+          <div className='pt-3 border-t'>
+            <StandardPagination
+              page={page}
+              pageSize={pageSize}
+              total={totalServerCount}
+              pageSizeOptions={[10, 20, 30, 50]}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              disabled={isFetching}
+            />
+          </div>
+        ) : null}
       </div>
 
       <MenuMobileSheet

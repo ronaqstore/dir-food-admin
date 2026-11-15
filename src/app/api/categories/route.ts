@@ -2,7 +2,9 @@ import { NextRequest } from 'next/server';
 import { proxyToBackend } from '@/lib/api/proxy';
 
 export async function GET(request: NextRequest) {
-  return proxyToBackend(request, '/me/restaurant/categories');
+  return proxyToBackend(request, '/me/restaurant/categories', {
+    allowedParams: ['search', 'isActive', 'page', 'limit', 'sortBy', 'sortOrder']
+  });
 }
 
 export async function POST(request: NextRequest) {

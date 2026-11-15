@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SortSelect } from '@/components/ui/sort-select';
 import {
   IconSearch,
   IconX,
@@ -13,6 +14,8 @@ export function MenuHeaderControls({
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
+  sortBy,
+  onSortChange,
   totalCount,
   availableCount,
   soldOutCount,
@@ -114,6 +117,14 @@ export function MenuHeaderControls({
               <span className='size-1.5 rounded-full bg-amber-500' />
               <span>{t('menuItems.statusSoldOut')} ({soldOutCount})</span>
             </button>
+          </div>
+
+          <div className='hidden sm:flex items-center'>
+            <SortSelect
+              value={sortBy}
+              onValueChange={onSortChange}
+              className='h-8 w-[9.5rem] text-xs [&[data-size]]:h-8 bg-card'
+            />
           </div>
 
           <div className='hidden sm:flex items-center rounded-lg border bg-muted/40 p-0.5'>

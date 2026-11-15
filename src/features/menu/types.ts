@@ -6,6 +6,7 @@ export interface PaginationMeta {
   page: number;
   limit: number;
   total: number;
+  totalPages?: number;
 }
 
 export interface CreateItemVariantInput {
@@ -56,6 +57,8 @@ export interface MenuItemsFilter {
   limit?: number;
   isDeal?: boolean;
   isAvailable?: boolean;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface MenuItemsResponse {
@@ -132,6 +135,12 @@ export interface MenuItemPricingProps {
 
 export type ViewMode = 'grid' | 'list';
 export type StatusFilter = 'all' | 'available' | 'soldOut';
+export type SortOrder = 'asc' | 'desc';
+
+export interface ParsedSort {
+  sortBy?: string;
+  sortOrder?: SortOrder;
+}
 
 export interface FoodCardProps {
   item: MenuItemDTO;
@@ -147,6 +156,8 @@ export interface MenuHeaderControlsProps {
   onSearchChange: (val: string) => void;
   statusFilter: StatusFilter;
   onStatusFilterChange: (status: StatusFilter) => void;
+  sortBy: string;
+  onSortChange: (val: string | null) => void;
   totalCount: number;
   availableCount: number;
   soldOutCount: number;

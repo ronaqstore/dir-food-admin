@@ -3,7 +3,16 @@ import { proxyToBackend } from '@/lib/api/proxy';
 
 export async function GET(request: NextRequest) {
   return proxyToBackend(request, '/me/restaurant/items', {
-    allowedParams: ['categoryId', 'search', 'page', 'limit', 'isDeal', 'isAvailable']
+    allowedParams: [
+      'categoryId',
+      'search',
+      'page',
+      'limit',
+      'isDeal',
+      'isAvailable',
+      'sortBy',
+      'sortOrder'
+    ]
   });
 }
 

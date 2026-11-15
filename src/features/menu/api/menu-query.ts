@@ -1,4 +1,4 @@
-import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { appFetch } from '@/lib/api/app-fetch';
 import { AppError } from '@/lib/errors';
 import type {
@@ -13,55 +13,6 @@ import type {
 } from '../types';
 
 export const MENU_ITEMS_QUERY_KEY = ['menu-items'] as const;
-
-export function useInfiniteMenuItems(filter?: MenuItemsFilter) {
-  return useInfiniteQuery<MenuItemsResponse>({
-    queryKey: [
-      ...MENU_ITEMS_QUERY_KEY,
-      'infinite',
-      filter?.categoryId ?? 'all',
-      filter?.search ?? '',
-      filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
-      filter?.isAvailable === undefined ? 'all' : String(filter.isAvailable)
-    ],
-    queryFn: async ({ pageParam = 1 }) => {
-      const params = new URLSearchParams();
-      if (filter?.categoryId && filter.categoryId !== 'all') {
-        params.set('categoryId', filter.categoryId);
-      }
-      if (filter?.search?.trim()) {
-        params.set('search', filter.search.trim());
-      }
-      if (typeof filter?.isDeal === 'boolean') {
-        params.set('isDeal', String(filter.isDeal));
-      }
-      if (typeof filter?.isAvailable === 'boolean') {
-        params.set('isAvailable', String(filter.isAvailable));
-      }
-      params.set('page', String(pageParam));
-      params.set('limit', String(filter?.limit ?? 24));
-
-      const queryStr = `?${params.toString()}`;
-      const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
-
-      if (Array.isArray(res)) {
-        return {
-          data: res,
-          meta: { page: Number(pageParam), limit: 24, total: res.length }
-        };
-      }
-      return res;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const { page, limit, total } = lastPage.meta;
-      if (page * limit < total) {
-        return page + 1;
-      }
-      return undefined;
-    }
-  });
-}
 
 export function useMenuItems(filter?: MenuItemsFilter) {
   const params = new URLSearchParams();
@@ -98,6 +49,8 @@ export function usePaginatedMenuItems(filter?: MenuItemsFilter) {
   if (typeof filter?.isAvailable === 'boolean') params.set('isAvailable', String(filter.isAvailable));
   if (filter?.page) params.set('page', String(filter.page));
   if (filter?.limit) params.set('limit', String(filter.limit));
+  if (filter?.sortBy) params.set('sortBy', filter.sortBy);
+  if (filter?.sortOrder) params.set('sortOrder', filter.sortOrder);
 
   const queryStr = params.toString() ? `?${params.toString()}` : '';
 
@@ -110,14 +63,16 @@ export function usePaginatedMenuItems(filter?: MenuItemsFilter) {
       filter?.isDeal === undefined ? 'all' : String(filter.isDeal),
       filter?.isAvailable === undefined ? 'all' : String(filter.isAvailable),
       filter?.page ?? 1,
-      filter?.limit ?? 12
+      filter?.limit ?? 12,
+      filter?.sortBy ?? 'default',
+      filter?.sortOrder ?? 'asc'
     ],
     queryFn: async () => {
       const res = await appFetch<MenuItemsResponse | MenuItemDTO[]>(`/api/items${queryStr}`);
       if (Array.isArray(res)) {
         return {
           data: res,
-          meta: { page: filter?.page ?? 1, limit: filter?.limit ?? res.length, total: res.length }
+          meta: { page: filter?.page ?? 1, limit: filter?.limit ?? res.length, total: res.length, totalPages: 1 }
         };
       }
       return res;
