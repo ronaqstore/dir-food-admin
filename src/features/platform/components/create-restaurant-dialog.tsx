@@ -222,11 +222,13 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   placeholder={t('selectDistrictPlaceholder')}
                   searchPlaceholder={t('searchDistrictPlaceholder')}
                   options={
-                    cities?.map((c) => ({
-                      value: c.id,
-                      label: c.name,
-                      sublabel: c.slug || undefined
-                    })) ?? []
+                    Array.isArray(cities)
+                      ? cities.map((c) => ({
+                          value: c.id,
+                          label: c.name,
+                          sublabel: c.slug || undefined
+                        }))
+                      : []
                   }
                   allowClear
                 />

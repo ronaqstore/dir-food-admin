@@ -14,6 +14,7 @@ import {
 import { useDataTable } from '@/hooks/use-data-table';
 import { TablePageBody } from '@/components/layout/table-page-body';
 import { Icons } from '@/components/icons';
+import { formatPkMobile } from '@/lib/auth/phone';
 import { usePlatformRestaurants, useIssueSetupLink } from '../api/platform-query';
 import { CreateRestaurantDialog } from './create-restaurant-dialog';
 import { ReviewApprovalDialog } from './review-approval-dialog';
@@ -41,8 +42,11 @@ export function RestaurantsView() {
   const [perPage] = useQueryState('perPage', parseAsInteger.withDefault(10));
   const [name] = useQueryState('name', parseAsString);
   const [sort] = useQueryState('sort', parseAsString);
-  const [statusValues] = useQueryStates({
-    status: parseAsArrayOf(parseAsString, ',')
+  const [filterValues] = useQueryStates({
+    status: parseAsArrayOf(parseAsString, ','),
+    subscription: parseAsArrayOf(parseAsString, ','),
+    plan: parseAsArrayOf(parseAsString, ','),
+    remaining: parseAsArrayOf(parseAsString, ',')
   });
 
   const [isCreateOpen, setIsCreateOpen] = React.useState(false);
@@ -65,7 +69,11 @@ export function RestaurantsView() {
 
   const issueLinkMutation = useIssueSetupLink();
 
-  const selectedStatus = statusValues.status?.[0];
+  const selectedStatus = filterValues.status?.[0];
+  const selectedSubStatus =
+    filterValues.remaining?.[0] ||
+    filterValues.plan?.[0] ||
+    filterValues.subscription?.[0];
   const isValidStatus =
     selectedStatus === 'PENDING' ||
     selectedStatus === 'ACTIVE' ||
@@ -77,12 +85,17 @@ export function RestaurantsView() {
     limit: perPage,
     q: name?.trim() || undefined,
     status: isValidStatus ? selectedStatus : 'ALL',
+    subStatus: selectedSubStatus && selectedSubStatus !== 'ALL' ? selectedSubStatus : undefined,
     sort: sort || undefined
   };
 
   const { data: response, isLoading } = usePlatformRestaurants(filter);
 
-  const restaurants = React.useMemo(() => response?.data ?? [], [response?.data]);
+  const restaurants = React.useMemo(() => {
+    if (Array.isArray(response?.data)) return response.data;
+    if (Array.isArray(response)) return response;
+    return [];
+  }, [response]);
   const meta = response?.meta;
   const totalPages = meta?.totalPages ?? 1;
 
@@ -92,6 +105,9 @@ export function RestaurantsView() {
   const suspendedCount = restaurants.filter(
     (r) => r.status === 'SUSPENDED' || r.status === 'DEACTIVATED'
   ).length;
+  const expiringCount = meta?.subCounts?.expiring ?? 0;
+  const expiredCount = meta?.subCounts?.expired ?? 0;
+  const trialCount = meta?.subCounts?.trial ?? 0;
 
   const handleOpenCreate = React.useCallback(() => {
     setIsCreateOpen(true);
@@ -156,7 +172,11 @@ export function RestaurantsView() {
   );
 
   const handleCopyIssuedLink = React.useCallback(() => {
-    if (issuedLinkData?.setupUrl && typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    if (
+      issuedLinkData?.setupUrl &&
+      typeof navigator !== 'undefined' &&
+      navigator.clipboard?.writeText
+    ) {
       navigator.clipboard.writeText(issuedLinkData.setupUrl);
       toast.success(t('setupLinkCopied'));
     }
@@ -182,7 +202,9 @@ export function RestaurantsView() {
       title: (row) => row.name,
       subtitle: (row) => {
         const owner = row.users?.[0];
-        return owner ? `${owner.name} · ${owner.phone}` : row.contactPhone;
+        return owner
+          ? `${owner.name} · ${formatPkMobile(owner.phone)}`
+          : formatPkMobile(row.contactPhone);
       },
       badge: (row) => ({
         label: row.status === 'PENDING' ? t('statusPending') : row.status,
@@ -214,8 +236,11 @@ export function RestaurantsView() {
             { label: t('colRestaurant'), value: row.name },
             { label: 'Slug', value: `/${row.slug}` },
             { label: 'Address', value: row.addressText || '—' },
-            { label: 'Contact Phone', value: row.contactPhone },
-            { label: 'WhatsApp', value: row.whatsappNumber || '—' },
+            { label: 'Contact Phone', value: formatPkMobile(row.contactPhone) },
+            {
+              label: 'WhatsApp',
+              value: row.whatsappNumber ? formatPkMobile(row.whatsappNumber) : '—'
+            },
             { label: t('colStatus'), value: renderRestaurantStatusBadge(row.status, t) },
             {
               label: t('colCatalog'),
@@ -232,9 +257,9 @@ export function RestaurantsView() {
               value: row.users?.[0]?.phone ? (
                 <a
                   className='text-primary underline-offset-2 hover:underline font-mono'
-                  href={`tel:${row.users[0].phone}`}
+                  href={`tel:${formatPkMobile(row.users[0].phone)}`}
                 >
-                  {row.users[0].phone}
+                  {formatPkMobile(row.users[0].phone)}
                 </a>
               ) : (
                 '—'
@@ -265,10 +290,14 @@ export function RestaurantsView() {
         }
       ],
       actions: (row) => [
-        {
-          label: t('reviewApproval'),
-          onClick: () => handleOpenReview(row)
-        },
+        ...(row.status === 'PENDING'
+          ? [
+              {
+                label: t('reviewApproval'),
+                onClick: () => handleOpenReview(row)
+              }
+            ]
+          : []),
         {
           label: t('extendSub'),
           onClick: () => handleOpenExtend(row)
@@ -309,6 +338,24 @@ export function RestaurantsView() {
       { id: 'all', label: t('filterAll') },
       { id: 'PENDING', label: t('filterPending'), columnId: 'status', value: ['PENDING'] },
       { id: 'ACTIVE', label: t('filterActive'), columnId: 'status', value: ['ACTIVE'] },
+      {
+        id: 'EXPIRING',
+        label: t('filterExpiring'),
+        columnId: 'remaining',
+        value: ['EXPIRING']
+      },
+      {
+        id: 'EXPIRED',
+        label: t('filterExpired'),
+        columnId: 'remaining',
+        value: ['EXPIRED']
+      },
+      {
+        id: 'TRIAL',
+        label: t('filterTrial'),
+        columnId: 'plan',
+        value: ['TRIAL']
+      },
       { id: 'SUSPENDED', label: t('filterSuspended'), columnId: 'status', value: ['SUSPENDED'] }
     ],
     [t]
@@ -336,7 +383,11 @@ export function RestaurantsView() {
           </h1>
           <p className='text-sm text-muted-foreground mt-0.5'>{t('subtitle')}</p>
         </div>
-        <Button type='button' onClick={handleOpenCreate} className='gap-1.5 self-start sm:self-auto'>
+        <Button
+          type='button'
+          onClick={handleOpenCreate}
+          className='gap-1.5 self-start sm:self-auto'
+        >
           <Icons.add className='size-4' />
           {t('addRestaurant')}
         </Button>
@@ -347,6 +398,9 @@ export function RestaurantsView() {
         pendingCount={pendingCount}
         activeCount={activeCount}
         suspendedCount={suspendedCount}
+        expiringCount={expiringCount}
+        expiredCount={expiredCount}
+        trialCount={trialCount}
         t={t}
       />
 

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
+import { formatPkMobile } from '@/lib/auth/phone';
 import { usePlatformActivity, usePlatformRestaurants } from '@/features/platform/api/platform-query';
 import type { SessionUserShape } from '@/types/auth';
 
@@ -194,7 +195,7 @@ export function PlatformOverview() {
                       </div>
                       <p className='text-xs text-muted-foreground'>
                         {owner?.name ? `${t('nav.owner')}: ${owner.name} • ` : ''}
-                        {t('user.phone')}: {restaurant.contactPhone}
+                        {t('user.phone')}: {formatPkMobile(restaurant.contactPhone)}
                         {restaurant.city?.name ? ` • ${restaurant.city.name}` : ''}
                       </p>
                     </div>

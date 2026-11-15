@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { DialogDetailSkeleton } from '@/components/skeletons/dialog-skeleton';
 import { Icons } from '@/components/icons';
 import { IconX } from '@tabler/icons-react';
+import { formatPkMobile } from '@/lib/auth/phone';
 import {
   usePlatformRestaurantDetail,
   useUpdatePlatformRestaurantStatus
@@ -78,7 +79,7 @@ export function ReviewApprovalDialog({
                 <div className='text-xs text-muted-foreground pt-1'>
                   {t('ownerLabel')}{' '}
                   <span className='font-medium text-foreground'>{restaurant.users[0].name}</span> (
-                  {restaurant.users[0].phone})
+                  {formatPkMobile(restaurant.users[0].phone)})
                 </div>
               )}
             </div>
@@ -97,7 +98,7 @@ export function ReviewApprovalDialog({
                       className='bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     >
                       <Icons.check className='me-1 size-3' />
-                      {restaurant.whatsappNumber}
+                      {formatPkMobile(restaurant.whatsappNumber)}
                     </Badge>
                   ) : (
                     <Badge variant='destructive'>{t('prereqMissing')}</Badge>

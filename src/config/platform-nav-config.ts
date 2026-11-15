@@ -26,14 +26,6 @@ export const platformNavGroups: NavGroup[] = [
         items: []
       },
       {
-        title: 'nav.subscriptions',
-        url: '/dashboard/platform/subscriptions',
-        icon: 'creditCard',
-        isActive: false,
-        shortcut: ['p', 's'],
-        items: []
-      },
-      {
         title: 'nav.settings',
         url: '/dashboard/platform/settings',
         icon: 'settings',

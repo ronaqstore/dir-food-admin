@@ -28,14 +28,16 @@ export function MergeAreaDialog({
   const mergeMutation = useMergeMasterArea();
   const [targetAreaId, setTargetAreaId] = React.useState('');
 
+  const safeAreas = React.useMemo(() => (Array.isArray(allAreas) ? allAreas : []), [allAreas]);
+
   const candidateTargetAreas = React.useMemo(() => {
     if (!sourceArea) return [];
-    return allAreas.filter((a) => {
+    return safeAreas.filter((a) => {
       if (a.id === sourceArea.id) return false;
       if (sourceArea.cityId && a.cityId && a.cityId !== sourceArea.cityId) return false;
       return a.isVerified !== false;
     });
-  }, [allAreas, sourceArea]);
+  }, [safeAreas, sourceArea]);
 
   React.useEffect(() => {
     if (open) {
@@ -53,7 +55,7 @@ export function MergeAreaDialog({
       return;
     }
 
-    const targetArea = allAreas.find((a) => a.id === targetAreaId);
+    const targetArea = safeAreas.find((a) => a.id === targetAreaId);
 
     try {
       await mergeMutation.mutateAsync({

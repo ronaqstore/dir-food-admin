@@ -2772,7 +2772,21 @@
     "selectDistrictPlaceholder": "ولسوالی وټاکئ (اصلي: کوز دیر)",
     "searchDistrictPlaceholder": "ولسوالی یا ښار لټول...",
     "cuisinesPlaceholder": "دیسی، کڑاهی، بی بی کیو",
-    "invalidPhone": "د ۱۱ عدده ګرځنده شمیره دننه کړئ (د بیلګې په توګه 03029825213)"
+    "invalidPhone": "د ۱۱ عدده ګرځنده شمیره دننه کړئ (د بیلګې په توګه 03029825213)",
+    "metricActiveBreakdown": "{active} فعال · {pending} تر کتنې لاندې",
+    "metricTrialBreakdown": "{count} آزمایښتي پړاو کې",
+    "metricRenewalAlerts": "د ګډون خبرتیاوې",
+    "metricRenewalBreakdown": "{expiring} پای ته رسېدونکي · {expired} پای ته رسېدلي",
+    "subDaysLeft": "{days} ورځې پاتې",
+    "colPlan": "پلان",
+    "colExpiry": "د پای نېټه",
+    "colDaysLeft": "پاتې ورځې",
+    "trialBadge": "۳۰ ورځې وړیا ازمایښت",
+    "paidBadge": "تادیه شوی پلان",
+    "daysRemaining": "{days} ورځې",
+    "filterExpiring": "ژر ختمېدونکي",
+    "filterExpired": "وخت پوره شوی",
+    "filterTrial": "ازمایښت"
   },
   "platformSubscriptions": {
     "title": "شراکتونه او بیلینګ",

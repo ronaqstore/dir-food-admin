@@ -16,13 +16,15 @@ export function PlatformDistrictsBar({
   totalNeedsReview
 }: PlatformDistrictsBarProps) {
   const t = useTranslations('platformAreas');
+  const safeCities = Array.isArray(cities) ? cities : [];
+  const safeAreas = Array.isArray(allAreas) ? allAreas : [];
   const handleSelectAll = () => {
     onSelectCityId('ALL');
   };
 
   return (
     <div className='flex flex-wrap items-center justify-between gap-2 shrink-0'>
-      {cities.length > 0 && (
+      {safeCities.length > 0 && (
         <div className='flex items-center gap-2 overflow-x-auto pb-1'>
           <span className='text-xs font-medium text-muted-foreground whitespace-nowrap'>{t('districtLabelPlain')}</span>
           <Button
@@ -43,8 +45,8 @@ export function PlatformDistrictsBar({
               {totalAllAreas}
             </span>
           </Button>
-          {cities.map((c) => {
-            const count = allAreas.filter((a) => a.cityId === c.id).length;
+          {safeCities.map((c) => {
+            const count = safeAreas.filter((a) => a.cityId === c.id).length;
             const isSelected = selectedCityId === c.id;
             return (
               <Button

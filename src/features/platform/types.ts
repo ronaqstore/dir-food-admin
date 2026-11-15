@@ -1,3 +1,5 @@
+import type { useTranslations } from 'next-intl';
+
 export type PlatformRestaurantStatus = 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED';
 
 export interface PlatformOwnerUser {
@@ -298,12 +300,6 @@ export interface StatusChangeDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export interface AnalyzedRestaurant extends PlatformRestaurant {
-  subStatus: 'NEVER' | 'ACTIVE' | 'EXPIRING' | 'EXPIRED';
-  daysLeft: number;
-  isTrial: boolean;
-}
-
 export interface RestaurantSubscriptionTarget {
   id: string;
   name: string;
@@ -355,17 +351,26 @@ export interface IssuedSetupLinkDialogProps {
   t: (key: string) => string;
 }
 
+export interface MasterAreasEnvelope {
+  data?: MasterArea[];
+}
+
+export interface PlatformCitiesEnvelope {
+  data?: PlatformCity[];
+}
+
+export type PlatformTranslator = ReturnType<typeof useTranslations>;
+
 export interface PlatformRestaurantsMetricsProps {
   totalCount: number;
   pendingCount: number;
   activeCount: number;
   suspendedCount: number;
-  t: (key: string) => string;
+  expiringCount?: number;
+  expiredCount?: number;
+  trialCount?: number;
+  t: PlatformTranslator;
 }
-
-import type { useTranslations } from 'next-intl';
-
-export type PlatformTranslator = ReturnType<typeof useTranslations>;
 
 export interface UseRestaurantColumnsOptions {
   currentTimestamp: number | null;

@@ -2772,7 +2772,21 @@
     "selectDistrictPlaceholder": "Select District (Default: Lower Dir)",
     "searchDistrictPlaceholder": "Search district or city...",
     "cuisinesPlaceholder": "Desi, Karahi, BBQ",
-    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)"
+    "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)",
+    "metricActiveBreakdown": "{active} active · {pending} pending",
+    "metricTrialBreakdown": "{count} on 30-day trial",
+    "metricRenewalAlerts": "Subscription Alerts",
+    "metricRenewalBreakdown": "{expiring} expiring · {expired} expired",
+    "subDaysLeft": "{days}d left",
+    "colPlan": "Plan / Term",
+    "colExpiry": "Expiry Date",
+    "colDaysLeft": "Remaining",
+    "trialBadge": "30-Day Free Trial",
+    "paidBadge": "Paid Term",
+    "daysRemaining": "{days} days",
+    "filterExpiring": "Expiring Soon",
+    "filterExpired": "Expired",
+    "filterTrial": "Trial"
   },
   "platformSubscriptions": {
     "title": "Subscriptions & Billing",

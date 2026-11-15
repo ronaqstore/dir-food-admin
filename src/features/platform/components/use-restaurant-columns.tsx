@@ -3,10 +3,10 @@
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { RowActionsMenu } from '@/components/common/row-actions-menu';
 import { Icons } from '@/components/icons';
+import { formatPkMobile } from '@/lib/auth/phone';
 import type {
   PlatformRestaurant,
   PlatformRestaurantStatus,
@@ -55,7 +55,7 @@ export function renderRestaurantStatusBadge(
   }
 }
 
-export function renderRestaurantSubscriptionBadge(
+export function renderRestaurantPlanBadge(
   restaurant: PlatformRestaurant,
   currentTimestamp: number | null,
   t: PlatformTranslator
@@ -65,38 +65,84 @@ export function renderRestaurantSubscriptionBadge(
   }
 
   const endsAt = restaurant.subscriptionEndsAt ? new Date(restaurant.subscriptionEndsAt) : null;
+  let daysLeft = 0;
+  if (endsAt && currentTimestamp) {
+    const diffMs = endsAt.getTime() - currentTimestamp;
+    daysLeft = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+  }
+
+  const isTrial = Boolean(
+    restaurant.trialStartedAt && daysLeft > 0 && restaurant.status === 'ACTIVE'
+  );
+
+  return isTrial ? (
+    <Badge
+      variant='outline'
+      className='border-primary/40 bg-primary/10 text-primary text-[11px] font-medium'
+    >
+      {t('trialBadge')}
+    </Badge>
+  ) : (
+    <Badge variant='secondary' className='text-[11px] font-medium'>
+      {t('paidBadge')}
+    </Badge>
+  );
+}
+
+export function renderRestaurantRemainingBadge(
+  restaurant: PlatformRestaurant,
+  currentTimestamp: number | null,
+  t: PlatformTranslator
+): React.ReactNode {
+  if (!restaurant.trialStartedAt) {
+    return <span className='text-xs text-muted-foreground'>—</span>;
+  }
+
+  const endsAt = restaurant.subscriptionEndsAt ? new Date(restaurant.subscriptionEndsAt) : null;
   const isExpired = endsAt && currentTimestamp ? endsAt.getTime() <= currentTimestamp : false;
+  let daysLeft = 0;
+  if (endsAt && currentTimestamp) {
+    const diffMs = endsAt.getTime() - currentTimestamp;
+    daysLeft = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+  }
 
   if (isExpired) {
     return (
-      <div className='flex flex-col'>
-        <Badge variant='destructive' className='w-fit text-[10px] py-0'>
-          {t('subExpired')}
-        </Badge>
-        {endsAt && (
-          <span className='text-[10px] text-muted-foreground font-mono mt-0.5'>
-            {endsAt.toLocaleDateString()}
-          </span>
-        )}
-      </div>
+      <Badge variant='destructive' className='text-[11px] font-medium'>
+        {t('subExpired')}
+      </Badge>
+    );
+  }
+
+  if (daysLeft <= 7) {
+    return (
+      <Badge
+        variant='outline'
+        className='border-amber-500/40 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[11px] font-medium'
+      >
+        <Icons.clock className='me-1 size-3' />
+        {t('daysRemaining', { days: daysLeft })}
+      </Badge>
     );
   }
 
   return (
-    <div className='flex flex-col'>
-      <Badge
-        variant='secondary'
-        className='w-fit text-[10px] py-0 bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-      >
-        {t('subValid')}
-      </Badge>
-      {endsAt && (
-        <span className='text-[10px] text-muted-foreground font-mono mt-0.5'>
-          {t('subExpiresOn', { date: endsAt.toLocaleDateString() })}
-        </span>
-      )}
-    </div>
+    <Badge
+      variant='secondary'
+      className='bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[11px] font-medium'
+    >
+      <Icons.circleCheck className='me-1 size-3' />
+      {t('daysRemaining', { days: daysLeft })}
+    </Badge>
   );
+}
+
+export function renderRestaurantSubscriptionBadge(
+  restaurant: PlatformRestaurant,
+  currentTimestamp: number | null,
+  t: PlatformTranslator
+): React.ReactNode {
+  return renderRestaurantRemainingBadge(restaurant, currentTimestamp, t);
 }
 
 export function useRestaurantColumns({
@@ -112,9 +158,15 @@ export function useRestaurantColumns({
     [t]
   );
 
-  const renderSubscriptionBadge = React.useCallback(
+  const renderPlanBadge = React.useCallback(
     (restaurant: PlatformRestaurant) =>
-      renderRestaurantSubscriptionBadge(restaurant, currentTimestamp, t),
+      renderRestaurantPlanBadge(restaurant, currentTimestamp, t),
+    [currentTimestamp, t]
+  );
+
+  const renderRemainingBadge = React.useCallback(
+    (restaurant: PlatformRestaurant) =>
+      renderRestaurantRemainingBadge(restaurant, currentTimestamp, t),
     [currentTimestamp, t]
   );
 
@@ -162,11 +214,13 @@ export function useRestaurantColumns({
           return owner ? (
             <div>
               <div className='font-medium text-foreground text-xs'>{owner.name}</div>
-              <div className='font-mono text-xs text-muted-foreground'>{owner.phone}</div>
+              <div className='font-mono text-xs text-muted-foreground'>
+                {formatPkMobile(owner.phone)}
+              </div>
             </div>
           ) : (
             <span className='text-xs text-muted-foreground font-mono'>
-              {restaurant.contactPhone}
+              {formatPkMobile(restaurant.contactPhone)}
             </span>
           );
         },
@@ -180,7 +234,7 @@ export function useRestaurantColumns({
         cell: ({ row }) => {
           const counts = row.original._count;
           return (
-            <div className='text-xs text-muted-foreground space-y-0.5'>
+            <div className='text-xs text-muted-foreground space-y-0.5 whitespace-nowrap'>
               <div>
                 <span className='font-semibold text-foreground'>
                   {t('prereqItemsCount', { count: counts?.items ?? 0 })}
@@ -197,13 +251,59 @@ export function useRestaurantColumns({
         meta: { label: t('colCatalog'), type: 'text', priority: 3 }
       },
       {
-        id: 'subscription',
+        id: 'plan',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('colPlan')} />
+        ),
+        cell: ({ row }) => renderPlanBadge(row.original),
+        meta: {
+          label: t('colPlan'),
+          variant: 'multiSelect',
+          options: [
+            { label: t('trialBadge'), value: 'TRIAL' },
+            { label: t('paidBadge'), value: 'PAID' }
+          ],
+          type: 'status',
+          priority: 2
+        },
+        enableColumnFilter: true
+      },
+      {
+        id: 'expiry',
         accessorKey: 'subscriptionEndsAt',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t('colSubscription')} />
+          <DataTableColumnHeader column={column} title={t('colExpiry')} />
         ),
-        cell: ({ row }) => renderSubscriptionBadge(row.original),
-        meta: { label: t('colSubscription'), type: 'date', priority: 2 }
+        cell: ({ row }) => {
+          const endsAt = row.original.subscriptionEndsAt
+            ? new Date(row.original.subscriptionEndsAt)
+            : null;
+          return (
+            <span className='text-xs font-mono text-muted-foreground whitespace-nowrap'>
+              {endsAt ? endsAt.toLocaleDateString() : '—'}
+            </span>
+          );
+        },
+        meta: { label: t('colExpiry'), type: 'date', priority: 3 }
+      },
+      {
+        id: 'remaining',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('colDaysLeft')} />
+        ),
+        cell: ({ row }) => renderRemainingBadge(row.original),
+        meta: {
+          label: t('colDaysLeft'),
+          variant: 'multiSelect',
+          options: [
+            { label: t('filterActive'), value: 'ACTIVE' },
+            { label: t('filterExpiring'), value: 'EXPIRING' },
+            { label: t('filterExpired'), value: 'EXPIRED' }
+          ],
+          type: 'status',
+          priority: 2
+        },
+        enableColumnFilter: true
       },
       {
         id: 'status',
@@ -228,7 +328,7 @@ export function useRestaurantColumns({
       },
       {
         id: 'actions',
-        size: 160,
+        size: 50,
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
@@ -242,34 +342,22 @@ export function useRestaurantColumns({
           const isActive = restaurant.status === 'ACTIVE';
           const isSuspended = restaurant.status === 'SUSPENDED';
 
-          const handleQuickReview = (e: React.MouseEvent) => {
-            e.stopPropagation();
-            onReview(restaurant);
-          };
-
           return (
             <div
-              className='flex items-center justify-end gap-1.5'
+              className='flex items-center justify-end'
               onClick={(e) => e.stopPropagation()}
             >
-              {isPending && (
-                <Button
-                  type='button'
-                  size='sm'
-                  className='h-7 bg-amber-600 hover:bg-amber-700 text-white gap-1 text-xs px-2'
-                  onClick={handleQuickReview}
-                >
-                  <Icons.check className='size-3' />
-                  {t('reviewApproval')}
-                </Button>
-              )}
               <RowActionsMenu
                 actions={[
-                  {
-                    label: t('reviewApproval'),
-                    icon: Icons.eye,
-                    onClick: () => onReview(restaurant)
-                  },
+                  ...(isPending
+                    ? [
+                        {
+                          label: t('reviewApproval'),
+                          icon: Icons.check,
+                          onClick: () => onReview(restaurant)
+                        }
+                      ]
+                    : []),
                   {
                     label: t('extendSub'),
                     icon: Icons.creditCard,
@@ -314,8 +402,9 @@ export function useRestaurantColumns({
       onExtend,
       onReview,
       onChangeStatus,
+      renderPlanBadge,
+      renderRemainingBadge,
       renderStatusBadge,
-      renderSubscriptionBadge,
       t
     ]
   );

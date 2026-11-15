@@ -2772,7 +2772,21 @@
     "selectDistrictPlaceholder": "Zila muntakhab karein (Default: Lower Dir)",
     "searchDistrictPlaceholder": "Zila ya shehar talash karein...",
     "cuisinesPlaceholder": "Desi, Karahi, BBQ",
-    "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)"
+    "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)",
+    "metricActiveBreakdown": "{active} active · {pending} pending",
+    "metricTrialBreakdown": "{count} 30-day trial par",
+    "metricRenewalAlerts": "Subscription Alerts",
+    "metricRenewalBreakdown": "{expiring} khatam honay walay · {expired} expired",
+    "subDaysLeft": "{days}d baqi",
+    "colPlan": "Plan / Term",
+    "colExpiry": "Expiry Date",
+    "colDaysLeft": "Remaining",
+    "trialBadge": "30-Day Free Trial",
+    "paidBadge": "Paid Term",
+    "daysRemaining": "{days} days",
+    "filterExpiring": "Expiring Soon",
+    "filterExpired": "Expired",
+    "filterTrial": "Trial"
   },
   "platformSubscriptions": {
     "title": "Subscriptions & Billing",

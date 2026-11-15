@@ -110,6 +110,8 @@ export interface RowAction {
 
 export interface RowActionsMenuProps {
   actions: RowAction[];
+  className?: string;
+  contentClassName?: string;
 }
 
 export interface ErrorContentProps {

@@ -32,7 +32,7 @@ import { MergeAreaDialog } from './merge-area-dialog';
 import { AddDistrictDialog } from './add-district-dialog';
 import { PlatformDistrictsBar } from './platform-districts-bar';
 import { PlatformAreasMetrics } from './platform-areas-metrics';
-import type { MasterArea } from '../types';
+import type { MasterArea, MasterAreasEnvelope, PlatformCitiesEnvelope } from '../types';
 
 export function PlatformSettingsView() {
   const t = useTranslations('platformAreas');
@@ -55,10 +55,20 @@ export function PlatformSettingsView() {
   const [selectedCityId, setSelectedCityId] = React.useState<string>('ALL');
   const [isAddCityOpen, setIsAddCityOpen] = React.useState(false);
 
-  const { data: cities = [] } = usePlatformCities();
-  const { data: allAreas = [], isLoading } = useMasterAreas();
+  const { data: rawCities = [] } = usePlatformCities();
+  const { data: rawAllAreas = [], isLoading } = useMasterAreas();
   const updateMutation = useUpdateMasterArea();
   const deleteMutation = useDeleteMasterArea();
+
+  const cities = React.useMemo(() => {
+    if (Array.isArray(rawCities)) return rawCities;
+    return (rawCities as PlatformCitiesEnvelope)?.data ?? [];
+  }, [rawCities]);
+
+  const allAreas = React.useMemo(() => {
+    if (Array.isArray(rawAllAreas)) return rawAllAreas;
+    return (rawAllAreas as MasterAreasEnvelope)?.data ?? [];
+  }, [rawAllAreas]);
 
   const { data: paginatedData, isLoading: isTableLoading } = usePaginatedMasterAreas({
     page,
@@ -69,7 +79,12 @@ export function PlatformSettingsView() {
     sort: sort || undefined
   });
 
-  const tableAreas = paginatedData?.data ?? [];
+  const tableAreas = React.useMemo(() => {
+    if (Array.isArray(paginatedData?.data)) return paginatedData.data;
+    if (Array.isArray(paginatedData)) return paginatedData;
+    return [];
+  }, [paginatedData]);
+
   const meta = paginatedData?.meta;
   const pageCount = meta?.totalPages ?? 1;
   const rowCount = meta?.total ?? 0;
@@ -202,21 +217,15 @@ export function PlatformSettingsView() {
       {
         id: 'sortOrder',
         accessorKey: 'sortOrder',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t('colSort')} />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('colSort')} />,
         cell: ({ row }) => (
-          <span className='font-mono text-xs text-muted-foreground'>
-            {row.original.sortOrder}
-          </span>
+          <span className='font-mono text-xs text-muted-foreground'>{row.original.sortOrder}</span>
         ),
         meta: { label: t('colSort'), type: 'number', priority: 3 }
       },
       {
         id: 'restaurants',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t('colRestaurants')} />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('colRestaurants')} />,
         cell: ({ row }) => (
           <Badge variant='outline' className='text-[11px] font-medium'>
             {t('restaurantsCount', { count: row.original.activeRestaurantsCount || 0 })}
@@ -226,16 +235,11 @@ export function PlatformSettingsView() {
       },
       {
         id: 'status',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t('colStatus')} />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('colStatus')} />,
         cell: ({ row }) => {
           const area = row.original;
           return (
-            <div
-              className='flex items-center gap-2'
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className='flex items-center gap-2' onClick={(e) => e.stopPropagation()}>
               <Switch
                 checked={area.isActive}
                 onCheckedChange={() => handleToggleActive(area)}
@@ -352,31 +356,18 @@ export function PlatformSettingsView() {
             { label: t('colName'), value: row.name },
             { label: t('colSlug'), value: `/${row.slug}` },
             { label: t('colSort'), value: String(row.sortOrder) },
-            {
-              label: t('colRestaurants'),
-              value: t('restaurantsCount', { count: row.activeRestaurantsCount || 0 })
-            },
-            {
-              label: t('colStatus'),
-              value: row.isActive ? t('active') : t('inactive')
-            }
+            { label: t('colRestaurants'), value: t('restaurantsCount', { count: row.activeRestaurantsCount || 0 }) },
+            { label: t('colStatus'), value: row.isActive ? t('active') : t('inactive') }
           ]
         }
       ],
-      actions: (row) => [
-        {
-          label: t('editArea'),
-          onClick: () => handleOpenEdit(row)
-        }
-      ]
+      actions: (row) => [{ label: t('editArea'), onClick: () => handleOpenEdit(row) }]
     }),
     [handleOpenEdit, t]
   );
 
   const areaQuickFilters = React.useMemo<QuickFilterChip[]>(
-    () => [
-      { id: 'all', label: t('metricTotal') }
-    ],
+    () => [{ id: 'all', label: t('metricTotal') }],
     [t]
   );
 

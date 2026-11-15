@@ -22,7 +22,8 @@ import type { MasterAreaDialogProps } from '../types';
 
 export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: MasterAreaDialogProps) {
   const t = useTranslations('platformAreas');
-  const { data: cities = [] } = usePlatformCities();
+  const { data: rawCities = [] } = usePlatformCities();
+  const cities = React.useMemo(() => (Array.isArray(rawCities) ? rawCities : []), [rawCities]);
   const createMutation = useCreateMasterArea();
   const updateMutation = useUpdateMasterArea();
 

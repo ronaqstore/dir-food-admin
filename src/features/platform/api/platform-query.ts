@@ -20,7 +20,9 @@ import type {
   MutationSuccessResponse,
   ApproveMasterAreaPayload,
   MergeMasterAreaPayload,
-  PlatformActivitySummary
+  PlatformActivitySummary,
+  MasterAreasEnvelope,
+  PlatformCitiesEnvelope
 } from '../types';
 
 export type { PlatformActivitySummary };
@@ -66,7 +68,24 @@ export function usePlatformRestaurants(filter?: QueryRestaurantsFilter) {
       filter?.sortBy,
       filter?.sortOrder
     ],
-    queryFn: () => appFetch<PaginatedRestaurantsResponse>(`/api/admin/restaurants${qs}`)
+    queryFn: async () => {
+      const res = await appFetch<PaginatedRestaurantsResponse | PlatformRestaurant[]>(`/api/admin/restaurants${qs}`);
+      if (res && 'data' in res && Array.isArray(res.data)) {
+        return res as PaginatedRestaurantsResponse;
+      }
+      if (Array.isArray(res)) {
+        return {
+          data: res,
+          meta: {
+            page: filter?.page ?? 1,
+            limit: filter?.limit ?? 10,
+            total: res.length,
+            totalPages: Math.max(1, Math.ceil(res.length / (filter?.limit ?? 10)))
+          }
+        } as PaginatedRestaurantsResponse;
+      }
+      return { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 1 } };
+    }
   });
 }
 
@@ -141,7 +160,12 @@ export const PLATFORM_CITIES_QUERY_KEY = ['platform-cities'] as const;
 export function usePlatformCities() {
   return useQuery({
     queryKey: PLATFORM_CITIES_QUERY_KEY,
-    queryFn: () => appFetch<PlatformCity[]>('/api/admin/cities')
+    queryFn: async () => {
+      const res = await appFetch<PlatformCity[] | PlatformCitiesEnvelope>('/api/admin/cities');
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.data)) return res.data;
+      return [] as PlatformCity[];
+    }
   });
 }
 
@@ -166,8 +190,14 @@ export const MASTER_AREAS_QUERY_KEY = ['master-areas'] as const;
 export function useMasterAreas(cityId?: string) {
   return useQuery({
     queryKey: [...MASTER_AREAS_QUERY_KEY, cityId],
-    queryFn: () =>
-      appFetch<MasterArea[]>(`/api/admin/areas${cityId ? `?cityId=${encodeURIComponent(cityId)}` : ''}`)
+    queryFn: async () => {
+      const res = await appFetch<MasterArea[] | MasterAreasEnvelope>(
+        `/api/admin/areas${cityId ? `?cityId=${encodeURIComponent(cityId)}` : ''}`
+      );
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.data)) return res.data;
+      return [] as MasterArea[];
+    }
   });
 }
 
@@ -207,7 +237,24 @@ export function usePaginatedMasterAreas(filter?: QueryAreasFilter) {
       filter?.sortBy,
       filter?.sortOrder
     ],
-    queryFn: () => appFetch<PaginatedAreasResponse>(`/api/admin/areas${qs}`)
+    queryFn: async () => {
+      const res = await appFetch<PaginatedAreasResponse | MasterArea[]>(`/api/admin/areas${qs}`);
+      if (res && 'data' in res && Array.isArray(res.data)) {
+        return res as PaginatedAreasResponse;
+      }
+      if (Array.isArray(res)) {
+        return {
+          data: res,
+          meta: {
+            page: filter?.page ?? 1,
+            limit: filter?.limit ?? 20,
+            total: res.length,
+            totalPages: Math.max(1, Math.ceil(res.length / (filter?.limit ?? 20)))
+          }
+        } as PaginatedAreasResponse;
+      }
+      return { data: [], meta: { page: 1, limit: 20, total: 0, totalPages: 1 } };
+    }
   });
 }
 
