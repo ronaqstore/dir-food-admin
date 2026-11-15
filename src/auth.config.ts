@@ -38,6 +38,10 @@ export const authConfig = {
         loginType: {
           label: 'Login Type',
           type: 'text'
+        },
+        rememberMe: {
+          label: 'Remember Me',
+          type: 'text'
         }
       },
       async authorize(rawCredentials) {
@@ -47,6 +51,7 @@ export const authConfig = {
         const password = typeof credentials?.password === 'string' ? credentials.password : '';
         const loginType =
           typeof credentials?.loginType === 'string' ? credentials.loginType : 'owner';
+        const rememberMe = credentials?.rememberMe === 'true' || credentials?.rememberMe === true;
 
         if (!rawIdentifier || !password) {
           return null;
@@ -65,7 +70,8 @@ export const authConfig = {
                 method: 'POST',
                 body: JSON.stringify({
                   phone: normalized,
-                  password
+                  password,
+                  rememberMe
                 })
               }
             );
@@ -94,7 +100,8 @@ export const authConfig = {
             method: 'POST',
             body: JSON.stringify({
               phone: normalized,
-              password
+              password,
+              rememberMe
             })
           });
 
@@ -122,7 +129,8 @@ export const authConfig = {
     signIn: '/login'
   },
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -151,12 +159,25 @@ export const authConfig = {
 
       if (typedToken.accessTokenExpiresAt && Date.now() >= typedToken.accessTokenExpiresAt) {
         delete typedToken.accessToken;
+        delete typedToken.sub;
       }
 
       return typedToken;
     },
     async session({ session, token }) {
       const typedToken = token as JwtTokenShape;
+
+      if (
+        !typedToken.accessToken ||
+        (typedToken.accessTokenExpiresAt && Date.now() >= typedToken.accessTokenExpiresAt)
+      ) {
+        return {
+          ...session,
+          user: undefined,
+          accessToken: undefined,
+          expires: new Date(0).toISOString()
+        };
+      }
 
       if (session.user) {
         const sessionUser = session.user as SessionUserShape;
@@ -173,9 +194,7 @@ export const authConfig = {
           typeof typedToken.picture === 'string' ? typedToken.picture : undefined;
       }
 
-      if (typeof typedToken.accessToken === 'string') {
-        session.accessToken = typedToken.accessToken;
-      }
+      session.accessToken = typedToken.accessToken;
 
       return session;
     }

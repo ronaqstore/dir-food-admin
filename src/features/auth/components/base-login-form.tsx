@@ -25,7 +25,8 @@ export function BaseLoginForm({
   const form = useAppForm({
     defaultValues: {
       phone: '',
-      password: ''
+      password: '',
+      rememberMe: false
     } as LoginValues,
     validators: {
       onSubmit: loginSchema
@@ -85,6 +86,12 @@ export function BaseLoginForm({
                   startIcon={Icons.lock}
                   required
                 />
+              )}
+            />
+            <form.AppField
+              name='rememberMe'
+              children={(field) => (
+                <field.CheckboxField label={t('auth.rememberMe')} />
               )}
             />
           </FieldGroup>

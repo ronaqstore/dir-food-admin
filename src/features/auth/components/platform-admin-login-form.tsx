@@ -16,6 +16,7 @@ export function PlatformAdminLoginForm() {
       identifier: values.phone.trim(),
       password: values.password,
       loginType: 'platform-admin',
+      rememberMe: values.rememberMe ? 'true' : 'false',
       redirect: false
     });
 

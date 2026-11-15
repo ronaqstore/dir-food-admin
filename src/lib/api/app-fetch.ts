@@ -1,5 +1,6 @@
 import { ApiError, extractErrorInfo, type ApiResponseBodyError } from '@/lib/api/types';
 import { APP_BASE_URL } from '@/constants/api';
+import { handleUnauthorizedLogout } from '@/lib/auth/session-utils';
 
 export async function appFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const url = path.startsWith('http') ? path : `${APP_BASE_URL}${path}`;
@@ -30,6 +31,9 @@ export async function appFetch<T>(path: string, init?: RequestInit): Promise<T> 
   }
 
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== 'undefined') {
+      handleUnauthorizedLogout();
+    }
     const fallback =
       text && !text.startsWith('{') && !text.startsWith('<')
         ? text

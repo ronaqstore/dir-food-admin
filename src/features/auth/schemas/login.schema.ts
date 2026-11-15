@@ -7,6 +7,7 @@ export function createLoginSchema(t: (key: string) => string, minPasswordLength 
       .string()
       .min(1, t('auth.phoneRequired'))
       .refine(isValidPkMobile, t('auth.phoneInvalid')),
-    password: z.string().min(minPasswordLength, t('auth.passwordRequired'))
+    password: z.string().min(minPasswordLength, t('auth.passwordRequired')),
+    rememberMe: z.boolean().optional()
   });
 }

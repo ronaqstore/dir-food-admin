@@ -25,6 +25,7 @@ export interface AuthorizeCredentials {
   identifier?: string;
   password?: string;
   loginType?: 'owner' | 'platform-admin';
+  rememberMe?: string | boolean;
 }
 
 export type AuthenticatedUser = AuthAccount;
@@ -68,6 +69,7 @@ export type AuthenticatedNextRequest = NextRequest & {
 export interface LoginValues {
   phone: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface BaseLoginFormProps {

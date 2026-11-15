@@ -935,6 +935,7 @@
     "welcomeBack": "Welcome back",
     "signIn": "Sign in",
     "signOut": "Sign out",
+    "rememberMe": "Remember me",
     "signInHint": "Sign in with your restaurant mobile number and password.",
     "ownerLoginPrompt": "Restaurant owner?",
     "setupPasswordPageTitle": "Account Setup",

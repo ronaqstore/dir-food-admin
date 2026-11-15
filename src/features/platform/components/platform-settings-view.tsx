@@ -62,12 +62,14 @@ export function PlatformSettingsView() {
 
   const cities = React.useMemo(() => {
     if (Array.isArray(rawCities)) return rawCities;
-    return (rawCities as PlatformCitiesEnvelope)?.data ?? [];
+    const items = (rawCities as PlatformCitiesEnvelope)?.data;
+    return Array.isArray(items) ? items : [];
   }, [rawCities]);
 
   const allAreas = React.useMemo(() => {
     if (Array.isArray(rawAllAreas)) return rawAllAreas;
-    return (rawAllAreas as MasterAreasEnvelope)?.data ?? [];
+    const items = (rawAllAreas as MasterAreasEnvelope)?.data;
+    return Array.isArray(items) ? items : [];
   }, [rawAllAreas]);
 
   const { data: paginatedData, isLoading: isTableLoading } = usePaginatedMasterAreas({

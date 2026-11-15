@@ -4,10 +4,18 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 import { cookies } from 'next/headers';
-import { getTranslations } from 'next-intl/server';
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
+import { getLocale, getTranslations } from 'next-intl/server';
 import type { DashboardLayoutProps } from '@/types';
 
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
+  const session = await auth();
+  if (!session?.user || !session?.accessToken) {
+    const locale = await getLocale();
+    redirect(`/${locale}/login`);
+  }
+
   const cookieStore = await cookies();
   const t = await getTranslations();
   const defaultOpen = cookieStore.get('sidebar_state')?.value !== 'false';

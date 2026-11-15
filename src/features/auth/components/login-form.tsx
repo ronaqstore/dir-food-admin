@@ -25,6 +25,7 @@ export function LoginForm() {
       identifier: normalizePhone(values.phone),
       password: values.password,
       loginType: 'owner',
+      rememberMe: values.rememberMe ? 'true' : 'false',
       redirect: false
     });
 
