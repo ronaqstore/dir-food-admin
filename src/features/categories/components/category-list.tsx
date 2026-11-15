@@ -33,7 +33,7 @@ export function CategoryList() {
   const t = useTranslations();
   const [search, setSearch] = React.useState('');
   const debouncedSearch = React.useDeferredValue(search.trim());
-  const [statusFilter, setStatusFilter] = React.useState<'all' | 'active' | 'inactive'>('all');
+  const [statusFilter, setStatusFilter] = React.useState<'active' | 'inactive'>('active');
   const [sortBy, setSortBy] = React.useState('default');
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
@@ -64,12 +64,7 @@ export function CategoryList() {
     refetch
   } = usePaginatedCategories({
     search: debouncedSearch || undefined,
-    isActive:
-      statusFilter === 'active'
-        ? true
-        : statusFilter === 'inactive'
-          ? false
-          : undefined,
+    isActive: statusFilter === 'active',
     page,
     limit: pageSize,
     sortBy: backendSortBy,
@@ -84,7 +79,7 @@ export function CategoryList() {
   const totalCategories = meta.total;
 
   const canReorder =
-    !debouncedSearch && statusFilter === 'all' && sortBy === 'default' && page === 1;
+    !debouncedSearch && statusFilter === 'active' && sortBy === 'default' && page === 1;
 
   const handleOpenCreate = () => {
     setSelectedCategory(null);
@@ -97,7 +92,7 @@ export function CategoryList() {
   };
 
   const handleStatusFilterChange = React.useCallback((val: string) => {
-    setStatusFilter(val as 'all' | 'active' | 'inactive');
+    setStatusFilter(val as 'active' | 'inactive');
     setPage(1);
   }, []);
 
@@ -192,9 +187,6 @@ export function CategoryList() {
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border bg-card p-3 min-w-0'>
         <Tabs value={statusFilter} onValueChange={handleStatusFilterChange}>
           <TabsList className='h-8'>
-            <TabsTrigger value='all' className='text-xs h-7 px-3'>
-              {t('menuItems.statusAll')}
-            </TabsTrigger>
             <TabsTrigger value='active' className='text-xs h-7 px-3'>
               {t('menuCategories.active')}
             </TabsTrigger>
