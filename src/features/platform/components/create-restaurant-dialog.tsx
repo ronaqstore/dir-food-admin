@@ -167,7 +167,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                   value={setupLink}
                   className='font-mono text-xs bg-background'
                 />
-                <Button type='button' size='sm' onClick={handleCopyLink} className='shrink-0 gap-1'>
+                <Button type='button' onClick={handleCopyLink} className='shrink-0 gap-1'>
                   <Icons.clipboard className='size-4' />
                   {t('copyLink')}
                 </Button>
@@ -337,7 +337,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
                 variant='outline'
                 onClick={() => onOpenChange(false)}
                 disabled={createMutation.isPending}
-                className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+                className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
               >
                 <IconX className='size-4' />
                 <span>{t('cancel')}</span>
@@ -345,7 +345,7 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
               <Button
                 type='submit'
                 disabled={createMutation.isPending}
-                className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+                className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
               >
                 <IconPlus className='size-4' />
                 <span>{t('addRestaurant')}</span>

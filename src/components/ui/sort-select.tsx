@@ -26,7 +26,7 @@ export function SortSelect({
   value,
   onValueChange,
   options,
-  className = 'h-8 w-[9rem] text-xs [&[data-size]]:h-8 bg-card'
+  className = 'h-9 w-[9.5rem] text-xs [&[data-size]]:h-9 bg-card'
 }: SortSelectProps) {
   const t = useTranslations('table');
   const activeOptions = options ?? [

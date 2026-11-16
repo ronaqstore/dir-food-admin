@@ -110,7 +110,8 @@ export async function proxyToBackend(
     !options?.rawResponse &&
     responseBody &&
     typeof responseBody === 'object' &&
-    'data' in responseBody
+    'data' in responseBody &&
+    !('meta' in responseBody)
       ? responseBody.data
       : responseBody;
 

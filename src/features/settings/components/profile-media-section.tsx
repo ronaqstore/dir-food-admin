@@ -79,10 +79,9 @@ export function ProfileMediaSection({
               <Button
                 type='button'
                 variant='outline'
-                size='sm'
                 onClick={handleLogoClick}
                 disabled={isPending}
-                className='gap-1.5 h-8 text-xs'
+                className='gap-1.5 h-9 text-xs'
               >
                 <IconUpload className='size-3.5' />
                 <span>
@@ -95,10 +94,9 @@ export function ProfileMediaSection({
                 <Button
                   type='button'
                   variant='ghost'
-                  size='sm'
                   onClick={handleDeleteLogo}
                   disabled={isPending}
-                  className='h-8 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5 justify-start'
+                  className='h-9 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5 justify-start'
                 >
                   <IconTrash className='size-3.5' />
                   <span>{t('restaurantSettings.removePhoto')}</span>
@@ -136,10 +134,9 @@ export function ProfileMediaSection({
               <Button
                 type='button'
                 variant='outline'
-                size='sm'
                 onClick={handleCoverClick}
                 disabled={isPending}
-                className='gap-1.5 h-8 text-xs'
+                className='gap-1.5 h-9 text-xs'
               >
                 <IconUpload className='size-3.5' />
                 <span>
@@ -152,10 +149,9 @@ export function ProfileMediaSection({
                 <Button
                   type='button'
                   variant='ghost'
-                  size='sm'
                   onClick={handleDeleteCover}
                   disabled={isPending}
-                  className='h-8 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5 justify-start'
+                  className='h-9 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5 justify-start'
                 >
                   <IconTrash className='size-3.5' />
                   <span>{t('restaurantSettings.removePhoto')}</span>

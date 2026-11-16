@@ -67,7 +67,7 @@ export function MenuItemImageField({
               size='sm'
               onClick={() => fileInputRef.current?.click()}
               disabled={isPending}
-              className='h-8 gap-1.5 rounded-lg text-xs font-medium shadow-2xs'
+              className='h-9 gap-1.5 rounded-lg text-xs font-medium shadow-2xs'
             >
               <IconUpload className='size-3.5' />
               <span>
@@ -78,10 +78,9 @@ export function MenuItemImageField({
               <Button
                 type='button'
                 variant='ghost'
-                size='sm'
                 onClick={onRemovePhoto}
                 disabled={isPending}
-                className='h-8 gap-1 rounded-lg text-xs text-destructive hover:bg-destructive/10 hover:text-destructive'
+                className='h-9 gap-1 rounded-lg text-xs text-destructive hover:bg-destructive/10 hover:text-destructive'
               >
                 <IconTrash className='size-3.5' />
                 <span>{t('menuItems.removeImage')}</span>

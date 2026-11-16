@@ -141,7 +141,7 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('common.cancel')}</span>
@@ -149,7 +149,7 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
             <Button
               type='submit'
               disabled={isPending || !name.trim()}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               {isEditing ? (
                 <>

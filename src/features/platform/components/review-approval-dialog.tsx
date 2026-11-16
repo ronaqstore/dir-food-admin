@@ -177,7 +177,7 @@ export function ReviewApprovalDialog({
                 variant='outline'
                 onClick={() => onOpenChange(false)}
                 disabled={statusMutation.isPending}
-                className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+                className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
               >
                 <IconX className='size-4' />
                 <span>{t('cancel')}</span>

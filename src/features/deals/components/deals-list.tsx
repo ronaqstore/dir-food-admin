@@ -197,11 +197,11 @@ export function DealsList() {
         </div>
 
         <div className='flex flex-wrap items-center gap-2 min-w-0 w-full sm:w-auto'>
-          <div className='flex items-center rounded-lg border bg-muted/40 p-0.5 text-xs font-medium'>
+          <div className='flex h-9 items-center rounded-lg border bg-muted/40 p-0.5 text-xs font-medium'>
             <button
               type='button'
               onClick={handleFilterAll}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`h-full px-2.5 rounded-md transition-all flex items-center ${
                 statusFilter === 'all'
                   ? 'bg-background text-foreground shadow-xs font-semibold'
                   : 'text-muted-foreground hover:text-foreground'
@@ -212,7 +212,7 @@ export function DealsList() {
             <button
               type='button'
               onClick={handleFilterAvailable}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all ${
+              className={`h-full flex items-center gap-1.5 px-2.5 rounded-md transition-all ${
                 statusFilter === 'available'
                   ? 'bg-background text-emerald-600 dark:text-emerald-400 shadow-xs font-semibold'
                   : 'text-muted-foreground hover:text-foreground'
@@ -224,7 +224,7 @@ export function DealsList() {
             <button
               type='button'
               onClick={handleFilterSoldOut}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all ${
+              className={`h-full flex items-center gap-1.5 px-2.5 rounded-md transition-all ${
                 statusFilter === 'soldOut'
                   ? 'bg-background text-amber-600 dark:text-amber-400 shadow-xs font-semibold'
                   : 'text-muted-foreground hover:text-foreground'
@@ -241,7 +241,7 @@ export function DealsList() {
               value={search}
               onChange={handleSearchChange}
               placeholder={t('searchPlaceholder')}
-              className='h-8 ps-8 pe-7 text-xs w-full'
+              className='h-9 ps-8 pe-7 text-xs w-full'
             />
             {search && (
               <button

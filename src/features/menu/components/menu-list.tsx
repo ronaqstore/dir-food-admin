@@ -11,7 +11,8 @@ import {
 } from '@/components/skeletons/menu-skeleton';
 import {
   IconPlus,
-  IconSalad
+  IconSalad,
+  IconFlame
 } from '@tabler/icons-react';
 import { useCategories } from '@/features/categories/api/categories-query';
 import { usePaginatedMenuItems, useUpdateMenuItem } from '../api/menu-query';
@@ -21,10 +22,11 @@ import { MenuItemDialog } from './menu-item-dialog';
 import { FoodCard, FoodTableView } from './menu-item-cards';
 import { MenuHeaderControls } from './menu-header-controls';
 import { MenuMobileSheet } from './menu-mobile-sheet';
-import type { MenuItemDTO, ViewMode, StatusFilter } from '../types';
+import type { MenuItemDTO, ViewMode, StatusFilter, MenuItemTab } from '../types';
 
 export function MenuList() {
   const t = useTranslations();
+  const [activeTab, setActiveTab] = React.useState<MenuItemTab>('dishes');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
   const [search, setSearch] = React.useState('');
@@ -36,8 +38,6 @@ export function MenuList() {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(20);
   const [sortBy, setSortBy] = React.useState('default');
-
-  const categoryPillsRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,6 +62,7 @@ export function MenuList() {
   } = usePaginatedMenuItems({
     categoryId: selectedCategory !== 'all' ? selectedCategory : undefined,
     search: debouncedSearch || undefined,
+    isDeal: activeTab === 'deals',
     isAvailable:
       statusFilter === 'available'
         ? true
@@ -127,6 +128,12 @@ export function MenuList() {
     }
   };
 
+  const handleTabChange = (tab: MenuItemTab) => {
+    setActiveTab(tab);
+    setPage(1);
+    setSelectedCategory('all');
+  };
+
   const handleSelectCategory = (catId: string) => {
     setSelectedCategory(catId);
     setPage(1);
@@ -150,14 +157,25 @@ export function MenuList() {
     return counts;
   }, [categories]);
 
-  const allCategoriesTotal = React.useMemo(() => {
-    if (!categories || categories.length === 0) return totalServerCount;
-    return categories.reduce((sum, c) => sum + (c._count?.items ?? 0), 0);
-  }, [categories, totalServerCount]);
+  const dishesCount = paginatedData?.meta?.dishesCount ?? 0;
+  const dealsCount = paginatedData?.meta?.dealsCount ?? 0;
+  const totalCount = paginatedData?.meta?.totalCount ?? totalServerCount;
+  const availableCount = paginatedData?.meta?.availableCount ?? 0;
+  const soldOutCount = paginatedData?.meta?.soldOutCount ?? 0;
 
-  const totalCount = totalServerCount;
-  const availableCount = items.filter((i) => i.isAvailable).length;
-  const soldOutCount = Math.max(0, items.length - availableCount);
+  const filteredCategories = React.useMemo(() => {
+    if (!categories) return [];
+    if (activeTab === 'dishes') {
+      return categories.filter((c) => c.name.toLowerCase() !== 'deals & combos');
+    }
+    return categories.filter(
+      (c) => c.name.toLowerCase() === 'deals & combos' || (c._count?.items ?? 0) > 0
+    );
+  }, [categories, activeTab]);
+
+  const allCategoriesTotal = React.useMemo(() => {
+    return activeTab === 'deals' ? dealsCount : dishesCount;
+  }, [activeTab, dealsCount, dishesCount]);
 
   const filteredItems = items;
   const hasNoCategories = !isCategoriesLoading && (!categories || categories.length === 0);
@@ -210,12 +228,18 @@ export function MenuList() {
             className='gap-1.5'
           >
             <IconPlus className='size-4' />
-            <span>{t('menuItems.newItem')}</span>
+            <span>
+              {activeTab === 'deals' ? t('deals.createDeal') : t('menuItems.newItem')}
+            </span>
           </Button>
         </div>
       </div>
 
       <MenuHeaderControls
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        dishesCount={dishesCount}
+        dealsCount={dealsCount}
         search={search}
         onSearchChange={handleSearchChange}
         statusFilter={statusFilter}
@@ -229,10 +253,9 @@ export function MenuList() {
         onViewModeChange={setViewMode}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
-        categories={categories}
+        categories={filteredCategories}
         categoryCounts={categoryCounts}
         allCategoriesTotal={allCategoriesTotal}
-        categoryPillsRef={categoryPillsRef}
         t={t}
       />
 
@@ -254,15 +277,25 @@ export function MenuList() {
         ) : filteredItems.length === 0 ? (
           <div className='flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50'>
             <div className='flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-3'>
-              <IconSalad className='size-6' />
+              {activeTab === 'deals' ? (
+                <IconFlame className='size-6 text-amber-500' />
+              ) : (
+                <IconSalad className='size-6' />
+              )}
             </div>
             <h3 className='text-base font-semibold text-foreground mb-1'>
-              {t('menuItems.emptyTitle')}
+              {search || statusFilter !== 'all' || selectedCategory !== 'all'
+                ? t('menuItems.noFilteredMatches')
+                : activeTab === 'deals'
+                  ? t('deals.noItemsAdded')
+                  : t('menuItems.emptyTitle')}
             </h3>
             <p className='text-xs text-muted-foreground max-w-sm mb-4'>
               {search || statusFilter !== 'all' || selectedCategory !== 'all'
                 ? t('menuItems.noFilteredMatches')
-                : t('menuItems.emptyDescription')}
+                : activeTab === 'deals'
+                  ? t('deals.createFirstDeal')
+                  : t('menuItems.emptyDescription')}
             </p>
             {search || statusFilter !== 'all' || selectedCategory !== 'all' ? (
               <Button type='button' variant='outline' size='sm' onClick={handleResetFilters}>
@@ -276,7 +309,9 @@ export function MenuList() {
                 className='gap-1.5'
               >
                 <IconPlus className='size-4' />
-                <span>{t('menuItems.newItem')}</span>
+                <span>
+                  {activeTab === 'deals' ? t('deals.createDeal') : t('menuItems.newItem')}
+                </span>
               </Button>
             )}
           </div>
@@ -315,7 +350,7 @@ export function MenuList() {
         onOpenChange={setMobileCategorySheetOpen}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
-        categories={categories}
+        categories={filteredCategories}
         categoryCounts={categoryCounts}
         allCategoriesTotal={allCategoriesTotal}
         t={t}
@@ -326,6 +361,7 @@ export function MenuList() {
         onOpenChange={setDialogOpen}
         item={editingItem}
         defaultCategoryId={selectedCategory !== 'all' ? selectedCategory : undefined}
+        defaultIsDeal={activeTab === 'deals'}
       />
     </div>
   );

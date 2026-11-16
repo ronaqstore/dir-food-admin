@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
       'isAvailable',
       'sortBy',
       'sortOrder'
-    ]
+    ],
+    rawResponse: true
   });
 }
 

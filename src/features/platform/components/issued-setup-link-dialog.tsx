@@ -57,7 +57,6 @@ export function IssuedSetupLinkDialog({
             />
             <Button
               type='button'
-              size='sm'
               onClick={onCopy}
               className='shrink-0 gap-1'
             >

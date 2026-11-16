@@ -133,7 +133,7 @@ export function MergeAreaDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={mergeMutation.isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('cancel')}</span>
@@ -141,7 +141,7 @@ export function MergeAreaDialog({
             <Button
               type='submit'
               disabled={mergeMutation.isPending || !targetAreaId || candidateTargetAreas.length === 0}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               <IconCheck className='size-4' />
               <span>{t('confirmMerge')}</span>

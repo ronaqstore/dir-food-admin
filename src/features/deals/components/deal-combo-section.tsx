@@ -126,10 +126,9 @@ export function DealComboSection({
         <Button
           type='button'
           variant='outline'
-          size='sm'
           onClick={onAddDish}
           disabled={isPending || availableDishes.length === 0}
-          className='h-8 gap-1.5 rounded-lg border-dashed text-xs font-semibold hover:border-primary hover:text-primary shadow-2xs'
+          className='h-9 gap-1.5 rounded-lg border-dashed text-xs font-semibold hover:border-primary hover:text-primary shadow-2xs'
         >
           <IconPlus className='size-3.5' />
           <span>{t('addDishFromMenu')}</span>
@@ -139,10 +138,9 @@ export function DealComboSection({
           <Button
             type='button'
             variant='secondary'
-            size='sm'
             onClick={handleSetPrice}
             disabled={isPending}
-            className='h-8 gap-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs'
+            className='h-9 gap-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs'
           >
             <IconReceipt className='size-3.5' />
             <span>{t('setOriginalPriceTo')} {formatPkr(toPaisa(calculatedTotalValue))}</span>

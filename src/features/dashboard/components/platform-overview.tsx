@@ -203,8 +203,7 @@ export function PlatformOverview() {
                       <Button type='button'
                         render={<Link href={`/dashboard/platform/restaurants?status=PENDING`} />}
                         variant='default'
-                        size='sm'
-                        className='h-8 text-xs font-medium'
+                        className='h-9 text-xs font-medium'
                       >
                         <Icons.check className='me-1 size-3.5' />
                         <span>{t('dashboard.approve')}</span>
@@ -212,8 +211,7 @@ export function PlatformOverview() {
                       <Button type='button'
                         render={<Link href={`/dashboard/platform/restaurants?status=PENDING`} />}
                         variant='outline'
-                        size='sm'
-                        className='h-8 text-xs font-medium'
+                        className='h-9 text-xs font-medium'
                       >
                         <span>{t('dashboard.reviewDetails')}</span>
                       </Button>

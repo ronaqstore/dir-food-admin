@@ -2468,6 +2468,8 @@
     "noCategoryWarning": "Please create at least one category before adding menu items",
     "viewGrid": "Grid View",
     "viewList": "List View",
+    "tabDishes": "Dishes",
+    "tabDeals": "Deals & Combos",
     "statusAll": "All",
     "statusAvailable": "In Stock",
     "statusSoldOut": "Sold Out",

@@ -165,7 +165,7 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('cancel')}</span>
@@ -173,7 +173,7 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
             <Button
               type='submit'
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               {isEditing ? (
                 <>

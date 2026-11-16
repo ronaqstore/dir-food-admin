@@ -90,7 +90,7 @@ export function DishCombobox({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              'group flex w-full items-center justify-between h-9.5 px-3 text-xs font-normal bg-background hover:bg-muted/40 border border-border/80 shadow-2xs min-w-0 overflow-hidden rounded-xl transition-colors cursor-pointer',
+              'group flex w-full items-center justify-between h-9 px-3 text-xs font-normal bg-background hover:bg-muted/40 border border-border/80 shadow-2xs min-w-0 overflow-hidden rounded-xl transition-colors cursor-pointer',
               !selectedDish && 'text-muted-foreground',
               open && 'border-ring ring-1 ring-ring'
             )}
@@ -153,7 +153,7 @@ export function DishCombobox({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={t('searchDishesPlaceholder')}
-                  className='h-8 ps-8 pe-8 text-xs bg-background'
+                  className='h-9 ps-8 pe-8 text-xs bg-background'
                   autoFocus
                 />
                 {search ? (

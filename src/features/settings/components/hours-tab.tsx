@@ -144,7 +144,7 @@ export function HoursTab() {
                       value={dayRow.openTime}
                       onChange={(e) => handleTimeChange(d.index, 'openTime', e.target.value)}
                       disabled={updateHours.isPending}
-                      className='h-8 w-28 text-xs'
+                      className='h-9 w-28 text-xs'
                     />
                   </div>
                   <span className='text-muted-foreground text-xs'>—</span>
@@ -157,7 +157,7 @@ export function HoursTab() {
                       value={dayRow.closeTime}
                       onChange={(e) => handleTimeChange(d.index, 'closeTime', e.target.value)}
                       disabled={updateHours.isPending}
-                      className='h-8 w-28 text-xs'
+                      className='h-9 w-28 text-xs'
                     />
                   </div>
                   <Button
@@ -165,7 +165,7 @@ export function HoursTab() {
                     variant='ghost'
                     size='icon'
                     onClick={() => handleCopyHoursToAll(dayRow.openTime, dayRow.closeTime)}
-                    className='size-7 text-muted-foreground hover:text-foreground'
+                    className='size-9 text-muted-foreground hover:text-foreground'
                     title={t('restaurantSettings.copyHoursToAll')}
                     aria-label={t('restaurantSettings.copyHoursToAll')}
                   >

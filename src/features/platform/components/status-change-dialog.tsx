@@ -102,7 +102,7 @@ export function StatusChangeDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={statusMutation.isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('cancel')}</span>
@@ -111,7 +111,7 @@ export function StatusChangeDialog({
               type='submit'
               variant={isDestructive ? 'destructive' : 'default'}
               disabled={statusMutation.isPending}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               <IconCheck className='size-4' />
               <span>{t('confirm')}</span>

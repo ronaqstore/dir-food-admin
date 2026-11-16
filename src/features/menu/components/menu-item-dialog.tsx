@@ -40,7 +40,8 @@ export function MenuItemDialog({
   open,
   onOpenChange,
   item,
-  defaultCategoryId
+  defaultCategoryId,
+  defaultIsDeal
 }: MenuItemDialogProps) {
   const t = useTranslations();
   const { data: categories } = useCategories();
@@ -114,7 +115,7 @@ export function MenuItemDialog({
       setDescription('');
       setPricingMode('fixed');
       setBasePrice('');
-      setIsDeal(false);
+      setIsDeal(defaultIsDeal ?? false);
       setVariants([
         { name: 'Half', price: '' },
         { name: 'Full', price: '' }
@@ -124,7 +125,7 @@ export function MenuItemDialog({
       setImageFile(null);
     }
     setErrors({});
-  }, [item, defaultCategoryId, categories, open]);
+  }, [item, defaultCategoryId, defaultIsDeal, categories, open]);
 
   const handleFileSelect = (file: File) => {
     setImageFile(file);
@@ -351,7 +352,7 @@ export function MenuItemDialog({
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t('menuItems.namePlaceholder')}
                   disabled={isPending}
-                  className={`h-10 rounded-xl text-sm ${errors.name ? 'border-destructive' : ''}`}
+                  className={`h-9 rounded-lg text-sm ${errors.name ? 'border-destructive' : ''}`}
                 />
                 {errors.name ? <p className='text-xs text-destructive'>{errors.name}</p> : null}
               </div>
@@ -430,7 +431,7 @@ export function MenuItemDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('common.cancel')}</span>
@@ -438,7 +439,7 @@ export function MenuItemDialog({
             <Button
               type='submit'
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               {isEditing ? (
                 <>

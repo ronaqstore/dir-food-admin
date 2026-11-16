@@ -150,19 +150,18 @@ export function DeliveryAreasTab() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('restaurantSettings.searchAreasPlaceholder')}
-                className='ps-8 h-8 text-xs'
+                className='ps-8 h-9 text-xs'
               />
             </div>
           )}
-          <Badge variant='secondary' className='text-xs font-normal whitespace-nowrap h-8 px-2.5'>
+          <Badge variant='secondary' className='text-xs font-normal whitespace-nowrap h-9 px-2.5'>
             {t('restaurantSettings.areasServedCount', { served: servedCount, total: rows.length })}
           </Badge>
 
           <Button
             type='button'
-            size='sm'
             variant='outline'
-            className='h-8 text-xs gap-1.5'
+            className='h-9 text-xs gap-1.5'
             onClick={() => setIsAddOpen(true)}
           >
             <IconPlus className='size-3.5' />
@@ -223,7 +222,7 @@ export function DeliveryAreasTab() {
                     variant='outline'
                     onClick={() => setIsAddOpen(false)}
                     disabled={createCustomArea.isPending}
-                    className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+                    className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
                   >
                     <IconX className='size-4' />
                     <span>{t('common.cancel')}</span>
@@ -231,7 +230,7 @@ export function DeliveryAreasTab() {
                   <Button
                     type='submit'
                     disabled={createCustomArea.isPending}
-                    className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+                    className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
                   >
                     <IconPlus className='size-4' />
                     <span>{t('common.add')}</span>
@@ -309,7 +308,7 @@ export function DeliveryAreasTab() {
                         onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
                         placeholder={t('restaurantSettings.feePlaceholder')}
                         disabled={updateAreas.isPending}
-                        className='h-8 ps-8 text-xs'
+                        className='h-9 ps-8 text-xs'
                       />
                     </div>
                   </div>
@@ -330,7 +329,7 @@ export function DeliveryAreasTab() {
                         onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
                         placeholder={t('restaurantSettings.defaultPlaceholder')}
                         disabled={updateAreas.isPending}
-                        className='h-8 ps-8 text-xs'
+                        className='h-9 ps-8 text-xs'
                       />
                     </div>
                   </div>

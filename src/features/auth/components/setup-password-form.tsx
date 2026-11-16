@@ -132,7 +132,7 @@ export function SetupPasswordForm() {
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton size='lg' className='w-full'>
+            <form.SubmitButton className='w-full'>
               {t('auth.setPasswordButton')}
             </form.SubmitButton>
           </form.AppForm>

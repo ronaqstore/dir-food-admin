@@ -186,11 +186,11 @@ export function CategoryList() {
 
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border bg-card p-3 min-w-0'>
         <Tabs value={statusFilter} onValueChange={handleStatusFilterChange}>
-          <TabsList className='h-8'>
-            <TabsTrigger value='active' className='text-xs h-7 px-3'>
+          <TabsList className='h-9'>
+            <TabsTrigger value='active' className='text-xs h-8 px-3'>
               {t('menuCategories.active')}
             </TabsTrigger>
-            <TabsTrigger value='inactive' className='text-xs h-7 px-3'>
+            <TabsTrigger value='inactive' className='text-xs h-8 px-3'>
               {t('menuCategories.inactive')}
             </TabsTrigger>
           </TabsList>
@@ -203,7 +203,7 @@ export function CategoryList() {
               value={search}
               onChange={handleSearchChange}
               placeholder={t('table.search')}
-              className='h-8 ps-8 pe-7 text-xs w-full'
+              className='h-9 ps-8 pe-7 text-xs w-full'
             />
             {search && (
               <button

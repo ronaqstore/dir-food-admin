@@ -7,6 +7,11 @@ export interface PaginationMeta {
   limit: number;
   total: number;
   totalPages?: number;
+  totalCount?: number;
+  availableCount?: number;
+  soldOutCount?: number;
+  dishesCount?: number;
+  dealsCount?: number;
 }
 
 export interface CreateItemVariantInput {
@@ -91,6 +96,7 @@ export interface MenuItemDialogProps {
   onOpenChange: (open: boolean) => void;
   item?: MenuItemDTO | null;
   defaultCategoryId?: string;
+  defaultIsDeal?: boolean;
 }
 
 export interface MenuItemImageFieldProps {
@@ -160,7 +166,13 @@ export interface FoodTableViewProps {
   t: (key: string) => string;
 }
 
+export type MenuItemTab = 'dishes' | 'deals';
+
 export interface MenuHeaderControlsProps {
+  activeTab: MenuItemTab;
+  onTabChange: (tab: MenuItemTab) => void;
+  dishesCount?: number;
+  dealsCount?: number;
   search: string;
   onSearchChange: (val: string) => void;
   statusFilter: StatusFilter;
@@ -177,7 +189,6 @@ export interface MenuHeaderControlsProps {
   categories: MenuCategoryDTO[] | undefined;
   categoryCounts: Record<string, number>;
   allCategoriesTotal: number;
-  categoryPillsRef: React.RefObject<HTMLDivElement | null>;
   t: (key: string) => string;
 }
 

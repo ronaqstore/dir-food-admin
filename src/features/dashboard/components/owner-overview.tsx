@@ -233,9 +233,8 @@ export function OwnerOverview() {
             <div className='flex items-center gap-2 shrink-0 self-end sm:self-center'>
               <Button type='button'
                 render={<Link href={missingSteps[0].href} />}
-                size='sm'
                 variant='default'
-                className='gap-1.5 text-xs h-8 px-3'
+                className='gap-1.5 text-xs h-9 px-3.5'
               >
                 {missingSteps[0].icon}
                 <span>{missingSteps[0].buttonText}</span>
@@ -262,8 +261,7 @@ export function OwnerOverview() {
               <Button type='button'
                 onClick={handlePublish}
                 disabled={publishRestaurant.isPending}
-                size='sm'
-                className='gap-1.5 shadow-xs text-xs h-8 px-3'
+                className='gap-1.5 shadow-xs text-xs h-9 px-3.5'
               >
                 <IconRocket className='size-3.5' />
                 <span>{t('dashboard.publishCtaShort')}</span>

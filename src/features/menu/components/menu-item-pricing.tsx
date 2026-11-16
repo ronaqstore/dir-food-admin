@@ -82,7 +82,7 @@ export function MenuItemPricing({
               onChange={(e) => onBasePriceChange(e.target.value)}
               placeholder={t('menuItems.pricePlaceholder')}
               disabled={isPending}
-              className='ps-11 h-10 rounded-xl font-semibold text-sm shadow-2xs'
+              className='ps-11 h-9 rounded-lg font-semibold text-sm shadow-2xs'
             />
           </div>
           {errors.basePrice ? (
@@ -166,7 +166,7 @@ export function MenuItemPricing({
             size='sm'
             onClick={onAddAddon}
             disabled={isPending || addons.length >= 12}
-            className='h-7.5 gap-1 rounded-lg text-xs font-medium shrink-0 shadow-2xs'
+            className='h-8 gap-1 rounded-lg text-xs font-medium shrink-0 shadow-2xs'
           >
             <IconPlus className='size-3.5' />
             <span>{t('menuItems.addAddon')}</span>

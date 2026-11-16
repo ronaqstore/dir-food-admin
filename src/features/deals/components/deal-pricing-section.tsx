@@ -37,7 +37,7 @@ export function DealPricingSection({
               onChange={(e) => onBasePriceChange(e.target.value)}
               placeholder={t('deals.dealPricePlaceholder')}
               disabled={isPending}
-              className='ps-10 h-10 rounded-xl bg-background font-semibold text-sm'
+              className='ps-10 h-9 rounded-lg bg-background font-semibold text-sm'
             />
           </div>
           {errors.basePrice ? (
@@ -65,7 +65,7 @@ export function DealPricingSection({
               onChange={(e) => onOriginalPriceChange(e.target.value)}
               placeholder={t('deals.regularPricePlaceholder')}
               disabled={isPending}
-              className='ps-10 h-10 rounded-xl bg-background font-semibold text-sm'
+              className='ps-10 h-9 rounded-lg bg-background font-semibold text-sm'
             />
           </div>
           {errors.originalPrice ? (

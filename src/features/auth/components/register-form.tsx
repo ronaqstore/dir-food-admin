@@ -213,7 +213,7 @@ export function RegisterForm() {
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton size='lg' className='w-full'>
+            <form.SubmitButton className='w-full'>
               {t('auth.registerButton')}
             </form.SubmitButton>
           </form.AppForm>

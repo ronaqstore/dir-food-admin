@@ -97,7 +97,7 @@ export function BaseLoginForm({
           </FieldGroup>
 
           <form.AppForm>
-            <form.SubmitButton size='lg' className='w-full'>
+            <form.SubmitButton className='w-full'>
               {t('auth.signIn')}
             </form.SubmitButton>
           </form.AppForm>

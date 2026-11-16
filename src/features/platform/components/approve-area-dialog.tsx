@@ -104,7 +104,7 @@ export function ApproveAreaDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={approveMutation.isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-semibold'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-semibold'
             >
               <IconX className='size-4' />
               <span>{t('cancel')}</span>
@@ -112,7 +112,7 @@ export function ApproveAreaDialog({
             <Button
               type='submit'
               disabled={approveMutation.isPending}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-semibold shadow-xs'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
               <IconCheck className='size-4' />
               <span>{t('approveAndPublish')}</span>

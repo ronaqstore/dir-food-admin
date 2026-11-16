@@ -339,7 +339,7 @@ export function DealBuilderDialog({
               onChange={(e) => setName(e.target.value)}
               placeholder={t('deals.dealTitlePlaceholder')}
               disabled={isPending}
-              className='h-10 rounded-xl bg-background text-sm font-medium'
+              className='h-9 rounded-lg bg-background text-sm font-medium'
             />
             {errors.name ? <p className='text-xs text-destructive'>{errors.name}</p> : null}
           </div>
@@ -405,7 +405,7 @@ export function DealBuilderDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-4 text-xs font-medium'
+              className='h-9 gap-1.5 rounded-lg px-4 text-xs font-medium'
             >
               <IconX className='size-4' />
               <span>{t('common.cancel')}</span>
@@ -413,7 +413,7 @@ export function DealBuilderDialog({
             <Button
               type='submit'
               disabled={isPending}
-              className='h-10 gap-1.5 rounded-xl px-5 text-xs font-bold shadow-sm'
+              className='h-9 gap-1.5 rounded-lg px-5 text-xs font-bold shadow-sm'
             >
               {isEditing ? (
                 <>
