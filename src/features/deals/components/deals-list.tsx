@@ -169,7 +169,10 @@ export function DealsList() {
   };
 
   return (
-    <div ref={topRef} className='space-y-4 pb-8 min-w-0'>
+    <div
+      ref={topRef}
+      className='flex min-h-0 min-w-0 flex-1 flex-col space-y-4 overflow-y-auto overscroll-y-contain pb-8'
+    >
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0'>
         <div>
           <h1 className='text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2'>
