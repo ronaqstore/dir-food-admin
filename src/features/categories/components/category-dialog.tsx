@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { useCreateCategory, useUpdateCategory } from '../api/categories-query';
-import type { CategoryDialogProps } from '../types';
+import { DEFAULT_CATEGORY_PRESETS, type CategoryDialogProps } from '../types';
 
 export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogProps) {
   const t = useTranslations();
@@ -86,6 +86,11 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
     if (error) setError(null);
   };
 
+  const handleSelectPreset = (preset: string) => {
+    setName(preset);
+    if (error) setError(null);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-md'>
@@ -114,6 +119,39 @@ export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogP
               />
               {error ? <p className='text-xs text-destructive'>{error}</p> : null}
             </div>
+
+            {!isEditing ? (
+              <div className='space-y-1.5 pt-1'>
+                <div className='flex items-center justify-between'>
+                  <Label className='text-xs font-semibold text-muted-foreground'>
+                    {t('menuCategories.presetsLabel')}
+                  </Label>
+                  <span className='text-[10px] text-muted-foreground'>
+                    {t('menuCategories.presetsHint')}
+                  </span>
+                </div>
+                <div className='flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-2 rounded-lg border bg-muted/20'>
+                  {DEFAULT_CATEGORY_PRESETS.map((preset) => {
+                    const isSelected = name.trim().toLowerCase() === preset.toLowerCase();
+                    return (
+                      <button
+                        key={preset}
+                        type='button'
+                        disabled={isPending}
+                        onClick={() => handleSelectPreset(preset)}
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors cursor-pointer ${
+                          isSelected
+                            ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
+                            : 'border border-border/70 bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
+                        }`}
+                      >
+                        {preset}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
 
             {isEditing ? (
               <div className='flex items-center justify-between rounded-lg border p-3'>

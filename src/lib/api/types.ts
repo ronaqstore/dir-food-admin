@@ -244,6 +244,7 @@ export interface ProxyOptions {
   body?: unknown;
   statusOnSuccess?: number;
   rawResponse?: boolean;
+  isPublic?: boolean;
   transformResponse?: (data: unknown) => unknown;
   transformError?: (
     error: unknown,

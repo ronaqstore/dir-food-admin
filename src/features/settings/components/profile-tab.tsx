@@ -27,6 +27,8 @@ import {
 import { ProfileMediaSection } from './profile-media-section';
 import { ProfileAvailabilitySection } from './profile-availability-section';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { usePublicCuisines } from '@/features/platform/api/cuisines-query';
+import { DEFAULT_MASTER_CUISINE_NAMES } from '@/features/platform/cuisines.types';
 import {
   useRestaurantProfile,
   useUpdateProfile,
@@ -39,13 +41,19 @@ import {
 } from '../api/restaurant-query';
 import type { ManualAvailabilityStatus } from '../types';
 
-const AVAILABLE_CUISINES = ['Fast Food', 'Karahi', 'BBQ', 'Biryani', 'Pizza', 'Burgers', 'Chai & Cafe', 'Traditional', 'Kabab'];
-
 export function ProfileTab() {
   const t = useTranslations();
   const { data: profile, isLoading } = useRestaurantProfile();
   const { data: readiness, refetch: refetchReadiness } = usePublishReadiness();
   const { data: cities } = useCities();
+  const { data: publicCuisinesRes } = usePublicCuisines();
+
+  const availableCuisines = React.useMemo(() => {
+    const list = Array.isArray(publicCuisinesRes) ? publicCuisinesRes : publicCuisinesRes?.data;
+    return Array.isArray(list) && list.length > 0
+      ? list.map((c) => c.name)
+      : [...DEFAULT_MASTER_CUISINE_NAMES];
+  }, [publicCuisinesRes]);
 
   const updateProfile = useUpdateProfile();
   const updateAvailability = useUpdateAvailability();
@@ -406,7 +414,7 @@ export function ProfileTab() {
               </span>
             </div>
             <div className='flex flex-wrap gap-1.5'>
-              {AVAILABLE_CUISINES.map((item) => {
+              {availableCuisines.map((item) => {
                 const isSelected = cuisines.includes(item);
                 return (
                   <button
@@ -415,11 +423,7 @@ export function ProfileTab() {
                     disabled={isPending}
                     onClick={() =>
                       setCuisines((prev) =>
-                        prev.includes(item)
-                          ? prev.filter((c) => c !== item)
-                          : prev.length < 5
-                            ? [...prev, item]
-                            : prev
+                        prev.includes(item) ? prev.filter((c) => c !== item) : prev.length < 5 ? [...prev, item] : prev
                       )
                     }
                     className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${

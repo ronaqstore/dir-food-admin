@@ -11,7 +11,7 @@ export async function proxyToBackend(
   const session = await auth();
   const token = session?.accessToken;
 
-  if (!token) {
+  if (!token && !options?.isPublic) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -46,9 +46,11 @@ export async function proxyToBackend(
 
   const method = options?.method ?? request.method;
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${token}`,
     Accept: 'application/json'
   };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   let reqBody: BodyInit | undefined;
   if (options?.forwardFormData) {

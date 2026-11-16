@@ -48,3 +48,22 @@ export interface CategoriesResponse {
     totalPages?: number;
   };
 }
+
+export const DEFAULT_CATEGORY_PRESETS = [
+  'Deals & Combos',
+  'Starters & Appetizers',
+  'Karahi & Handi',
+  'BBQ & Grills',
+  'Biryani & Rice',
+  'Fast Food & Burgers',
+  'Pizza',
+  'Shawarma & Rolls',
+  'Tandoor (Roti & Naan)',
+  'Fish & Seafood',
+  'Chinese Dishes',
+  'Salad & Raita',
+  'Cold Drinks & Beverages',
+  'Chai & Hot Drinks',
+  'Desserts & Sweets',
+  'Breakfast'
+] as const;

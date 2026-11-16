@@ -32,6 +32,14 @@ export const platformNavGroups: NavGroup[] = [
         isActive: false,
         shortcut: ['p', 'a'],
         items: []
+      },
+      {
+        title: 'nav.cuisines',
+        url: '/dashboard/platform/cuisines',
+        icon: 'pizza',
+        isActive: false,
+        shortcut: ['p', 'c'],
+        items: []
       }
     ]
   },
