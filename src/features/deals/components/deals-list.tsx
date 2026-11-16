@@ -18,6 +18,7 @@ import {
 import { usePaginatedMenuItems, useUpdateMenuItem } from '@/features/menu/api/menu-query';
 import { parseSortParam } from '@/features/menu/lib/sort-utils';
 import { StandardPagination } from '@/components/ui/standard-pagination';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { DealBuilderDialog } from './deal-builder-dialog';
 import { DealCard, DealListItem } from './deal-cards';
 import { DealCardSkeleton, DealListRowSkeleton } from '@/components/skeletons/deals-skeleton';
@@ -35,6 +36,8 @@ export function DealsList() {
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editingDeal, setEditingDeal] = React.useState<MenuItemDTO | null>(null);
+  const [dealToDelete, setDealToDelete] = React.useState<MenuItemDTO | null>(null);
+  const [isDeletingDeal, setIsDeletingDeal] = React.useState(false);
 
   const topRef = React.useRef<HTMLDivElement>(null);
 
@@ -133,21 +136,25 @@ export function DealsList() {
     }
   };
 
-  const handleDelete = async (deal: MenuItemDTO) => {
-    const confirmed = window.confirm(
-      t('confirmRemove', { name: deal.name })
-    );
-    if (!confirmed) return;
+  const handleDelete = (deal: MenuItemDTO) => {
+    setDealToDelete(deal);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!dealToDelete) return;
     try {
+      setIsDeletingDeal(true);
       await updateMenuItem.mutateAsync({
-        id: deal.id,
+        id: dealToDelete.id,
         input: { isActive: false }
       });
       toast.success(t('dealRemoved'));
+      setDealToDelete(null);
       refetch();
     } catch {
       toast.error(t('removeFailed'));
+    } finally {
+      setIsDeletingDeal(false);
     }
   };
 
@@ -377,6 +384,24 @@ export function DealsList() {
         onSuccess={() => {
           refetch();
         }}
+      />
+
+      <ConfirmDialog
+        open={!!dealToDelete}
+        onOpenChange={(open) => {
+          if (!open) setDealToDelete(null);
+        }}
+        title={t('deleteDeal')}
+        description={
+          dealToDelete
+            ? t('confirmRemove', { name: dealToDelete.name })
+            : undefined
+        }
+        confirmLabel={tRoot('common.delete')}
+        cancelLabel={tRoot('common.cancel')}
+        variant='destructive'
+        isLoading={isDeletingDeal}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );

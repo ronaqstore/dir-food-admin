@@ -26,6 +26,7 @@ import {
 } from '@/lib/auth/phone';
 import { ProfileMediaSection } from './profile-media-section';
 import { ProfileAvailabilitySection } from './profile-availability-section';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   useRestaurantProfile,
   useUpdateProfile,
@@ -38,17 +39,7 @@ import {
 } from '../api/restaurant-query';
 import type { ManualAvailabilityStatus } from '../types';
 
-const AVAILABLE_CUISINES = [
-  'Fast Food',
-  'Karahi',
-  'BBQ',
-  'Biryani',
-  'Pizza',
-  'Burgers',
-  'Chai & Cafe',
-  'Traditional',
-  'Kabab'
-];
+const AVAILABLE_CUISINES = ['Fast Food', 'Karahi', 'BBQ', 'Biryani', 'Pizza', 'Burgers', 'Chai & Cafe', 'Traditional', 'Kabab'];
 
 export function ProfileTab() {
   const t = useTranslations();
@@ -73,6 +64,7 @@ export function ProfileTab() {
 
   const [manualStatus, setManualStatus] = React.useState<ManualAvailabilityStatus>('AUTO');
   const [unavailableNote, setUnavailableNote] = React.useState('');
+  const [imageToDelete, setImageToDelete] = React.useState<'logo' | 'cover' | null>(null);
 
   React.useEffect(() => {
     if (profile) {
@@ -164,10 +156,17 @@ export function ProfileTab() {
     }
   };
 
-  const handleDeleteImage = async (kind: 'logo' | 'cover') => {
+  const handleDeleteImage = (kind: 'logo' | 'cover') => {
+    setImageToDelete(kind);
+  };
+
+  const handleConfirmDeleteImage = async () => {
+    if (!imageToDelete) return;
     try {
-      await deleteImage.mutateAsync(kind);
+      await deleteImage.mutateAsync(imageToDelete);
       toast.success(t('menuItems.deleteSuccess'));
+      setImageToDelete(null);
+      void refetchReadiness();
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
       toast.error(msg);
@@ -307,9 +306,7 @@ export function ProfileTab() {
                 className='text-xs h-9'
               />
               {contactPhone && !isExactPkMobile(contactPhone) ? (
-                <p className='text-[11px] text-destructive'>
-                  {t('restaurantSettings.invalidPhone')}
-                </p>
+                <p className='text-[11px] text-destructive'>{t('restaurantSettings.invalidPhone')}</p>
               ) : null}
             </div>
           </div>
@@ -334,9 +331,7 @@ export function ProfileTab() {
                 className='text-xs h-9'
               />
               {whatsappNumber && !isExactPkMobile(whatsappNumber) ? (
-                <p className='text-[11px] text-destructive'>
-                  {t('restaurantSettings.invalidPhone')}
-                </p>
+                <p className='text-[11px] text-destructive'>{t('restaurantSettings.invalidPhone')}</p>
               ) : null}
               <p className='text-[11px] text-muted-foreground leading-normal'>
                 {t('restaurantSettings.whatsappHint')}
@@ -381,13 +376,7 @@ export function ProfileTab() {
                 disabled={isPending}
                 placeholder={t('restaurantSettings.selectDistrictPlaceholder')}
                 searchPlaceholder={t('restaurantSettings.searchDistrictPlaceholder')}
-                options={
-                  cities?.map((c) => ({
-                    value: c.id,
-                    label: c.name,
-                    sublabel: c.slug || undefined
-                  })) ?? []
-                }
+                options={cities?.map((c) => ({ value: c.id, label: c.name, sublabel: c.slug || undefined })) ?? []}
                 allowClear
               />
             </div>
@@ -468,6 +457,18 @@ export function ProfileTab() {
           </div>
         </form>
       </div>
+
+      <ConfirmDialog
+        open={!!imageToDelete}
+        onOpenChange={(open) => !open && setImageToDelete(null)}
+        title={t('common.areYouSure')}
+        description={t('common.cannotUndo')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant='destructive'
+        isLoading={deleteImage.isPending}
+        onConfirm={handleConfirmDeleteImage}
+      />
     </div>
   );
 }

@@ -29,6 +29,7 @@ import {
 } from '../api/menu-query';
 import { MenuItemPricing } from './menu-item-pricing';
 import { MenuItemImageField } from './menu-item-image-field';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import type {
   MenuItemDialogProps,
   VariantField,
@@ -60,6 +61,7 @@ export function MenuItemDialog({
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [confirmDeletePhoto, setConfirmDeletePhoto] = React.useState(false);
 
   const isEditing = Boolean(item);
   const createItem = useCreateMenuItem();
@@ -304,20 +306,26 @@ export function MenuItemDialog({
     }
   };
 
-  const handleRemovePhoto = async () => {
+  const handleRemovePhoto = () => {
     if (isEditing && item?.imageUrl) {
-      try {
-        await deleteImage.mutateAsync(item.id);
-        setImagePreview(null);
-        setImageFile(null);
-        toast.success(t('menuItems.deleteSuccess'));
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : t('common.unexpectedError');
-        toast.error(msg);
-      }
+      setConfirmDeletePhoto(true);
     } else {
       setImagePreview(null);
       setImageFile(null);
+    }
+  };
+
+  const handleConfirmDeletePhoto = async () => {
+    if (!item?.id) return;
+    try {
+      await deleteImage.mutateAsync(item.id);
+      setImagePreview(null);
+      setImageFile(null);
+      setConfirmDeletePhoto(false);
+      toast.success(t('menuItems.deleteSuccess'));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t('common.unexpectedError');
+      toast.error(msg);
     }
   };
 
@@ -441,21 +449,24 @@ export function MenuItemDialog({
               disabled={isPending}
               className='h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold shadow-xs'
             >
-              {isEditing ? (
-                <>
-                  <IconCheck className='size-4' />
-                  <span>{t('common.save')}</span>
-                </>
-              ) : (
-                <>
-                  <IconPlus className='size-4' />
-                  <span>{t('common.add')}</span>
-                </>
-              )}
+              {isEditing ? <IconCheck className='size-4' /> : <IconPlus className='size-4' />}
+              <span>{isEditing ? t('common.save') : t('common.add')}</span>
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <ConfirmDialog
+        open={confirmDeletePhoto}
+        onOpenChange={setConfirmDeletePhoto}
+        title={t('common.areYouSure')}
+        description={t('common.cannotUndo')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant='destructive'
+        isLoading={deleteImage.isPending}
+        onConfirm={handleConfirmDeletePhoto}
+      />
     </Dialog>
   );
 }

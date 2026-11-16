@@ -32,10 +32,12 @@ import { MergeAreaDialog } from './merge-area-dialog';
 import { AddDistrictDialog } from './add-district-dialog';
 import { PlatformDistrictsBar } from './platform-districts-bar';
 import { PlatformAreasMetrics } from './platform-areas-metrics';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import type { MasterArea, MasterAreasEnvelope, PlatformCitiesEnvelope } from '../types';
 
 export function PlatformSettingsView() {
   const t = useTranslations('platformAreas');
+  const tCommon = useTranslations('common');
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
   const [perPage] = useQueryState('perPage', parseAsInteger.withDefault(20));
   const [name] = useQueryState('name', parseAsString);
@@ -43,17 +45,14 @@ export function PlatformSettingsView() {
 
   const [selectedArea, setSelectedArea] = React.useState<MasterArea | null>(null);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-
   const [approveArea, setApproveArea] = React.useState<MasterArea | null>(null);
   const [isApproveOpen, setIsApproveOpen] = React.useState(false);
-
   const [mergeArea, setMergeArea] = React.useState<MasterArea | null>(null);
   const [isMergeOpen, setIsMergeOpen] = React.useState(false);
-
   const [filterNeedsReview, setFilterNeedsReview] = React.useState(false);
-
   const [selectedCityId, setSelectedCityId] = React.useState<string>('ALL');
   const [isAddCityOpen, setIsAddCityOpen] = React.useState(false);
+  const [areaToDelete, setAreaToDelete] = React.useState<MasterArea | null>(null);
 
   const { data: rawCities = [] } = usePlatformCities();
   const { data: rawAllAreas = [], isLoading } = useMasterAreas();
@@ -153,25 +152,21 @@ export function PlatformSettingsView() {
     [t, updateMutation]
   );
 
-  const handleDeleteArea = React.useCallback(
-    async (area: MasterArea) => {
-      if (
-        !window.confirm(
-          t('confirmDeleteArea', { name: area.name })
-        )
-      ) {
-        return;
-      }
-      try {
-        await deleteMutation.mutateAsync(area.id);
-        toast.success(t('areaDeleted', { name: area.name }));
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Failed to delete area';
-        toast.error(msg);
-      }
-    },
-    [deleteMutation, t]
-  );
+  const handleDeleteArea = React.useCallback((area: MasterArea) => {
+    setAreaToDelete(area);
+  }, []);
+
+  const handleConfirmDeleteArea = React.useCallback(async () => {
+    if (!areaToDelete) return;
+    try {
+      await deleteMutation.mutateAsync(areaToDelete.id);
+      toast.success(t('areaDeleted', { name: areaToDelete.name }));
+      setAreaToDelete(null);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to delete area';
+      toast.error(msg);
+    }
+  }, [areaToDelete, deleteMutation, t]);
 
   const columns = React.useMemo<ColumnDef<MasterArea>[]>(
     () => [
@@ -334,8 +329,7 @@ export function PlatformSettingsView() {
         label: row.isActive ? t('active') : t('inactive'),
         status: row.isActive ? 'ACTIVE' : 'INACTIVE'
       }),
-      value: (row) =>
-        t('restaurantsCount', { count: row.activeRestaurantsCount || 0 }),
+      value: (row) => t('restaurantsCount', { count: row.activeRestaurantsCount || 0 }),
       valueLabel: () => t('colRestaurants'),
       meta: [(row) => `${t('colSort')}: ${row.sortOrder}`],
       ariaLabel: (row) => `${row.name}, ${row.isActive ? t('active') : t('inactive')}`
@@ -368,10 +362,7 @@ export function PlatformSettingsView() {
     [handleOpenEdit, t]
   );
 
-  const areaQuickFilters = React.useMemo<QuickFilterChip[]>(
-    () => [{ id: 'all', label: t('metricTotal') }],
-    [t]
-  );
+  const areaQuickFilters = React.useMemo<QuickFilterChip[]>(() => [{ id: 'all', label: t('metricTotal') }], [t]);
 
   const { table } = useDataTable({
     data: tableAreas,
@@ -461,6 +452,22 @@ export function PlatformSettingsView() {
         open={isAddCityOpen}
         onOpenChange={setIsAddCityOpen}
         onCreated={setSelectedCityId}
+      />
+
+      <ConfirmDialog
+        open={!!areaToDelete}
+        onOpenChange={(open) => !open && setAreaToDelete(null)}
+        title={t('deleteArea')}
+        description={
+          areaToDelete
+            ? t('confirmDeleteArea', { name: areaToDelete.name })
+            : undefined
+        }
+        confirmLabel={tCommon('delete')}
+        cancelLabel={tCommon('cancel')}
+        variant='destructive'
+        isLoading={deleteMutation.isPending}
+        onConfirm={handleConfirmDeleteArea}
       />
     </div>
   );
