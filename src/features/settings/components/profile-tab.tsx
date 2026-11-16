@@ -423,7 +423,7 @@ export function ProfileTab() {
                     disabled={isPending}
                     onClick={() =>
                       setCuisines((prev) =>
-                        prev.includes(item) ? prev.filter((c) => c !== item) : prev.length < 5 ? [...prev, item] : prev
+                        prev.includes(item) ? prev.filter((c) => c !== item) : [...prev, item]
                       )
                     }
                     className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${

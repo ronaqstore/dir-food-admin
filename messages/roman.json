@@ -2616,7 +2616,7 @@
     "copyHoursToAll": "Tamam open days k lye copy krein",
     "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)",
     "cuisinesLabel": "Khaano ki Aqsam / Speciality",
-    "cuisinesHint": "Zyada se zyada 5 aqsam muntakhib karein"
+    "cuisinesHint": "Apne restaurant ke khano ki aqsam muntakhib karein"
   },
   "orders": {
     "title": "Orders & Inquiries",
