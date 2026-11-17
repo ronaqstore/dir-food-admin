@@ -23,15 +23,15 @@ export function PlatformDistrictsBar({
   };
 
   return (
-    <div className='flex flex-wrap items-center justify-between gap-2 shrink-0'>
+    <div className='flex flex-wrap items-center justify-between gap-2 shrink-0 w-full'>
       {safeCities.length > 0 && (
-        <div className='flex items-center gap-2 overflow-x-auto pb-1'>
-          <span className='text-xs font-medium text-muted-foreground whitespace-nowrap'>{t('districtLabelPlain')}</span>
+        <div className='flex items-center gap-2 overflow-x-auto pb-1 max-w-full flex-1 min-w-0'>
+          <span className='text-xs font-medium text-muted-foreground whitespace-nowrap shrink-0'>{t('districtLabelPlain')}</span>
           <Button
             type='button'
             size='sm'
             variant={selectedCityId === 'ALL' ? 'default' : 'outline'}
-            className='h-7 text-xs rounded-full'
+            className='h-7 text-xs rounded-full shrink-0 whitespace-nowrap'
             onClick={handleSelectAll}
           >
             <span>{t('allDistricts')}</span>
@@ -54,7 +54,7 @@ export function PlatformDistrictsBar({
                 key={c.id}
                 size='sm'
                 variant={isSelected ? 'default' : 'outline'}
-                className='h-7 text-xs rounded-full'
+                className='h-7 text-xs rounded-full shrink-0 whitespace-nowrap'
                 onClick={() => onSelectCityId(c.id)}
               >
                 <span>{c.name}</span>
