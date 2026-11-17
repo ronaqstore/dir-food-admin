@@ -28,7 +28,7 @@ export function StandardPagination({
   page,
   pageSize,
   total,
-  pageSizeOptions = [10, 20, 30, 50],
+  pageSizeOptions = [10, 20, 30, 50, 100],
   onPageChange,
   onPageSizeChange,
   className,
@@ -66,7 +66,7 @@ export function StandardPagination({
             <SelectTrigger className='h-8 w-[4.5rem] [&[data-size]]:h-8'>
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
-            <SelectContent side='top'>
+            <SelectContent side='top' alignItemWithTrigger={false}>
               <SelectGroup>
                 {pageSizeOptions.map((size) => (
                   <SelectItem key={size} value={`${size}`}>

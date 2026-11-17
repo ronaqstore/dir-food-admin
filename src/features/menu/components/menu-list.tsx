@@ -336,7 +336,7 @@ export function MenuList() {
               page={page}
               pageSize={pageSize}
               total={totalServerCount}
-              pageSizeOptions={[10, 20, 30, 50]}
+              pageSizeOptions={[10, 20, 30, 50, 100]}
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
               disabled={isFetching}

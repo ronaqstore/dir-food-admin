@@ -240,7 +240,7 @@ export function CuisinesView() {
             page={page}
             pageSize={pageSize}
             total={total}
-            pageSizeOptions={[20, 50, 100]}
+            pageSizeOptions={[10, 20, 50, 100]}
             onPageChange={setPage}
             onPageSizeChange={handlePageSizeChange}
             disabled={isLoading}

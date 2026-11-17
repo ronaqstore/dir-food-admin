@@ -20,7 +20,7 @@ interface DataTablePaginationProps<TData> extends React.ComponentProps<'div'> {
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions = [20, 30, 50, 100],
+  pageSizeOptions = [10, 20, 30, 50, 100],
   className,
   ...props
 }: DataTablePaginationProps<TData>) {
@@ -61,7 +61,7 @@ export function DataTablePagination<TData>({
             <SelectTrigger className='h-8 w-[4.5rem] [&[data-size]]:h-8'>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
-            <SelectContent side='top'>
+            <SelectContent side='top' alignItemWithTrigger={false}>
               <SelectGroup>
                 {pageSizeOptions.map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
