@@ -56,8 +56,8 @@ export function StatusChangeDialog({
           reason: reason.trim() || undefined
         }
       });
-      toast.success(t('statusUpdated'));
       onOpenChange(false);
+      toast.success(t('statusUpdated'));
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to update status';
       toast.error(message);

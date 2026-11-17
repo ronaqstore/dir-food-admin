@@ -54,8 +54,9 @@ export function ApproveAreaDialog({
           slug: slug.trim() || undefined
         }
       });
-      toast.success(t('areaApproved', { name: name.trim() }));
+      const approvedName = name.trim();
       onOpenChange(false);
+      toast.success(t('areaApproved', { name: approvedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to approve area';
       toast.error(msg);

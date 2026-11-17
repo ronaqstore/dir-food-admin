@@ -53,11 +53,12 @@ export function DeliveryAreasTab() {
         deliveryFee: newAreaFee ? toPaisa(Number(newAreaFee)) : null,
         minOrderAmount: newAreaMinOrder ? toPaisa(Number(newAreaMinOrder)) : null,
       });
-      toast.success(t('restaurantSettings.areaAddedSuccess', { name: newAreaName.trim() }));
+      const addedName = newAreaName.trim();
       setIsAddOpen(false);
       setNewAreaName('');
       setNewAreaFee('');
       setNewAreaMinOrder('');
+      toast.success(t('restaurantSettings.areaAddedSuccess', { name: addedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
       toast.error(msg);

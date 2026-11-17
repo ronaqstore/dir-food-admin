@@ -160,8 +160,9 @@ export function PlatformSettingsView() {
     if (!areaToDelete) return;
     try {
       await deleteMutation.mutateAsync(areaToDelete.id);
-      toast.success(t('areaDeleted', { name: areaToDelete.name }));
+      const deletedName = areaToDelete.name;
       setAreaToDelete(null);
+      toast.success(t('areaDeleted', { name: deletedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to delete area';
       toast.error(msg);

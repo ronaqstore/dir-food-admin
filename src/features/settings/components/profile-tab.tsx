@@ -172,8 +172,8 @@ export function ProfileTab() {
     if (!imageToDelete) return;
     try {
       await deleteImage.mutateAsync(imageToDelete);
-      toast.success(t('menuItems.deleteSuccess'));
       setImageToDelete(null);
+      toast.success(t('menuItems.deleteSuccess'));
       void refetchReadiness();
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');

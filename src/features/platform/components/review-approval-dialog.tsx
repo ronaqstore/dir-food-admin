@@ -38,8 +38,8 @@ export function ReviewApprovalDialog({
         id: restaurant.id,
         input: { status: 'ACTIVE' }
       });
-      toast.success(t('statusUpdated'));
       onOpenChange(false);
+      toast.success(t('statusUpdated'));
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to approve restaurant';
       toast.error(message);

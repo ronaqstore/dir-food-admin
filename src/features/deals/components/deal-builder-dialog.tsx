@@ -253,7 +253,6 @@ export function DealBuilderDialog({
             isDeal: true
           }
         });
-        toast.success(t('deals.dealUpdated'));
       } else {
         const created = await createItem.mutateAsync({
           categoryId: targetCatId,
@@ -264,7 +263,6 @@ export function DealBuilderDialog({
           isDeal: true
         });
         savedId = created.id;
-        toast.success(t('deals.dealCreated'));
       }
 
       if (savedId && imageFile) {
@@ -278,8 +276,9 @@ export function DealBuilderDialog({
 
       await queryClient.invalidateQueries({ queryKey: ['menu-items'] });
       await queryClient.refetchQueries({ queryKey: ['menu-items'] });
-      onSuccess?.();
       onOpenChange(false);
+      onSuccess?.();
+      toast.success(isEditing ? t('deals.dealUpdated') : t('deals.dealCreated'));
     } catch (err: unknown) {
       const msg =
         err instanceof ApiError && err.message

@@ -39,10 +39,11 @@ export function AddDistrictDialog({
     if (!cityName.trim()) return;
     try {
       const created = await createCityMutation.mutateAsync({ name: cityName.trim() });
-      toast.success(t('districtCreated', { name: cityName.trim() }));
+      const name = cityName.trim();
       setCityName('');
       onOpenChange(false);
       onCreated?.(created.id);
+      toast.success(t('districtCreated', { name }));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('districtFailed'));
     }

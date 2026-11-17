@@ -73,16 +73,17 @@ export function CategoryDialog({
             isActive
           }
         });
-        toast.success(t('menuCategories.updateSuccess'));
+        onOpenChange(false);
         onSuccess?.(updated);
+        toast.success(t('menuCategories.updateSuccess'));
       } else {
         const created = await createCategory.mutateAsync({
           name: trimmed
         });
-        toast.success(t('menuCategories.createSuccess'));
+        onOpenChange(false);
         onSuccess?.(created);
+        toast.success(t('menuCategories.createSuccess'));
       }
-      onOpenChange(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : t('common.unexpectedError');
       toast.error(message);

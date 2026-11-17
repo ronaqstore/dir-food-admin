@@ -79,8 +79,9 @@ export function CuisinesView() {
     if (!cuisineToDelete) return;
     try {
       await deleteMutation.mutateAsync(cuisineToDelete.id);
-      toast.success(t('cuisineDeleted', { name: cuisineToDelete.name }));
+      const deletedName = cuisineToDelete.name;
       setCuisineToDelete(null);
+      toast.success(t('cuisineDeleted', { name: deletedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('deleteFailed');
       toast.error(msg);

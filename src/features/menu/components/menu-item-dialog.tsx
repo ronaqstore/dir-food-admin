@@ -263,8 +263,6 @@ export function MenuItemDialog({
             }))
           }
         });
-
-        toast.success(t('menuItems.updateSuccess'));
       } else {
         const created = await createItem.mutateAsync({
           categoryId,
@@ -288,7 +286,6 @@ export function MenuItemDialog({
               : undefined
         });
         savedItemId = created.id;
-        toast.success(t('menuItems.createSuccess'));
       }
 
       if (savedItemId && imageFile) {
@@ -296,10 +293,10 @@ export function MenuItemDialog({
           id: savedItemId,
           file: imageFile
         });
-        toast.success(t('menuItems.imageUploadSuccess'));
       }
 
       onOpenChange(false);
+      toast.success(isEditing ? t('menuItems.updateSuccess') : t('menuItems.createSuccess'));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
       toast.error(msg);

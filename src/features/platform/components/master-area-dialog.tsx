@@ -71,6 +71,7 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
             isActive
           }
         });
+        onOpenChange(false);
         toast.success(t('areaUpdated'));
       } else {
         await createMutation.mutateAsync({
@@ -80,9 +81,9 @@ export function MasterAreaDialog({ area, open, onOpenChange, defaultCityId }: Ma
           sortOrder,
           isActive
         });
+        onOpenChange(false);
         toast.success(t('areaCreated'));
       }
-      onOpenChange(false);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to save delivery area';
       toast.error(msg);

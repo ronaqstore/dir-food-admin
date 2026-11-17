@@ -52,8 +52,8 @@ export function ExtendSubscriptionDialog({
         id: restaurantId,
         input: { addDays: daysToAdd }
       });
-      toast.success(t('subExtended'));
       onOpenChange(false);
+      toast.success(t('subExtended'));
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to extend subscription';
       toast.error(message);

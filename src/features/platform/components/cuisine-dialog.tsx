@@ -65,6 +65,7 @@ export function CuisineDialog({ cuisine, open, onOpenChange }: CuisineDialogProp
             isActive
           }
         });
+        onOpenChange(false);
         toast.success(t('cuisineUpdated'));
       } else {
         await createMutation.mutateAsync({
@@ -73,9 +74,9 @@ export function CuisineDialog({ cuisine, open, onOpenChange }: CuisineDialogProp
           sortOrder,
           isActive
         });
+        onOpenChange(false);
         toast.success(t('cuisineCreated'));
       }
-      onOpenChange(false);
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('saveFailed');
       toast.error(msg);

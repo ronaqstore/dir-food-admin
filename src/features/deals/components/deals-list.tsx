@@ -148,8 +148,8 @@ export function DealsList() {
         id: dealToDelete.id,
         input: { isActive: false }
       });
-      toast.success(t('dealRemoved'));
       setDealToDelete(null);
+      toast.success(t('dealRemoved'));
       refetch();
     } catch {
       toast.error(t('removeFailed'));

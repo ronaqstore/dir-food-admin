@@ -62,13 +62,13 @@ export function MergeAreaDialog({
         sourceAreaId: sourceArea.id,
         targetAreaId
       });
+      onOpenChange(false);
       toast.success(
         t('mergeSuccess', {
           from: sourceArea.name,
           to: targetArea?.name || 'canonical area'
         })
       );
-      onOpenChange(false);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to merge area';
       toast.error(msg);
