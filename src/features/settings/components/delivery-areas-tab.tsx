@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { DeliveryAreasListSkeleton } from '@/components/skeletons/settings-skeleton';
 import { IconMapPin, IconSearch, IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import { toPaisa, fromPaisa } from '@/lib/money';
+import { StandardPagination } from '@/components/ui/standard-pagination';
 import {
   Dialog,
   DialogContent,
@@ -35,6 +36,8 @@ export function DeliveryAreasTab() {
 
   const [rows, setRows] = React.useState<AreaRowState[]>([]);
   const [search, setSearch] = React.useState('');
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(20);
   const [isAddOpen, setIsAddOpen] = React.useState(false);
   const [newAreaName, setNewAreaName] = React.useState('');
   const [newAreaFee, setNewAreaFee] = React.useState('');
@@ -42,23 +45,54 @@ export function DeliveryAreasTab() {
 
   const handleCreateArea = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAreaName.trim()) {
+    const trimmedName = newAreaName.trim();
+    if (!trimmedName) {
       toast.error(t('restaurantSettings.enterAreaName'));
       return;
+    }
+    if (trimmedName.length < 2) {
+      toast.error(t('restaurantSettings.areaNameTooShort'));
+      return;
+    }
+    if (trimmedName.length > 60) {
+      toast.error(t('restaurantSettings.areaNameTooLong'));
+      return;
+    }
+    const alreadyExists = rows.some(
+      (r) => r.name.trim().toLowerCase() === trimmedName.toLowerCase()
+    );
+    if (alreadyExists) {
+      toast.error(t('restaurantSettings.areaAlreadyExists'));
+      return;
+    }
+
+    if (newAreaFee.trim() !== '') {
+      const fee = Number(newAreaFee);
+      if (Number.isNaN(fee) || fee < 0 || fee > 50000 || !Number.isInteger(fee)) {
+        toast.error(t('restaurantSettings.invalidDeliveryFee'));
+        return;
+      }
+    }
+
+    if (newAreaMinOrder.trim() !== '') {
+      const minOrder = Number(newAreaMinOrder);
+      if (Number.isNaN(minOrder) || minOrder < 0 || minOrder > 500000 || !Number.isInteger(minOrder)) {
+        toast.error(t('restaurantSettings.invalidMinOrder'));
+        return;
+      }
     }
 
     try {
       await createCustomArea.mutateAsync({
-        name: newAreaName.trim(),
-        deliveryFee: newAreaFee ? toPaisa(Number(newAreaFee)) : null,
-        minOrderAmount: newAreaMinOrder ? toPaisa(Number(newAreaMinOrder)) : null,
+        name: trimmedName,
+        deliveryFee: newAreaFee.trim() ? toPaisa(Number(newAreaFee)) : null,
+        minOrderAmount: newAreaMinOrder.trim() ? toPaisa(Number(newAreaMinOrder)) : null,
       });
-      const addedName = newAreaName.trim();
       setIsAddOpen(false);
       setNewAreaName('');
       setNewAreaFee('');
       setNewAreaMinOrder('');
-      toast.success(t('restaurantSettings.areaAddedSuccess', { name: addedName }));
+      toast.success(t('restaurantSettings.areaAddedSuccess', { name: trimmedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
       toast.error(msg);
@@ -70,6 +104,19 @@ export function DeliveryAreasTab() {
     const lower = search.toLowerCase();
     return rows.filter((r) => r.name.toLowerCase().includes(lower));
   }, [rows, search]);
+
+  const total = filteredRows.length;
+  const paginatedRows = React.useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filteredRows.slice(start, start + pageSize);
+  }, [filteredRows, page, pageSize]);
+
+  React.useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil(total / pageSize));
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [total, pageSize, page]);
 
   React.useEffect(() => {
     if (areas) {
@@ -99,14 +146,40 @@ export function DeliveryAreasTab() {
     setRows((prev) => prev.map((r) => (r.areaId === areaId ? { ...r, minOrderInput } : r)));
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPage(1);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  };
+
   const handleSave = async () => {
-    const payload = rows
-      .filter((r) => r.isServed)
-      .map((r) => ({
-        areaId: r.areaId,
-        deliveryFee: r.feeInput ? toPaisa(Number(r.feeInput)) : null,
-        minOrderAmount: r.minOrderInput ? toPaisa(Number(r.minOrderInput)) : null
-      }));
+    const served = rows.filter((r) => r.isServed);
+    for (const r of served) {
+      if (r.feeInput.trim() !== '') {
+        const fee = Number(r.feeInput);
+        if (Number.isNaN(fee) || fee < 0 || fee > 50000 || !Number.isInteger(fee)) {
+          toast.error(t('restaurantSettings.invalidRowFee', { name: r.name }));
+          return;
+        }
+      }
+      if (r.minOrderInput.trim() !== '') {
+        const min = Number(r.minOrderInput);
+        if (Number.isNaN(min) || min < 0 || min > 500000 || !Number.isInteger(min)) {
+          toast.error(t('restaurantSettings.invalidRowMinOrder', { name: r.name }));
+          return;
+        }
+      }
+    }
+
+    const payload = served.map((r) => ({
+      areaId: r.areaId,
+      deliveryFee: r.feeInput.trim() ? toPaisa(Number(r.feeInput)) : null,
+      minOrderAmount: r.minOrderInput.trim() ? toPaisa(Number(r.minOrderInput)) : null
+    }));
 
     try {
       await updateAreas.mutateAsync({ areas: payload });
@@ -149,7 +222,7 @@ export function DeliveryAreasTab() {
               <IconSearch className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground' />
               <Input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
                 placeholder={t('restaurantSettings.searchAreasPlaceholder')}
                 className='ps-8 h-9 text-xs'
               />
@@ -246,98 +319,114 @@ export function DeliveryAreasTab() {
       {isLoading ? (
         <DeliveryAreasListSkeleton />
       ) : (
-        <div className='divide-y divide-border/60'>
-          {filteredRows.map((row) => (
-            <div
-              key={row.areaId}
-              className={`flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between transition-colors rounded-xl px-2.5 ${
-                row.isServed ? 'bg-muted/30 border border-border/50' : 'hover:bg-muted/20'
-              }`}
-            >
-              <div className='flex items-center gap-3'>
-                <Switch
-                  checked={row.isServed}
-                  onCheckedChange={(checked) => handleToggleServed(row.areaId, checked)}
-                  disabled={updateAreas.isPending}
-                  aria-label={row.name}
-                />
-                <div className='flex items-center gap-2'>
-                  <IconMapPin
-                    className={`size-4 ${row.isServed ? 'text-primary' : 'text-muted-foreground'}`}
+        <div className='space-y-4'>
+          <div className='divide-y divide-border/60'>
+            {paginatedRows.map((row) => (
+              <div
+                key={row.areaId}
+                className={`flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between transition-colors rounded-xl px-2.5 ${
+                  row.isServed ? 'bg-muted/30 border border-border/50' : 'hover:bg-muted/20'
+                }`}
+              >
+                <div className='flex items-center gap-3'>
+                  <Switch
+                    checked={row.isServed}
+                    onCheckedChange={(checked) => handleToggleServed(row.areaId, checked)}
+                    disabled={updateAreas.isPending}
+                    aria-label={row.name}
                   />
-                  <span
-                    className={`text-sm font-semibold ${row.isServed ? 'text-foreground' : 'text-muted-foreground'}`}
-                  >
-                    {row.name}
-                  </span>
-                  <Badge
-                    variant='outline'
-                    className={`text-[10px] px-1.5 py-0 font-medium ${
-                      row.isServed
-                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                        : 'border-muted text-muted-foreground bg-muted/40'
-                    }`}
-                  >
-                    {row.isServed ? t('restaurantSettings.servedArea') : t('restaurantSettings.closed')}
-                  </Badge>
-                  {row.isVerified === false && (
+                  <div className='flex items-center gap-2'>
+                    <IconMapPin
+                      className={`size-4 ${row.isServed ? 'text-primary' : 'text-muted-foreground'}`}
+                    />
+                    <span
+                      className={`text-sm font-semibold ${row.isServed ? 'text-foreground' : 'text-muted-foreground'}`}
+                    >
+                      {row.name}
+                    </span>
                     <Badge
                       variant='outline'
-                      className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
+                      className={`text-[10px] px-1.5 py-0 font-medium ${
+                        row.isServed
+                          ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                          : 'border-muted text-muted-foreground bg-muted/40'
+                      }`}
                     >
-                      {t('restaurantSettings.pendingVerification')}
+                      {row.isServed ? t('restaurantSettings.servedArea') : t('restaurantSettings.closed')}
                     </Badge>
-                  )}
+                    {row.isVerified === false && (
+                      <Badge
+                        variant='outline'
+                        className='text-[10px] text-amber-700 bg-amber-50 border-amber-300 dark:text-amber-400 dark:bg-amber-950/40 font-medium'
+                      >
+                        {t('restaurantSettings.pendingVerification')}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
+
+                {row.isServed ? (
+                  <div className='flex flex-wrap items-center gap-3 ps-11 sm:ps-0 animate-in fade-in-50'>
+                    <div className='flex items-center gap-1.5'>
+                      <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
+                        {t('restaurantSettings.deliveryFee')}:
+                      </span>
+                      <div className='relative w-28'>
+                        <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                          {t('common.currency')}
+                        </span>
+                        <Input
+                          type='number'
+                          min='0'
+                          step='1'
+                          value={row.feeInput}
+                          onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
+                          placeholder={t('restaurantSettings.feePlaceholder')}
+                          disabled={updateAreas.isPending}
+                          className='h-9 ps-8 text-xs'
+                        />
+                      </div>
+                    </div>
+
+                    <div className='flex items-center gap-1.5'>
+                      <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
+                        {t('restaurantSettings.areaMinOrder')}:
+                      </span>
+                      <div className='relative w-28'>
+                        <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
+                          {t('common.currency')}
+                        </span>
+                        <Input
+                          type='number'
+                          min='0'
+                          step='1'
+                          value={row.minOrderInput}
+                          onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
+                          placeholder={t('restaurantSettings.defaultPlaceholder')}
+                          disabled={updateAreas.isPending}
+                          className='h-9 ps-8 text-xs'
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
+            ))}
+          </div>
 
-              {row.isServed ? (
-                <div className='flex flex-wrap items-center gap-3 ps-11 sm:ps-0 animate-in fade-in-50'>
-                  <div className='flex items-center gap-1.5'>
-                    <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
-                      {t('restaurantSettings.deliveryFee')}:
-                    </span>
-                    <div className='relative w-28'>
-                      <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                        {t('common.currency')}
-                      </span>
-                      <Input
-                        type='number'
-                        min='0'
-                        step='1'
-                        value={row.feeInput}
-                        onChange={(e) => handleFeeChange(row.areaId, e.target.value)}
-                        placeholder={t('restaurantSettings.feePlaceholder')}
-                        disabled={updateAreas.isPending}
-                        className='h-9 ps-8 text-xs'
-                      />
-                    </div>
-                  </div>
-
-                  <div className='flex items-center gap-1.5'>
-                    <span className='text-[11px] text-muted-foreground whitespace-nowrap'>
-                      {t('restaurantSettings.areaMinOrder')}:
-                    </span>
-                    <div className='relative w-28'>
-                      <span className='absolute inset-s-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium'>
-                        {t('common.currency')}
-                      </span>
-                      <Input
-                        type='number'
-                        min='0'
-                        step='1'
-                        value={row.minOrderInput}
-                        onChange={(e) => handleMinOrderChange(row.areaId, e.target.value)}
-                        placeholder={t('restaurantSettings.defaultPlaceholder')}
-                        disabled={updateAreas.isPending}
-                        className='h-9 ps-8 text-xs'
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : null}
+          {total > 0 && (
+            <div className='pt-2'>
+              <StandardPagination
+                page={page}
+                pageSize={pageSize}
+                total={total}
+                pageSizeOptions={[10, 20, 30, 50, 100]}
+                onPageChange={setPage}
+                onPageSizeChange={handlePageSizeChange}
+                disabled={updateAreas.isPending}
+              />
             </div>
-          ))}
+          )}
         </div>
       )}
 

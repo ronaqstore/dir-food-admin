@@ -18,6 +18,7 @@ import {
 import { Icons } from '@/components/icons';
 import { formatPkr } from '@/lib/money';
 import { WHATSAPP_BASE_URL } from '@/constants/api';
+import { StandardPagination } from '@/components/ui/standard-pagination';
 import { useOrders, useOrderStats } from '../api/orders-query';
 import { OrderDetailsDialog } from './order-details-dialog';
 import type { OrderIntentStatus, OwnerOrderIntent } from '../types';
@@ -31,7 +32,7 @@ export function OrdersList() {
   const [search, setSearch] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<OrderIntentStatus | 'ALL'>('ALL');
   const [page, setPage] = React.useState(1);
-  const limit = 20;
+  const [limit, setLimit] = React.useState(20);
 
   const { data: statsData } = useOrderStats('30d');
 
@@ -44,7 +45,11 @@ export function OrdersList() {
 
   const orders = ordersResponse?.data ?? [];
   const meta = ordersResponse?.meta;
-  const totalPages = meta ? Math.ceil(meta.total / limit) : 1;
+
+  const handlePageSizeChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
 
   const handleOpenDetail = (order: OwnerOrderIntent) => {
     setSelectedOrderId(order.id);
@@ -383,37 +388,16 @@ export function OrdersList() {
             })}
           </div>
 
-          {}
-          {totalPages > 1 && (
-            <div className='shrink-0 flex items-center justify-between pt-2'>
-              <div className='text-xs text-muted-foreground'>
-                {t('metricTotalOrders')}: {meta?.total}
-              </div>
-              <div className='flex items-center gap-1'>
-                <Button
-                  type='button'
-                  size='sm'
-                  variant='outline'
-                  disabled={page <= 1}
-                  aria-label={t('prevPage')}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                >
-                  <Icons.chevronLeft className='size-4' />
-                </Button>
-                <span className='px-2 text-xs font-mono font-medium'>
-                  {page} / {totalPages}
-                </span>
-                <Button
-                  type='button'
-                  size='sm'
-                  variant='outline'
-                  disabled={page >= totalPages}
-                  aria-label={t('nextPage')}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                >
-                  <Icons.chevronRight className='size-4' />
-                </Button>
-              </div>
+          {meta && meta.total > 0 && (
+            <div className='shrink-0 pt-2'>
+              <StandardPagination
+                page={page}
+                pageSize={limit}
+                total={meta.total}
+                pageSizeOptions={[10, 20, 30, 50]}
+                onPageChange={setPage}
+                onPageSizeChange={handlePageSizeChange}
+              />
             </div>
           )}
         </>

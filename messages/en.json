@@ -2617,7 +2617,14 @@
     "copyHoursToAll": "Copy hours to all open days",
     "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)",
     "cuisinesLabel": "Cuisines / Specialties",
-    "cuisinesHint": "Select cuisines your restaurant serves"
+    "cuisinesHint": "Select cuisines your restaurant serves",
+    "areaNameTooShort": "Area name must be at least 2 characters",
+    "areaNameTooLong": "Area name must be 60 characters or fewer",
+    "areaAlreadyExists": "An area with this name already exists in your district",
+    "invalidDeliveryFee": "Delivery fee must be a valid amount up to 50,000 PKR",
+    "invalidMinOrder": "Minimum order must be a valid amount up to 500,000 PKR",
+    "invalidRowFee": "Please enter a valid delivery fee for {name}",
+    "invalidRowMinOrder": "Please enter a valid minimum order for {name}"
   },
   "orders": {
     "title": "Orders & Inquiries",

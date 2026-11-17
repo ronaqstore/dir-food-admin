@@ -2617,7 +2617,14 @@
     "copyHoursToAll": "Tamam open days k lye copy krein",
     "invalidPhone": "11 digits mobile number darj karein (maslan 03029825213)",
     "cuisinesLabel": "Khaano ki Aqsam / Speciality",
-    "cuisinesHint": "Apne restaurant ke khano ki aqsam muntakhib karein"
+    "cuisinesHint": "Apne restaurant ke khano ki aqsam muntakhib karein",
+    "areaNameTooShort": "Area ka naam kam az kam 2 characters hona chahiye",
+    "areaNameTooLong": "Area ka naam 60 characters se zyada nahi hona chahiye",
+    "areaAlreadyExists": "Is naam ka area aapke district mein pehle se mojood hai",
+    "invalidDeliveryFee": "Delivery fee 50,000 PKR tak durust raqam honi chahiye",
+    "invalidMinOrder": "Minimum order 500,000 PKR tak durust raqam honi chahiye",
+    "invalidRowFee": "Bara-e-meherbani {name} ke liye durust delivery fee darj karein",
+    "invalidRowMinOrder": "Bara-e-meherbani {name} ke liye durust minimum order darj karein"
   },
   "orders": {
     "title": "Orders & Inquiries",
