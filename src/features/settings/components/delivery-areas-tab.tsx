@@ -40,8 +40,8 @@ export function DeliveryAreasTab() {
   const [pageSize, setPageSize] = React.useState(20);
   const [isAddOpen, setIsAddOpen] = React.useState(false);
   const [newAreaName, setNewAreaName] = React.useState('');
-  const [newAreaFee, setNewAreaFee] = React.useState('');
-  const [newAreaMinOrder, setNewAreaMinOrder] = React.useState('');
+  const [newAreaFee, setNewAreaFee] = React.useState('0');
+  const [newAreaMinOrder, setNewAreaMinOrder] = React.useState('0');
 
   const handleCreateArea = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,8 +90,8 @@ export function DeliveryAreasTab() {
       });
       setIsAddOpen(false);
       setNewAreaName('');
-      setNewAreaFee('');
-      setNewAreaMinOrder('');
+      setNewAreaFee('0');
+      setNewAreaMinOrder('0');
       toast.success(t('restaurantSettings.areaAddedSuccess', { name: trimmedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
@@ -126,8 +126,8 @@ export function DeliveryAreasTab() {
           name: a.name,
           slug: a.slug,
           isServed: a.isServed,
-          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '',
-          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : '',
+          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '0',
+          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : '0',
           isVerified: a.isVerified !== false
         }))
       );
@@ -135,7 +135,17 @@ export function DeliveryAreasTab() {
   }, [areas]);
 
   const handleToggleServed = (areaId: string, isServed: boolean) => {
-    setRows((prev) => prev.map((r) => (r.areaId === areaId ? { ...r, isServed } : r)));
+    setRows((prev) =>
+      prev.map((r) => {
+        if (r.areaId !== areaId) return r;
+        return {
+          ...r,
+          isServed,
+          feeInput: r.feeInput.trim() !== '' ? r.feeInput : '0',
+          minOrderInput: r.minOrderInput.trim() !== '' ? r.minOrderInput : '0'
+        };
+      })
+    );
   };
 
   const handleFeeChange = (areaId: string, feeInput: string) => {
