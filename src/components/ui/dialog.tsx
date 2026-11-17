@@ -44,6 +44,7 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
 
 function DialogContent({
   className,
+  overlayClassName,
   children,
   showCloseButton = true,
   closeLabel,
@@ -52,13 +53,14 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
   closeLabel?: string;
+  overlayClassName?: string;
 }) {
   const t = useTranslations();
   const resolvedCloseLabel = closeLabel ?? t('common.close');
 
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className={overlayClassName} />
       <DialogPrimitive.Popup
         data-slot='dialog-content'
         onClick={(e) => {

@@ -7,7 +7,8 @@ import {
   IconSearch,
   IconCheck,
   IconX,
-  IconLoader2
+  IconLoader2,
+  IconPlus
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +17,12 @@ export interface SearchableSelectOption {
   label: string;
   sublabel?: string;
   disabled?: boolean;
+}
+
+export interface SearchableSelectAction {
+  label: string;
+  icon?: React.ReactNode;
+  onClick: (currentSearch: string) => void;
 }
 
 export interface SearchableSelectProps {
@@ -36,6 +43,7 @@ export interface SearchableSelectProps {
   onLoadMore?: () => Promise<void> | void;
   hasMoreRemote?: boolean;
   isLoadingRemote?: boolean;
+  action?: SearchableSelectAction;
 }
 
 export function SearchableSelect({
@@ -55,7 +63,8 @@ export function SearchableSelect({
   allowClear = false,
   onLoadMore,
   hasMoreRemote = false,
-  isLoadingRemote = false
+  isLoadingRemote = false,
+  action
 }: SearchableSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
@@ -258,6 +267,24 @@ export function SearchableSelect({
                         No match for &ldquo;{search}&rdquo;
                       </p>
                     )}
+                    {action && (
+                      <div className='mt-3 flex justify-center'>
+                        <button
+                          type='button'
+                          onClick={() => {
+                            const currentSearch = search.trim();
+                            setOpen(false);
+                            action.onClick(currentSearch);
+                          }}
+                          className='inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-90'
+                        >
+                          {action.icon ?? <IconPlus className='h-3.5 w-3.5' />}
+                          <span>
+                            {search.trim() ? `Add "${search.trim()}"` : action.label}
+                          </span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   displayedOptions.map((opt) => {
@@ -307,6 +334,23 @@ export function SearchableSelect({
                   </div>
                 )}
               </div>
+
+              {action && displayedOptions.length > 0 && (
+                <div className='sticky bottom-0 z-10 -mx-1 -mb-1 mt-1 border-t border-border/60 bg-popover/95 p-1 backdrop-blur-xs'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      const currentSearch = search.trim();
+                      setOpen(false);
+                      action.onClick(currentSearch);
+                    }}
+                    className='flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-primary/40 bg-primary/5 py-1.5 px-3 text-xs font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10'
+                  >
+                    {action.icon ?? <IconPlus className='h-3.5 w-3.5' />}
+                    <span>{action.label}</span>
+                  </button>
+                </div>
+              )}
             </PopoverPrimitive.Popup>
           </PopoverPrimitive.Positioner>
         </PopoverPrimitive.Portal>

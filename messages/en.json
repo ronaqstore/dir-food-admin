@@ -2438,6 +2438,7 @@
     "descriptionPlaceholder": "Brief description (optional)...",
     "category": "Category",
     "selectCategory": "Select a category",
+    "searchCategories": "Search categories...",
     "pricingType": "Pricing Type",
     "fixedPrice": "Single Price",
     "fixedPriceDesc": "Single standard price",

@@ -202,3 +202,11 @@ export interface MenuMobileSheetProps {
   allCategoriesTotal: number;
   t: (key: string) => string;
 }
+
+export interface MenuItemCategoryFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+  categories: MenuCategoryDTO[] | undefined;
+  disabled: boolean;
+  error?: string;
+}

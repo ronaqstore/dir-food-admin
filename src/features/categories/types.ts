@@ -28,6 +28,8 @@ export interface CategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   category?: CategoryWithCount | null;
+  initialName?: string;
+  onSuccess?: (category: CategoryWithCount) => void;
 }
 
 export interface CategoriesFilter {
