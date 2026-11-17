@@ -168,7 +168,7 @@ export function CuisinesView() {
           </div>
         ) : (
           <div className='min-h-0 flex-1 overflow-auto overscroll-contain'>
-            <table className='w-full text-start text-xs'>
+            <table className='w-full text-start text-xs min-w-[500px]'>
               <thead className='sticky top-0 z-10 border-b bg-muted/95 backdrop-blur-xs text-muted-foreground font-semibold shadow-[0_1px_0_0_var(--border)]'>
                 <tr>
                   <th className='py-3 px-4'>{t('colName')}</th>

@@ -43,26 +43,32 @@
   }
 
   * {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   *::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    display: none;
+    width: 0;
+    height: 0;
   }
 
-  *::-webkit-scrollbar-track {
-    background: transparent;
+  html,
+  body {
+    -webkit-overflow-scrolling: touch;
   }
 
-  *::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.25);
-    border-radius: 9999px;
+  .no-scrollbar,
+  .scrollbar-none {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
   }
 
-  *::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.45);
+  .no-scrollbar::-webkit-scrollbar,
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 }
 
