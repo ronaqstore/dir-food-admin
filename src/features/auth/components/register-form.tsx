@@ -32,6 +32,7 @@ export function RegisterForm() {
       ownerName: '',
       phone: '',
       password: '',
+      confirmPassword: '',
       whatsappNumber: '',
       description: ''
     } as RegisterFormValues,
@@ -75,14 +76,14 @@ export function RegisterForm() {
 
   return (
     <Card className='w-full max-w-lg border-border/60 shadow-sm'>
-      <CardHeader className='space-y-1'>
-        <CardTitle className='text-2xl font-semibold tracking-tight'>
+      <CardHeader className='space-y-1 p-4 sm:p-6'>
+        <CardTitle className='text-xl sm:text-2xl font-semibold tracking-tight'>
           {t('auth.registerTitle')}
         </CardTitle>
-        <CardDescription>{t('auth.registerHint')}</CardDescription>
+        <CardDescription className='text-xs sm:text-sm'>{t('auth.registerHint')}</CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='p-4 pt-0 sm:p-6 sm:pt-0'>
         <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
           {error ? (
             <Alert variant='destructive'>
@@ -168,7 +169,6 @@ export function RegisterForm() {
             </div>
 
             <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-              {}
               <form.AppField
                 name='password'
                 children={(field) => (
@@ -183,21 +183,34 @@ export function RegisterForm() {
                 )}
               />
 
-              {}
               <form.AppField
-                name='whatsappNumber'
+                name='confirmPassword'
                 children={(field) => (
                   <field.TextField
-                    label={t('auth.whatsappNumber')}
-                    type='tel'
-                    inputMode='numeric'
-                    autoComplete='tel'
-                    placeholder={t('auth.whatsappPlaceholder')}
-                    startIcon={Icons.whatsapp}
+                    label={t('auth.confirmPassword')}
+                    type='password'
+                    autoComplete='new-password'
+                    placeholder='••••••••'
+                    startIcon={Icons.lock}
+                    required
                   />
                 )}
               />
             </div>
+
+            <form.AppField
+              name='whatsappNumber'
+              children={(field) => (
+                <field.TextField
+                  label={t('auth.whatsappNumber')}
+                  type='tel'
+                  inputMode='numeric'
+                  autoComplete='tel'
+                  placeholder={t('auth.whatsappPlaceholder')}
+                  startIcon={Icons.whatsapp}
+                />
+              )}
+            />
 
             {}
             <form.AppField

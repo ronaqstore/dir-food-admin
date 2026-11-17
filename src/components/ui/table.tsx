@@ -9,10 +9,17 @@ export interface TableProps extends React.ComponentProps<'table'> {
 }
 
 function Table({ className, containerClassName, ...props }: TableProps) {
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (e.deltaY !== 0 && e.currentTarget.scrollWidth > e.currentTarget.clientWidth) {
+      e.currentTarget.scrollLeft += e.deltaY;
+    }
+  };
+
   return (
     <div
       data-slot='table-container'
-      className={cn('relative w-full overflow-x-auto', containerClassName)}
+      onWheel={handleWheel}
+      className={cn('relative w-full overflow-x-auto scrollbar-none', containerClassName)}
     >
       <table
         data-slot='table'

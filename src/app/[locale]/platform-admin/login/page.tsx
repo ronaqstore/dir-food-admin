@@ -18,7 +18,7 @@ export default async function PlatformAdminLoginPage() {
   const t = await getTranslations('auth');
 
   return (
-    <div className='bg-background relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-4 sm:p-6'>
+    <div className='bg-background relative flex min-h-svh flex-col items-center justify-center overflow-y-auto overflow-x-hidden scrollbar-none py-14 px-3 sm:py-16 sm:px-6'>
       <div
         aria-hidden
         className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.6_0.1_20_/_0.1),transparent_55%)]'
