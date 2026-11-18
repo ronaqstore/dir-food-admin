@@ -243,8 +243,12 @@ export function RestaurantsView() {
             },
             { label: t('colStatus'), value: renderRestaurantStatusBadge(row.status, t) },
             {
-              label: t('colCatalog'),
-              value: `${row._count?.items ?? 0} items · ${row._count?.deliveryAreas ?? 0} areas`
+              label: t('colItems'),
+              value: t('prereqItemsCount', { count: row._count?.items ?? 0 })
+            },
+            {
+              label: t('colDeliveryAreas'),
+              value: t('prereqAreasCount', { count: row._count?.deliveryAreas ?? 0 })
             }
           ]
         },

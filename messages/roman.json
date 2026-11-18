@@ -2705,6 +2705,8 @@
     "colRestaurant": "Restaurant",
     "colOwner": "Owner",
     "colCatalog": "Catalog & Areas",
+    "colItems": "Items",
+    "colDeliveryAreas": "Areas",
     "colSubscription": "Subscription",
     "colStatus": "Status",
     "colActions": "Actions",

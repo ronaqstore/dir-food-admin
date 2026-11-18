@@ -227,28 +227,34 @@ export function useRestaurantColumns({
         meta: { label: t('colOwner'), type: 'text', priority: 2 }
       },
       {
-        id: 'catalog',
+        id: 'items',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t('colCatalog')} />
+          <DataTableColumnHeader column={column} title={t('colItems')} />
         ),
         cell: ({ row }) => {
-          const counts = row.original._count;
+          const count = row.original._count?.items ?? 0;
           return (
-            <div className='text-xs text-muted-foreground space-y-0.5 whitespace-nowrap'>
-              <div>
-                <span className='font-semibold text-foreground'>
-                  {t('prereqItemsCount', { count: counts?.items ?? 0 })}
-                </span>
-              </div>
-              <div>
-                <span className='font-semibold text-foreground'>
-                  {t('prereqAreasCount', { count: counts?.deliveryAreas ?? 0 })}
-                </span>
-              </div>
-            </div>
+            <span className='font-semibold text-foreground text-xs whitespace-nowrap'>
+              {t('prereqItemsCount', { count })}
+            </span>
           );
         },
-        meta: { label: t('colCatalog'), type: 'text', priority: 3 }
+        meta: { label: t('colItems'), type: 'text', priority: 3 }
+      },
+      {
+        id: 'deliveryAreas',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('colDeliveryAreas')} />
+        ),
+        cell: ({ row }) => {
+          const count = row.original._count?.deliveryAreas ?? 0;
+          return (
+            <span className='font-semibold text-foreground text-xs whitespace-nowrap'>
+              {t('prereqAreasCount', { count })}
+            </span>
+          );
+        },
+        meta: { label: t('colDeliveryAreas'), type: 'text', priority: 3 }
       },
       {
         id: 'plan',
