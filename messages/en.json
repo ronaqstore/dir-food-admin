@@ -12,7 +12,7 @@
     "sortPriceDesc": "Price: High to Low",
     "sortNewest": "Newest First",
     "view": "View",
-    "search": "Search",
+    "search": "Search...",
     "noResults": "No results.",
     "rowsRange": "{from}–{to} of {total}",
     "rowsSelected": "{selected} of {total} row(s) selected",
@@ -175,8 +175,8 @@
     "trialEndsLabel": "Trial ends",
     "allCities": "All Cities",
     "allStatuses": "All Statuses",
-    "searchShops": "Search shops by name, owner, phone…",
-    "searchTabs": "Search tabs...",
+    "searchShops": "Search...",
+    "searchTabs": "Search...",
     "searchPlaceholder": "Search...",
     "noMatchingTabs": "No matching tabs",
     "accountMenu": "Account menu",
@@ -186,7 +186,7 @@
     "restaurantOwner": "Restaurant Owner",
     "orders": "Orders",
     "liveOrders": "Live Orders",
-    "menuItems": "Menu Items",
+    "menuItems": "Menus",
     "deals": "Deals",
     "menuCategories": "Categories",
     "tables": "Tables & QR",
@@ -558,7 +558,7 @@
       "bulkUnpublish": "Unpublish",
       "productDeactivated": "Product deactivated successfully",
       "publishUpdated": "Publish status updated",
-      "searchPlaceholder": "Search products...",
+      "searchPlaceholder": "Search...",
       "status": "Status",
       "active": "Active",
       "inactive": "Inactive"
@@ -707,7 +707,7 @@
       "description": "Customer order requests and WhatsApp handoffs"
     },
     "menu": {
-      "title": "Menu Items",
+      "title": "Menus",
       "description": "Manage restaurant dishes and pricing"
     },
     "settings": {
@@ -869,7 +869,7 @@
     "activeOrders": "Active Orders",
     "activeOrdersHint": "Kitchen / In preparation",
     "completedOrders": "Completed Orders",
-    "totalMenuItems": "Menu Items",
+    "totalMenuItems": "Menus",
     "totalMenuItemsHint": "Active food items",
     "quickActions": "Quick Actions",
     "quickActionsDesc": "Common restaurant tasks and quick shortcuts",
@@ -1009,7 +1009,7 @@
     "addressPlaceholder": "Main Bazaar, Timergara, Lower Dir",
     "districtLabel": "District / City",
     "selectDistrictPlaceholder": "Select District (Default: Lower Dir)",
-    "searchDistrictPlaceholder": "Search district or city...",
+    "searchDistrictPlaceholder": "Search...",
     "whatsappPlaceholder": "03001234567 (optional)"
   },
   "appearance": {
@@ -1146,7 +1146,7 @@
     "inventoryDesc": "Open inventory"
   },
   "icons": {
-    "searchPlaceholder": "Search icons...",
+    "searchPlaceholder": "Search...",
     "noIconsFound": "No icons found matching \"{search}\"",
     "browseTabler": "Browse Tabler Icons"
   },
@@ -1197,7 +1197,7 @@
     "screenLoadDescription": "A network hiccup interrupted the page. Reload and continue where you left off."
   },
   "kbar": {
-    "searchPlaceholder": "Search actions...",
+    "searchPlaceholder": "Search...",
     "noResults": "No results found.",
     "navigate": "navigate",
     "open": "open",
@@ -2428,7 +2428,7 @@
     "saveOrder": "Save Order"
   },
   "menuItems": {
-    "title": "Menu Items",
+    "title": "Menus",
     "description": "Manage your restaurant dishes, variants, prices, and availability",
     "newItem": "Add Menu Item",
     "editItem": "Edit Menu Item",
@@ -2438,7 +2438,7 @@
     "descriptionPlaceholder": "Brief description (optional)...",
     "category": "Category",
     "selectCategory": "Select a category",
-    "searchCategories": "Search categories...",
+    "searchCategories": "Search...",
     "pricingType": "Pricing Type",
     "fixedPrice": "Single Price",
     "fixedPriceDesc": "Single standard price",
@@ -2595,7 +2595,9 @@
     "phoneInUse": "This phone number is already in use",
     "districtLabel": "District / City",
     "selectDistrictPlaceholder": "Select District (Default: Lower Dir)",
-    "searchDistrictPlaceholder": "Search district or city...",
+    "searchDistrictPlaceholder": "Search...",
+    "searchDistricts": "Search...",
+    "searchCuisinesPlaceholder": "Search...",
     "failedCopyClipboard": "Failed to copy to clipboard",
     "openStorefront": "Open Storefront",
     "platformBrandFooter": "Dir Food • Lower Dir",
@@ -2848,8 +2850,10 @@
     "title": "Master Delivery Areas",
     "subtitle": "Manage standard geographical zones across Timergara and Lower Dir",
     "addArea": "Add Master Area",
+    "metricDistricts": "Total Districts",
+    "metricDistrictsDesc": "Covered operational districts",
     "metricTotal": "Total Areas",
-    "metricTotalDesc": "Standard zones in Lower Dir",
+    "metricTotalDesc": "Standard zones across districts",
     "metricActive": "Active Areas",
     "metricActiveDesc": "Available for restaurants",
     "metricCoverage": "Total Active Links",
@@ -2916,7 +2920,7 @@
     "noOtherVerifiedAreas": "No other verified areas available in this district to merge into.",
     "selectDestinationArea": "Select destination area...",
     "confirmMerge": "Confirm Merge",
-    "searchDistrictPlaceholder": "Search district..."
+    "searchDistrictPlaceholder": "Search..."
   },
   "deals": {
     "title": "Deals",
@@ -3009,7 +3013,7 @@
     "colActions": "Actions",
     "namePlaceholder": "e.g. Fast Food, Karahi",
     "slugPlaceholder": "e.g. fast-food, karahi",
-    "searchPlaceholder": "Search food types...",
+    "searchPlaceholder": "Search...",
     "filter_all": "All",
     "filter_active": "Active",
     "filter_inactive": "Inactive",

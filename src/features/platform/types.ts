@@ -337,6 +337,7 @@ export interface PlatformDistrictsBarProps {
 }
 
 export interface PlatformAreasMetricsProps {
+  totalDistricts: number;
   totalAreas: number;
   selectedCityName?: string;
   activeAreas: number;

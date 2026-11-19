@@ -12,7 +12,7 @@
     "sortPriceDesc": "قیمت: زیادہ سے کم",
     "sortNewest": "تازہ ترین",
     "view": "دیکھیں",
-    "search": "تلاش",
+    "search": "تلاش کریں...",
     "noResults": "کوئی نتیجہ نہیں۔",
     "rowsRange": "{from}–{to} از {total}",
     "rowsSelected": "{total} میں سے {selected} قطاریں منتخب",
@@ -175,8 +175,8 @@
     "trialEndsLabel": "ٹرائل ختم ہوتا ہے",
     "allCities": "تمام شہر",
     "allStatuses": "تمام اسٹیٹس",
-    "searchShops": "نام، مالک، فون سے دکانیں تلاش کریں…",
-    "searchTabs": "ٹیب تلاش کریں…",
+    "searchShops": "تلاش کریں...",
+    "searchTabs": "تلاش کریں...",
     "searchPlaceholder": "تلاش کریں...",
     "noMatchingTabs": "کوئی مماثل ٹیب نہیں",
     "accountMenu": "اکاؤنٹ مینو",
@@ -186,7 +186,7 @@
     "restaurantOwner": "ریستوران کا مالک",
     "orders": "آرڈرز",
     "liveOrders": "لائیو آرڈرز",
-    "menuItems": "کھانوں کے آئٹمز",
+    "menuItems": "مینو",
     "deals": "اسپیشل ڈیلز",
     "menuCategories": "کھانوں کے زمرے",
     "tables": "ٹیبلز اور کیو آر",
@@ -558,7 +558,7 @@
       "bulkUnpublish": "شائع نہ کریں",
       "productDeactivated": "مصنوعہ کامیابی سے غیر فعال ہو گیا",
       "publishUpdated": "شائع کرنے کی حیثیت اپ ڈیٹ ہو گئی",
-      "searchPlaceholder": "مصنوعات تلاش کریں...",
+      "searchPlaceholder": "تلاش کریں...",
       "status": "حیثیت",
       "active": "فعال",
       "inactive": "غیر فعال"
@@ -1009,7 +1009,7 @@
     "addressPlaceholder": "مین بازار، تیمرگرہ، دیر زیریں",
     "districtLabel": "ضلع / شہر",
     "selectDistrictPlaceholder": "ضلع منتخب کریں (ڈیفالٹ: دیر پائیں)",
-    "searchDistrictPlaceholder": "ضلع یا شہر تلاش کریں...",
+    "searchDistrictPlaceholder": "تلاش کریں...",
     "whatsappPlaceholder": "03001234567 (اختیاری)"
   },
   "appearance": {
@@ -1146,7 +1146,7 @@
     "inventoryDesc": "انوینٹری کھولیں"
   },
   "icons": {
-    "searchPlaceholder": "آئیکنز تلاش کریں...",
+    "searchPlaceholder": "تلاش کریں...",
     "noIconsFound": "\"{search}\" سے مماثل کوئی آئیکن نہیں ملا",
     "browseTabler": "Tabler آئیکنز براؤز کریں"
   },
@@ -1197,7 +1197,7 @@
     "screenLoadDescription": "نیٹ ورک میں مسئلہ آنے سے صفحہ متاثر ہوا۔ دوبارہ لوڈ کریں اور جہاں چھوڑا تھا وہاں سے جاری رکھیں۔"
   },
   "kbar": {
-    "searchPlaceholder": "اقدامات تلاش کریں...",
+    "searchPlaceholder": "تلاش کریں...",
     "noResults": "کوئی نتیجہ نہیں ملا۔",
     "navigate": "منتقل ہوں",
     "open": "کھولیں",
@@ -2428,7 +2428,7 @@
     "saveOrder": "ترتیب محفوظ کریں"
   },
   "menuItems": {
-    "title": "مینو آئٹمز",
+    "title": "مینو",
     "description": "اپنے پکوان، قیمتیں، سائز اور دستیابی کا نظم کریں",
     "newItem": "کھانا شامل کریں",
     "editItem": "کھانا تبدیل کریں",
@@ -2438,7 +2438,7 @@
     "descriptionPlaceholder": "مختصر تفصیل (اختیاری)...",
     "category": "کیٹیگری",
     "selectCategory": "کیٹیگری منتخب کریں",
-    "searchCategories": "اقسام تلاش کریں...",
+    "searchCategories": "تلاش کریں...",
     "pricingType": "قیمت کی قسم",
     "fixedPrice": "مقررہ قیمت",
     "fixedPriceDesc": "ایک معیاری قیمت",
@@ -2595,7 +2595,9 @@
     "phoneInUse": "یہ فون نمبر پہلے سے زیر استعمال ہے",
     "districtLabel": "ضلع / شہر",
     "selectDistrictPlaceholder": "ضلع منتخب کریں (ڈیفالٹ: دیر پائیں)",
-    "searchDistrictPlaceholder": "ضلع یا شہر تلاش کریں...",
+    "searchDistrictPlaceholder": "تلاش کریں...",
+    "searchDistricts": "تلاش کریں...",
+    "searchCuisinesPlaceholder": "تلاش کریں...",
     "failedCopyClipboard": "کلپ بورڈ پر کاپی کرنے میں ناکامی",
     "openStorefront": "سٹور کھولیں",
     "platformBrandFooter": "دیر فوڈ • دیر پائیں",
@@ -2848,8 +2850,10 @@
     "title": "ماسٹر ڈیلیوری کے علاقے",
     "subtitle": "تیمرگرہ اور لوئر دیر کے معیاری جغرافیائی علاقوں کا انتظام کریں",
     "addArea": "نیا علاقہ شامل کریں",
+    "metricDistricts": "کل اضلاع",
+    "metricDistrictsDesc": "احاطہ شدہ اضلاع",
     "metricTotal": "کل علاقے",
-    "metricTotalDesc": "لوئر دیر کے معیاری علاقے",
+    "metricTotalDesc": "معیاری جغرافیائی علاقے",
     "metricActive": "فعال علاقے",
     "metricActiveDesc": "ریسٹورنٹس کے انتخاب کیلئے دستیاب",
     "metricCoverage": "کل ریسٹورنٹ روابط",
@@ -2916,7 +2920,7 @@
     "noOtherVerifiedAreas": "اس ضلع میں ضم کرنے کے لیے کوئی دوسرا تصدیق شدہ علاقہ دستیاب نہیں ہے۔",
     "selectDestinationArea": "منزل کا علاقہ منتخب کریں...",
     "confirmMerge": "ضم کرنے کی تصدیق کریں",
-    "searchDistrictPlaceholder": "ضلع تلاش کریں..."
+    "searchDistrictPlaceholder": "تلاش کریں..."
   },
   "deals": {
     "title": "ڈیلز",
@@ -3009,7 +3013,7 @@
     "colActions": "اقدامات",
     "namePlaceholder": "مثلاً: برگر، کڑاہی",
     "slugPlaceholder": "مثلاً: burgers, karahi",
-    "searchPlaceholder": "کھانے تلاش کریں...",
+    "searchPlaceholder": "تلاش کریں...",
     "filter_all": "سب",
     "filter_active": "فعال",
     "filter_inactive": "غیر فعال",

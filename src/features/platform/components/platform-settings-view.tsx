@@ -400,6 +400,7 @@ export function PlatformSettingsView() {
       </div>
 
       <PlatformAreasMetrics
+        totalDistricts={cities.length}
         totalAreas={totalAreas}
         selectedCityName={selectedCity?.name}
         activeAreas={activeAreas}

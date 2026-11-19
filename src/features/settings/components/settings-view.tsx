@@ -41,40 +41,52 @@ export function SettingsView() {
   ];
 
   return (
-    <div className='flex min-h-0 min-w-0 flex-1 flex-col space-y-6 overflow-y-auto overscroll-y-contain pb-12'>
-      <div className='w-full min-w-0 space-y-6'>
-        <div className='space-y-1'>
-          <h1 className='text-2xl font-bold tracking-tight text-foreground'>
-            {t('restaurantSettings.title')}
-          </h1>
-          <p className='text-sm text-muted-foreground'>{t('restaurantSettings.description')}</p>
-        </div>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
+      <div className='shrink-0 space-y-1'>
+        <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+          {t('restaurantSettings.title')}
+        </h1>
+        <p className='text-sm text-muted-foreground'>{t('restaurantSettings.description')}</p>
+      </div>
 
-        <div className='flex items-center gap-1.5 p-1 rounded-xl bg-muted/60 border border-border/60 max-w-full overflow-x-auto no-scrollbar'>
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type='button'
-                onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  isActive
-                    ? 'bg-background text-foreground shadow-xs font-semibold'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-background/40 font-medium'
-                }`}
-              >
-                <tab.icon className={`size-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
+      <div className='shrink-0 flex items-center gap-1.5 p-1 rounded-xl bg-muted/60 border border-border/60 max-w-full overflow-x-auto no-scrollbar'>
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type='button'
+              onClick={() => setActiveTab(tab.id)}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                isActive
+                  ? 'bg-background text-foreground shadow-xs font-semibold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-background/40 font-medium'
+              }`}
+            >
+              <tab.icon className={`size-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-        {activeTab === 'profile' ? <ProfileTab /> : null}
-        {activeTab === 'hours' ? <HoursTab /> : null}
+      <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden'>
+        {activeTab === 'profile' ? (
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+            <ProfileTab />
+          </div>
+        ) : null}
+        {activeTab === 'hours' ? (
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+            <HoursTab />
+          </div>
+        ) : null}
         {activeTab === 'delivery' ? <DeliveryAreasTab /> : null}
-        {activeTab === 'qrcode' ? <QrCodeTab /> : null}
+        {activeTab === 'qrcode' ? (
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+            <QrCodeTab />
+          </div>
+        ) : null}
       </div>
     </div>
   );

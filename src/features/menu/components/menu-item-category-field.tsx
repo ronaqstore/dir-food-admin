@@ -52,7 +52,7 @@ export function MenuItemCategoryField({
         onChange={onChange}
         disabled={disabled}
         placeholder={t('menuItems.selectCategory')}
-        searchPlaceholder={t('menuItems.searchCategories') || 'Search categories...'}
+        searchPlaceholder={t('menuItems.searchCategories') || 'Search...'}
         options={options}
         pageSize={20}
         required

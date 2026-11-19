@@ -79,9 +79,9 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: '/icons/shortcut-sale.png', sizes: '96x96', type: 'image/png' }]
       },
       {
-        name: 'Menu Items',
-        short_name: 'Menu',
-        description: 'Manage restaurant menu items',
+        name: 'Menus',
+        short_name: 'Menus',
+        description: 'Manage restaurant menus and dishes',
         url: '/?source=pwa&to=menu',
         icons: [{ src: '/icons/shortcut-inventory.png', sizes: '96x96', type: 'image/png' }]
       },

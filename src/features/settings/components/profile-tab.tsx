@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ProfileTabSkeleton } from '@/components/skeletons/settings-skeleton';
 import { SearchableSelect } from '@/components/ui/searchable-select';
+import { SearchableMultiSelect } from '@/components/ui/searchable-multi-select';
 import {
   IconCheck,
   IconAlertCircle,
@@ -54,6 +55,13 @@ export function ProfileTab() {
       ? list.map((c) => c.name)
       : [...DEFAULT_MASTER_CUISINE_NAMES];
   }, [publicCuisinesRes]);
+
+  const cuisineOptions = React.useMemo(() => {
+    return availableCuisines.map((item) => ({
+      value: item,
+      label: item
+    }));
+  }, [availableCuisines]);
 
   const updateProfile = useUpdateProfile();
   const updateAvailability = useUpdateAvailability();
@@ -404,39 +412,25 @@ export function ProfileTab() {
             </div>
           </div>
 
-          <div className='space-y-2'>
+          <div className='space-y-1.5'>
             <div className='flex items-center justify-between'>
-              <Label className='text-xs font-semibold'>
+              <Label htmlFor='restaurant-cuisines' className='text-xs font-semibold'>
                 {t('restaurantSettings.cuisinesLabel')}
               </Label>
               <span className='text-[11px] text-muted-foreground'>
                 {t('restaurantSettings.cuisinesHint')}
               </span>
             </div>
-            <div className='flex flex-wrap gap-1.5'>
-              {availableCuisines.map((item) => {
-                const isSelected = cuisines.includes(item);
-                return (
-                  <button
-                    key={item}
-                    type='button'
-                    disabled={isPending}
-                    onClick={() =>
-                      setCuisines((prev) =>
-                        prev.includes(item) ? prev.filter((c) => c !== item) : [...prev, item]
-                      )
-                    }
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
-                      isSelected
-                        ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
-                        : 'border border-border bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                );
-              })}
-            </div>
+            <SearchableMultiSelect
+              id='restaurant-cuisines'
+              value={cuisines}
+              onChange={setCuisines}
+              disabled={isPending}
+              placeholder={t('restaurantSettings.cuisinesPlaceholder') || 'Select cuisines your restaurant serves...'}
+              searchPlaceholder={t('restaurantSettings.searchCuisinesPlaceholder') || 'Search...'}
+              options={cuisineOptions}
+              pageSize={20}
+            />
           </div>
 
           <div className='space-y-1.5'>

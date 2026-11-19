@@ -153,7 +153,7 @@ export function MenuHeaderControls({
             onChange={(val) => onSelectCategory(val || 'all')}
             options={categoryOptions}
             placeholder={t('menuItems.filterByCategory') || 'All Categories'}
-            searchPlaceholder={t('menuItems.searchCategories') || 'Search categories...'}
+            searchPlaceholder={t('menuItems.searchCategories') || 'Search...'}
             className='w-44 sm:w-52 shrink-0'
             triggerClassName='h-9 text-xs bg-card'
             pageSize={20}

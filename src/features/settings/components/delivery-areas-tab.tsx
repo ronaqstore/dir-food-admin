@@ -204,8 +204,8 @@ export function DeliveryAreasTab() {
   const currentDistrictName = profile?.city?.name ?? 'Lower Dir';
 
   return (
-    <div className='rounded-xl border bg-card p-6 shadow-xs space-y-6'>
-      <div className='flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/40 px-4 py-3 text-xs text-foreground shadow-2xs'>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col rounded-xl border bg-card p-4 sm:p-5 shadow-xs overflow-hidden gap-3.5'>
+      <div className='shrink-0 flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/40 px-4 py-2.5 text-xs text-foreground shadow-2xs'>
         <div className='flex items-center gap-2'>
           <IconMapPin className='size-4 text-primary shrink-0' />
           <span>
@@ -217,7 +217,7 @@ export function DeliveryAreasTab() {
         </span>
       </div>
 
-      <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b pb-4'>
+      <div className='shrink-0 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b pb-3'>
         <div>
           <h3 className='text-base font-semibold text-foreground'>
             {t('restaurantSettings.deliveryTitle')}
@@ -327,15 +327,22 @@ export function DeliveryAreasTab() {
       </div>
 
       {isLoading ? (
-        <DeliveryAreasListSkeleton />
+        <div className='flex-1 min-h-0 overflow-y-auto overscroll-contain'>
+          <DeliveryAreasListSkeleton />
+        </div>
       ) : (
-        <div className='space-y-4'>
-          <div className='divide-y divide-border/60'>
-            {paginatedRows.map((row) => (
+        <div className='flex-1 min-h-0 overflow-y-auto overscroll-contain rounded-lg border border-border/70 bg-card/40 px-3 py-1 divide-y divide-border/60'>
+          {paginatedRows.length === 0 ? (
+            <div className='flex h-32 flex-col items-center justify-center text-center text-muted-foreground text-xs'>
+              <IconMapPin className='size-6 opacity-40 mb-1.5' />
+              <span>{t('table.noResults')}</span>
+            </div>
+          ) : (
+            paginatedRows.map((row) => (
               <div
                 key={row.areaId}
-                className={`flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between transition-colors rounded-xl px-2.5 ${
-                  row.isServed ? 'bg-muted/30 border border-border/50' : 'hover:bg-muted/20'
+                className={`flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between transition-colors rounded-lg px-2.5 ${
+                  row.isServed ? 'bg-muted/30 border border-border/50 my-1' : 'hover:bg-muted/20'
                 }`}
               >
                 <div className='flex items-center gap-3'>
@@ -421,31 +428,30 @@ export function DeliveryAreasTab() {
                   </div>
                 ) : null}
               </div>
-            ))}
-          </div>
-
-          {total > 0 && (
-            <div className='pt-2'>
-              <StandardPagination
-                page={page}
-                pageSize={pageSize}
-                total={total}
-                pageSizeOptions={[10, 20, 30, 50, 100]}
-                onPageChange={setPage}
-                onPageSizeChange={handlePageSizeChange}
-                disabled={updateAreas.isPending}
-              />
-            </div>
+            ))
           )}
         </div>
       )}
 
-      <div className='flex justify-end pt-3 border-t'>
+      <div className='shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t'>
+        <div className='w-full sm:w-auto flex-1'>
+          {total > 0 && (
+            <StandardPagination
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              pageSizeOptions={[10, 20, 30, 50, 100]}
+              onPageChange={setPage}
+              onPageSizeChange={handlePageSizeChange}
+              disabled={updateAreas.isPending}
+            />
+          )}
+        </div>
         <Button
           type='button'
           onClick={handleSave}
           disabled={updateAreas.isPending}
-          className='gap-1.5 shadow-xs px-5'
+          className='w-full sm:w-auto gap-1.5 shadow-xs px-5'
         >
           <IconCheck className='size-4' />
           <span>{t('restaurantSettings.saveAreas')}</span>

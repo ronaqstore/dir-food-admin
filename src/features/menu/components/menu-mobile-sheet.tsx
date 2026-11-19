@@ -102,7 +102,7 @@ export function MenuMobileSheet({
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('menuItems.searchCategories') || 'Search categories...'}
+              placeholder={t('menuItems.searchCategories') || 'Search...'}
               className='ps-9 pe-8 h-9 text-xs bg-muted/40 w-full'
             />
             {search ? (

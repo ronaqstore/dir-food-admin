@@ -60,17 +60,29 @@ export function ProfileTabSkeleton() {
 
 export function DeliveryAreasListSkeleton() {
   return (
-    <div className='divide-y divide-border/60 rounded-xl border border-border/60 bg-card overflow-hidden'>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className='flex items-center justify-between p-4'>
-          <div className='space-y-1.5'>
-            <Skeleton className='h-5 w-32 rounded-md' />
-            <Skeleton className='h-3.5 w-44 rounded-sm' />
-          </div>
-          <div className='flex items-center gap-4'>
-            <Skeleton className='h-9 w-24 rounded-md' />
-            <Skeleton className='h-9 w-24 rounded-md' />
+    <div className='divide-y divide-border/60 rounded-lg border border-border/70 bg-card/40 px-3 py-1'>
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        <div
+          key={i}
+          className='flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between px-2.5'
+        >
+          <div className='flex items-center gap-3'>
             <Skeleton className='h-5 w-9 rounded-full' />
+            <div className='flex items-center gap-2'>
+              <Skeleton className='size-4 rounded-full' />
+              <Skeleton className='h-4 w-28 sm:w-36 rounded-md' />
+              <Skeleton className='h-4 w-12 rounded-full' />
+            </div>
+          </div>
+          <div className='flex items-center gap-3 ps-11 sm:ps-0'>
+            <div className='flex items-center gap-1.5'>
+              <Skeleton className='h-3 w-16 hidden sm:block' />
+              <Skeleton className='h-9 w-24 sm:w-28 rounded-md' />
+            </div>
+            <div className='flex items-center gap-1.5'>
+              <Skeleton className='h-3 w-16 hidden sm:block' />
+              <Skeleton className='h-9 w-24 sm:w-28 rounded-md' />
+            </div>
           </div>
         </div>
       ))}
