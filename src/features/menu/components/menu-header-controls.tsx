@@ -1,15 +1,9 @@
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SortSelect } from '@/components/ui/sort-select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { SearchableSelect, type SearchableSelectOption } from '@/components/ui/searchable-select';
 import {
   IconSearch,
   IconX,
@@ -66,6 +60,19 @@ export function MenuHeaderControls({
   const handleViewList = () => {
     onViewModeChange('list');
   };
+
+  const categoryOptions: SearchableSelectOption[] = React.useMemo(() => {
+    const allLabel = t('menuItems.filterByCategory') || 'All Categories';
+    const allOpt: SearchableSelectOption = {
+      value: 'all',
+      label: `${allLabel} (${allCategoriesTotal})`
+    };
+    const list: SearchableSelectOption[] = (categories ?? []).map((cat) => ({
+      value: cat.id,
+      label: `${cat.name} (${categoryCounts[cat.id] || 0})`
+    }));
+    return [allOpt, ...list];
+  }, [categories, categoryCounts, allCategoriesTotal, t]);
 
   return (
     <div className='sticky top-0 z-20 -mx-4 px-4 sm:-mx-6 sm:px-6 bg-background/95 backdrop-blur-md border-b pb-3 pt-1 space-y-3'>
@@ -141,26 +148,16 @@ export function MenuHeaderControls({
             ) : null}
           </div>
 
-          <Select value={selectedCategory} onValueChange={(val) => { if (val != null) onSelectCategory(val); }}>
-            <SelectTrigger className='h-9 w-40 sm:w-44 text-xs bg-card shrink-0'>
-              <SelectValue placeholder={t('menuItems.filterByCategory')} />
-            </SelectTrigger>
-            <SelectContent side='bottom'>
-              <SelectGroup>
-                <SelectItem value='all'>
-                  {t('menuItems.filterByCategory')} ({allCategoriesTotal})
-                </SelectItem>
-                {categories?.map((cat) => {
-                  const count = categoryCounts[cat.id] || 0;
-                  return (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name} ({count})
-                    </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <SearchableSelect
+            value={selectedCategory}
+            onChange={(val) => onSelectCategory(val || 'all')}
+            options={categoryOptions}
+            placeholder={t('menuItems.filterByCategory') || 'All Categories'}
+            searchPlaceholder={t('menuItems.searchCategories') || 'Search categories...'}
+            className='w-44 sm:w-52 shrink-0'
+            triggerClassName='h-9 text-xs bg-card'
+            pageSize={20}
+          />
         </div>
 
         <div className='flex items-center gap-2 flex-wrap'>

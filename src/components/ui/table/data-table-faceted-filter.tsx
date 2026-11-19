@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator
@@ -35,6 +36,42 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const t = useT();
   const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+  const [visibleLimit, setVisibleLimit] = React.useState(20);
+
+  React.useEffect(() => {
+    if (open) {
+      setSearch('');
+      setVisibleLimit(20);
+    }
+  }, [open]);
+
+  React.useEffect(() => {
+    setVisibleLimit(20);
+  }, [search]);
+
+  const filteredOptions = React.useMemo(() => {
+    if (!search.trim()) return options;
+    const q = search.toLowerCase().trim();
+    return options.filter((opt) => opt.label.toLowerCase().includes(q));
+  }, [options, search]);
+
+  const displayedOptions = React.useMemo(() => {
+    return filteredOptions.slice(0, visibleLimit);
+  }, [filteredOptions, visibleLimit]);
+
+  const handleScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const reachedBottom =
+        target.scrollTop + target.clientHeight >= target.scrollHeight - 30;
+
+      if (reachedBottom && visibleLimit < filteredOptions.length) {
+        setVisibleLimit((prev) => Math.min(prev + 20, filteredOptions.length));
+      }
+    },
+    [visibleLimit, filteredOptions.length]
+  );
 
   const columnFilterValue = column?.getFilterValue();
   const selectedValues = React.useMemo(
@@ -110,11 +147,21 @@ export function DataTableFacetedFilter<TData, TValue>({
           </>
         )}
       </PopoverTrigger>
-      <PopoverContent className='w-48 p-1.5' align='start' sideOffset={6}>
+      <PopoverContent className='w-56 p-1.5' align='start' sideOffset={6}>
         <Command shouldFilter={false}>
+          {options.length > 5 ? (
+            <CommandInput
+              value={search}
+              onValueChange={setSearch}
+              placeholder={title || 'Search...'}
+            />
+          ) : null}
           <CommandList className='max-h-full'>
-            <CommandGroup className='max-h-[18.75rem] overflow-x-hidden overflow-y-auto p-0.5 [&_[cmdk-group-items]]:space-y-1'>
-              {options.map((option) => {
+            <CommandGroup
+              onScroll={handleScroll}
+              className='max-h-[18.75rem] overflow-x-hidden overflow-y-auto no-scrollbar p-0.5 [&_[cmdk-group-items]]:space-y-1'
+            >
+              {displayedOptions.map((option) => {
                 const isSelected = selectedValues.has(option.value);
 
                 return (

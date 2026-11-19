@@ -51,18 +51,13 @@ export function FoodCard({
             </div>
           )}
 
-          <div className='absolute top-2.5 inset-s-2.5 flex items-center gap-1.5 flex-wrap'>
-            {categoryName ? (
-              <Badge className='bg-background/90 text-foreground backdrop-blur-xs text-[11px] font-medium shadow-xs border-0 px-2 py-0.5'>
-                {categoryName}
-              </Badge>
-            ) : null}
-            {item.isDeal ? (
+          {item.isDeal ? (
+            <div className='absolute top-2.5 inset-s-2.5 flex items-center gap-1.5 flex-wrap'>
               <Badge className='bg-rose-500 text-white text-[11px] font-bold px-2 py-0.5 shadow-xs border-0'>
                 🔥 {t('menuItems.dealBadge')}
               </Badge>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           {discountPct > 0 ? (
             <div className='absolute top-2.5 inset-e-2.5'>
@@ -83,9 +78,23 @@ export function FoodCard({
 
         <div className='p-4 space-y-2.5 min-w-0'>
           <div className='space-y-1 min-w-0'>
-            <h3 className='font-semibold text-foreground text-base leading-snug truncate group-hover:text-primary transition-colors' title={item.name}>
-              {item.name}
-            </h3>
+            <div className='flex items-start justify-between gap-2 min-w-0'>
+              <h3
+                className='font-semibold text-foreground text-base leading-snug truncate group-hover:text-primary transition-colors flex-1'
+                title={item.name}
+              >
+                {item.name}
+              </h3>
+              {categoryName ? (
+                <Badge
+                  variant='secondary'
+                  className='text-[10.5px] font-medium text-muted-foreground bg-muted/60 border border-border/50 px-2 py-0.5 rounded-md shrink-0 max-w-[130px] truncate'
+                  title={categoryName}
+                >
+                  {categoryName}
+                </Badge>
+              ) : null}
+            </div>
             {item.description ? (
               <p className='text-xs text-muted-foreground line-clamp-2 leading-relaxed min-h-[2rem]'>
                 {item.description}

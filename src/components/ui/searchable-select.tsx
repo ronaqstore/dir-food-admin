@@ -256,7 +256,7 @@ export function SearchableSelect({
               <div
                 ref={listRef}
                 onScroll={handleScroll}
-                className='max-h-56 overflow-y-auto space-y-0.5 p-0.5 scrollbar-thin'
+                className='max-h-56 overflow-y-auto space-y-0.5 p-0.5 no-scrollbar'
               >
                 {displayedOptions.length === 0 ? (
                   <div className='py-6 text-center text-xs text-muted-foreground'>

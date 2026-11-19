@@ -72,6 +72,52 @@ export function DishCombobox({
     return filteredGroups.reduce((acc, g) => acc + g.items.length, 0);
   }, [filteredGroups]);
 
+  const [visibleLimit, setVisibleLimit] = React.useState(20);
+
+  React.useEffect(() => {
+    if (open) {
+      setVisibleLimit(20);
+      setSearch('');
+    }
+  }, [open]);
+
+  React.useEffect(() => {
+    setVisibleLimit(20);
+  }, [search]);
+
+  const displayedGroups = React.useMemo(() => {
+    let count = 0;
+    const result: DishGroup[] = [];
+
+    for (const group of filteredGroups) {
+      if (count >= visibleLimit) break;
+      const remaining = visibleLimit - count;
+      const slicedItems = group.items.slice(0, remaining);
+      if (slicedItems.length > 0) {
+        result.push({
+          categoryName: group.categoryName,
+          items: slicedItems
+        });
+        count += slicedItems.length;
+      }
+    }
+
+    return result;
+  }, [filteredGroups, visibleLimit]);
+
+  const handleScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const reachedBottom =
+        target.scrollTop + target.clientHeight >= target.scrollHeight - 30;
+
+      if (reachedBottom && visibleLimit < totalFilteredCount) {
+        setVisibleLimit((prev) => Math.min(prev + 20, totalFilteredCount));
+      }
+    },
+    [visibleLimit, totalFilteredCount]
+  );
+
   const handlePick = (dish: MenuItemDTO) => {
     onSelect(dish);
     setOpen(false);
@@ -169,13 +215,25 @@ export function DishCombobox({
               </div>
             </div>
 
-            <div className='max-h-64 overflow-y-auto p-1.5 space-y-2 text-xs'>
+            {totalFilteredCount > 20 ? (
+              <div className='flex items-center justify-between px-3 py-1 text-[11px] font-medium text-muted-foreground border-b border-border/50 bg-muted/10'>
+                <span>Matches: {totalFilteredCount}</span>
+                <span className='text-[10px] text-primary/80'>
+                  Showing {Math.min(visibleLimit, totalFilteredCount)} of {totalFilteredCount}
+                </span>
+              </div>
+            ) : null}
+
+            <div
+              onScroll={handleScroll}
+              className='max-h-64 overflow-y-auto no-scrollbar p-1.5 space-y-2 text-xs'
+            >
               {totalFilteredCount === 0 ? (
                 <div className='py-8 text-center text-xs text-muted-foreground'>
                   {t('noDishesFound', { query: search })}
                 </div>
               ) : (
-                filteredGroups.map((group) => (
+                displayedGroups.map((group) => (
                   <div key={group.categoryName} className='space-y-1'>
                     <div className='px-2 py-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center justify-between'>
                       <span>{group.categoryName}</span>
