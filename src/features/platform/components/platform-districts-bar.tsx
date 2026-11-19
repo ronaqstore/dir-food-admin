@@ -57,7 +57,7 @@ export function PlatformDistrictsBar({
             value={selectedCityId}
             onChange={(val) => onSelectCityId(val || 'ALL')}
             options={districtOptions}
-            placeholder={t('selectDistrictPlaceholder')}
+            placeholder={t('districtPlaceholder')}
             searchPlaceholder={t('searchDistrictPlaceholder')}
             pageSize={20}
             className='w-full'

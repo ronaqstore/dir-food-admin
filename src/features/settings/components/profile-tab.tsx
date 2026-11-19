@@ -426,8 +426,8 @@ export function ProfileTab() {
               value={cuisines}
               onChange={setCuisines}
               disabled={isPending}
-              placeholder={t('restaurantSettings.cuisinesPlaceholder') || 'Select cuisines your restaurant serves...'}
-              searchPlaceholder={t('restaurantSettings.searchCuisinesPlaceholder') || 'Search...'}
+              placeholder={t('restaurantSettings.cuisinesPlaceholder')}
+              searchPlaceholder={t('restaurantSettings.searchCuisinesPlaceholder')}
               options={cuisineOptions}
               pageSize={20}
             />

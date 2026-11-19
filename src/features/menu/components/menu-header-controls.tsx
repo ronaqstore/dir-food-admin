@@ -62,7 +62,7 @@ export function MenuHeaderControls({
   };
 
   const categoryOptions: SearchableSelectOption[] = React.useMemo(() => {
-    const allLabel = t('menuItems.filterByCategory') || 'All Categories';
+    const allLabel = t('menuItems.filterByCategory');
     const allOpt: SearchableSelectOption = {
       value: 'all',
       label: `${allLabel} (${allCategoriesTotal})`
@@ -152,8 +152,8 @@ export function MenuHeaderControls({
             value={selectedCategory}
             onChange={(val) => onSelectCategory(val || 'all')}
             options={categoryOptions}
-            placeholder={t('menuItems.filterByCategory') || 'All Categories'}
-            searchPlaceholder={t('menuItems.searchCategories') || 'Search...'}
+            placeholder={t('menuItems.filterByCategory')}
+            searchPlaceholder={t('menuItems.searchCategories')}
             className='w-44 sm:w-52 shrink-0'
             triggerClassName='h-9 text-xs bg-card'
             pageSize={20}

@@ -102,7 +102,7 @@ export function MenuMobileSheet({
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('menuItems.searchCategories') || 'Search...'}
+              placeholder={t('menuItems.searchCategories')}
               className='ps-9 pe-8 h-9 text-xs bg-muted/40 w-full'
             />
             {search ? (
@@ -160,7 +160,7 @@ export function MenuMobileSheet({
 
             {displayedCategories.length === 0 && (
               <div className='py-6 text-center text-xs text-muted-foreground'>
-                No categories found
+                {t('menuItems.noCategoriesFound')}
               </div>
             )}
           </div>

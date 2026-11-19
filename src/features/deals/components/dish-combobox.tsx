@@ -217,9 +217,12 @@ export function DishCombobox({
 
             {totalFilteredCount > 20 ? (
               <div className='flex items-center justify-between px-3 py-1 text-[11px] font-medium text-muted-foreground border-b border-border/50 bg-muted/10'>
-                <span>Matches: {totalFilteredCount}</span>
+                <span>{t('matchesCount', { count: totalFilteredCount })}</span>
                 <span className='text-[10px] text-primary/80'>
-                  Showing {Math.min(visibleLimit, totalFilteredCount)} of {totalFilteredCount}
+                  {t('showingCount', {
+                    current: Math.min(visibleLimit, totalFilteredCount),
+                    total: totalFilteredCount
+                  })}
                 </span>
               </div>
             ) : null}

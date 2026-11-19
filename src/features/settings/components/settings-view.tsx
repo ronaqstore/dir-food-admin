@@ -72,18 +72,18 @@ export function SettingsView() {
 
       <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden'>
         {activeTab === 'profile' ? (
-          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pe-1 pb-12 space-y-6'>
             <ProfileTab />
           </div>
         ) : null}
         {activeTab === 'hours' ? (
-          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pe-1 pb-12 space-y-6'>
             <HoursTab />
           </div>
         ) : null}
         {activeTab === 'delivery' ? <DeliveryAreasTab /> : null}
         {activeTab === 'qrcode' ? (
-          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-1 pb-12 space-y-6'>
+          <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pe-1 pb-12 space-y-6'>
             <QrCodeTab />
           </div>
         ) : null}
