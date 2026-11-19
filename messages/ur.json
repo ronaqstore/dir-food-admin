@@ -2473,7 +2473,7 @@
     "viewGrid": "گرڈ منظر",
     "viewList": "لسٹ منظر",
     "tabDishes": "کھانے / ڈشز",
-    "tabDeals": "ڈیلز اور کمبوز",
+    "tabDeals": "ڈیلز",
     "statusAll": "تمام",
     "statusAvailable": "دستیاب",
     "statusSoldOut": "ختم شدہ",
@@ -2919,7 +2919,7 @@
     "searchDistrictPlaceholder": "ضلع تلاش کریں..."
   },
   "deals": {
-    "title": "ڈیلز اور کمبوز",
+    "title": "ڈیلز",
     "subtitle": "اپنے پروموشنل بنڈلز، پیکیج آفرز، اور ملٹی ڈش کمبوز کا انتظام کریں",
     "createDeal": "ڈیل شامل کریں",
     "totalDeals": "کل ڈیلز:",

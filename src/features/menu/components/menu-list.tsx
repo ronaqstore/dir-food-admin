@@ -165,11 +165,15 @@ export function MenuList() {
 
   const filteredCategories = React.useMemo(() => {
     if (!categories) return [];
+    const isDealsCategory = (name: string) => {
+      const lower = name.toLowerCase().trim();
+      return lower === 'deals' || lower === 'deals & combos';
+    };
     if (activeTab === 'dishes') {
-      return categories.filter((c) => c.name.toLowerCase() !== 'deals & combos');
+      return categories.filter((c) => !isDealsCategory(c.name));
     }
     return categories.filter(
-      (c) => c.name.toLowerCase() === 'deals & combos' || (c._count?.items ?? 0) > 0
+      (c) => isDealsCategory(c.name) || (c._count?.items ?? 0) > 0
     );
   }, [categories, activeTab]);
 

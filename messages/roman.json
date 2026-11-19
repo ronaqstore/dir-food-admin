@@ -187,7 +187,7 @@
     "orders": "Orders",
     "liveOrders": "Live Orders",
     "menuItems": "Menu Items",
-    "deals": "Deals & Combos",
+    "deals": "Deals",
     "menuCategories": "Categories",
     "tables": "Tables & QR",
     "restaurants": "Restaurants",
@@ -2473,7 +2473,7 @@
     "viewGrid": "Grid View",
     "viewList": "List View",
     "tabDishes": "Dishes",
-    "tabDeals": "Deals & Combos",
+    "tabDeals": "Deals",
     "statusAll": "All",
     "statusAvailable": "In Stock",
     "statusSoldOut": "Sold Out",
@@ -2919,7 +2919,7 @@
     "searchDistrictPlaceholder": "Zila talash karein..."
   },
   "deals": {
-    "title": "Deals aur Combos",
+    "title": "Deals",
     "subtitle": "Apne promotional bundles aur combos ka intezam karein",
     "createDeal": "Deal banayein",
     "totalDeals": "Kul deals:",

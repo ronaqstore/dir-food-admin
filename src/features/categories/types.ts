@@ -52,7 +52,7 @@ export interface CategoriesResponse {
 }
 
 export const DEFAULT_CATEGORY_PRESETS = [
-  'Deals & Combos',
+  'Deals',
   'Starters & Appetizers',
   'Karahi & Handi',
   'BBQ & Grills',

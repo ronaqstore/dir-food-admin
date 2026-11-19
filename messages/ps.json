@@ -2473,7 +2473,7 @@
     "viewGrid": "د گرډ بڼه",
     "viewList": "د لست بڼه",
     "tabDishes": "خواړه",
-    "tabDeals": "ډیلونه او کمبو",
+    "tabDeals": "ډیلونه",
     "statusAll": "ټول",
     "statusAvailable": "شته",
     "statusSoldOut": "ختم شوی",
@@ -2919,7 +2919,7 @@
     "searchDistrictPlaceholder": "ولسوالی وپلټئ..."
   },
   "deals": {
-    "title": "ډیلونه او کمبوګانې",
+    "title": "ډیلونه",
     "subtitle": "خپل پروموشنل بنډلونه، بسته وړاندیزونه، او څو ډوله ډیلونه اداره کړئ",
     "createDeal": "ډیل جوړ کړئ",
     "totalDeals": "ټول ډیلونه:",
