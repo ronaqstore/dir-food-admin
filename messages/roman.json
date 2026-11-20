@@ -2991,7 +2991,8 @@
     "imageSizeLimit": "Tasweer ka size 3MB se kam hona chahiye",
     "selectDishPlaceholder": "Menu se aik dish chunein...",
     "searchDishesPlaceholder": "Search...",
-    "noDishesFound": "“{query}” ke mutabiq koi dish nahi mili"
+    "noDishesFound": "“{query}” ke mutabiq koi dish nahi mili",
+    "selectVariant": "Size ya variant muntakhib karein"
   },
   "platformCuisines": {
     "title": "Food Types & Specialties",

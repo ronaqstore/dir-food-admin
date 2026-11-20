@@ -17,6 +17,8 @@ export interface DealBuilderDialogProps {
 export interface ComboRow {
   id: string;
   menuItemId?: string;
+  variantId?: string;
+  variantName?: string;
   name: string;
   quantity: number;
   unitPrice: number;
@@ -33,6 +35,7 @@ export interface DealComboSectionProps {
   calculatedTotalValue: number;
   isPending: boolean;
   onSelectDish: (index: number, dishId: string) => void;
+  onVariantChange?: (index: number, variantId: string) => void;
   onQtyChange: (index: number, delta: number) => void;
   onRemoveRow: (index: number) => void;
   onAddDish: () => void;

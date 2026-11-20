@@ -2991,7 +2991,8 @@
     "imageSizeLimit": "تصویر کا سائز 3 ایم بی سے کم ہونا چاہیے",
     "selectDishPlaceholder": "مینو سے ایک ڈش منتخب کریں...",
     "searchDishesPlaceholder": "تلاش کریں...",
-    "noDishesFound": "“{query}” سے مماثل کوئی ڈش نہیں ملی"
+    "noDishesFound": "“{query}” سے مماثل کوئی ڈش نہیں ملی",
+    "selectVariant": "سائز یا ویرینٹ منتخب کریں"
   },
   "platformCuisines": {
     "title": "بنیادی کھانوں کی اقسام",

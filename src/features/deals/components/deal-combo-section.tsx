@@ -4,23 +4,9 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { IconPlus, IconTrash, IconMinus, IconToolsKitchen2, IconReceipt } from '@tabler/icons-react';
-import { toPaisa, fromPaisa, formatPkr } from '@/lib/money';
+import { toPaisa, formatPkr } from '@/lib/money';
 import { DishCombobox } from './dish-combobox';
 import type { DealComboSectionProps } from '../types';
-import type { MenuItemDTO } from '@/features/menu/types';
-
-export function getDishUnitPrice(dish: MenuItemDTO): number {
-  if (dish.basePrice != null && dish.basePrice > 0) {
-    return fromPaisa(dish.basePrice);
-  }
-  if (dish.variants && dish.variants.length > 0) {
-    const firstActive = dish.variants.find((v) => v.isActive !== false) || dish.variants[0];
-    if (firstActive && firstActive.price > 0) {
-      return fromPaisa(firstActive.price);
-    }
-  }
-  return 0;
-}
 
 export function DealComboSection({
   comboRows,
@@ -28,6 +14,7 @@ export function DealComboSection({
   calculatedTotalValue,
   isPending,
   onSelectDish,
+  onVariantChange,
   onQtyChange,
   onRemoveRow,
   onAddDish,
@@ -64,61 +51,92 @@ export function DealComboSection({
         </button>
       ) : (
         <div className='space-y-2'>
-          {comboRows.map((row, idx) => (
-            <div
-              key={row.id}
-              className='flex items-center gap-2 rounded-xl border border-border/80 bg-background p-2.5 text-xs w-full min-w-0 shadow-2xs transition-colors hover:border-border'
-            >
-              <div className='flex-1 min-w-0'>
-                <DishCombobox
-                  value={row.menuItemId}
-                  onSelect={(dish) => onSelectDish(idx, dish.id)}
-                  dishes={availableDishes}
-                  disabled={isPending}
-                />
-              </div>
+          {comboRows.map((row, idx) => {
+            const selectedDish = availableDishes.find((d) => d.id === row.menuItemId);
+            const activeVariants =
+              selectedDish?.variants?.filter((v) => v.isActive !== false) ||
+              selectedDish?.variants ||
+              [];
+            const hasVariants = activeVariants.length > 0;
 
-              <div className='flex items-center rounded-lg border border-border/70 bg-muted/30 p-0.5 shrink-0'>
-                <button
-                  type='button'
-                  onClick={() => onQtyChange(idx, -1)}
-                  disabled={row.quantity <= 1 || isPending}
-                  className='flex size-7 items-center justify-center rounded-md hover:bg-background text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors cursor-pointer'
-                  aria-label={t('decreaseQty')}
-                >
-                  <IconMinus className='size-3.5' />
-                </button>
-                <span className='w-6 text-center text-xs font-bold text-foreground select-none'>{row.quantity}</span>
-                <button
-                  type='button'
-                  onClick={() => onQtyChange(idx, 1)}
-                  disabled={isPending}
-                  className='flex size-7 items-center justify-center rounded-md hover:bg-background text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors cursor-pointer'
-                  aria-label={t('increaseQty')}
-                >
-                  <IconPlus className='size-3.5' />
-                </button>
-              </div>
-
-              {row.unitPrice > 0 ? (
-                <span className='w-16 sm:w-20 text-end text-xs font-bold text-foreground shrink-0 tabular-nums'>
-                  {formatPkr(toPaisa(row.unitPrice * row.quantity))}
-                </span>
-              ) : null}
-
-              <Button
-                type='button'
-                variant='ghost'
-                size='icon'
-                onClick={() => onRemoveRow(idx)}
-                disabled={isPending}
-                className='size-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive shrink-0'
-                aria-label={t('removeItem')}
+            return (
+              <div
+                key={row.id}
+                className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-xl border border-border/80 bg-background p-2.5 text-xs w-full min-w-0 shadow-2xs transition-colors hover:border-border'
               >
-                <IconTrash className='size-4' />
-              </Button>
-            </div>
-          ))}
+                <div className='flex flex-1 items-center gap-2 min-w-0'>
+                  <div className='flex-1 min-w-0'>
+                    <DishCombobox
+                      value={row.menuItemId}
+                      onSelect={(dish) => onSelectDish(idx, dish.id)}
+                      dishes={availableDishes}
+                      disabled={isPending}
+                    />
+                  </div>
+
+                  {hasVariants && selectedDish ? (
+                    <div className='w-36 sm:w-44 shrink-0'>
+                      <select
+                        value={row.variantId || activeVariants[0]?.id || ''}
+                        onChange={(e) => onVariantChange?.(idx, e.target.value)}
+                        disabled={isPending}
+                        aria-label={t('selectVariant')}
+                        className='h-9 w-full rounded-xl border border-border/80 bg-background px-2.5 text-xs font-medium text-foreground transition-colors focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 cursor-pointer shadow-2xs'
+                      >
+                        {activeVariants.map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.name} ({formatPkr(v.price)})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className='flex items-center justify-between sm:justify-end gap-2 shrink-0 pt-1 sm:pt-0 border-t border-border/40 sm:border-0'>
+                  <div className='flex items-center rounded-lg border border-border/70 bg-muted/30 p-0.5 shrink-0'>
+                    <button
+                      type='button'
+                      onClick={() => onQtyChange(idx, -1)}
+                      disabled={row.quantity <= 1 || isPending}
+                      className='flex size-7 items-center justify-center rounded-md hover:bg-background text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors cursor-pointer'
+                      aria-label={t('decreaseQty')}
+                    >
+                      <IconMinus className='size-3.5' />
+                    </button>
+                    <span className='w-6 text-center text-xs font-bold text-foreground select-none'>{row.quantity}</span>
+                    <button
+                      type='button'
+                      onClick={() => onQtyChange(idx, 1)}
+                      disabled={isPending}
+                      className='flex size-7 items-center justify-center rounded-md hover:bg-background text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors cursor-pointer'
+                      aria-label={t('increaseQty')}
+                    >
+                      <IconPlus className='size-3.5' />
+                    </button>
+                  </div>
+
+                  {row.unitPrice > 0 ? (
+                    <span className='w-16 sm:w-20 text-end text-xs font-bold text-foreground shrink-0 tabular-nums'>
+                      {formatPkr(toPaisa(row.unitPrice * row.quantity))}
+                    </span>
+                  ) : null}
+
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => onRemoveRow(idx)}
+                    disabled={isPending}
+                    className='size-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive shrink-0'
+                    aria-label={t('removeItem')}
+                  >
+                    <IconTrash className='size-4' />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

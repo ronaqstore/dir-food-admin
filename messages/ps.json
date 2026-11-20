@@ -2991,7 +2991,8 @@
     "imageSizeLimit": "د انځور اندازه باید له 3MB څخه کمه وي",
     "selectDishPlaceholder": "له مینو څخه خواړه وټاکئ...",
     "searchDishesPlaceholder": "وپلټئ...",
-    "noDishesFound": "د “{query}” سره سمون لرونکي خواړه ونه موندل شول"
+    "noDishesFound": "د “{query}” سره سمون لرونکي خواړه ونه موندل شول",
+    "selectVariant": "اندازه یا بڼه وټاکئ"
   },
   "platformCuisines": {
     "title": "اصلي خواړه",

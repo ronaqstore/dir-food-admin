@@ -160,7 +160,7 @@ export function DishCombobox({
               <span className='font-medium text-foreground truncate min-w-0 flex-1'>
                 {selectedDish.name}
               </span>
-              {selectedPrice > 0 ? (
+              {selectedPrice > 0 && (!selectedDish.variants || selectedDish.variants.length === 0) ? (
                 <span className='rounded-md bg-muted/70 px-1.5 py-0.5 text-muted-foreground font-semibold shrink-0 text-[11px] whitespace-nowrap'>
                   {formatPkr(toPaisa(selectedPrice))}
                 </span>

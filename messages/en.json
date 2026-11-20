@@ -2991,7 +2991,8 @@
     "imageSizeLimit": "Image size must be less than 3MB",
     "selectDishPlaceholder": "Select a dish from menu...",
     "searchDishesPlaceholder": "Search...",
-    "noDishesFound": "No dishes found matching “{query}”"
+    "noDishesFound": "No dishes found matching “{query}”",
+    "selectVariant": "Select size/variant"
   },
   "platformCuisines": {
     "title": "Food Types & Specialties",

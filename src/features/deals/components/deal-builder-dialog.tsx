@@ -27,9 +27,10 @@ import {
   useMenuItems
 } from '@/features/menu/api/menu-query';
 import { ApiError } from '@/lib/api/types';
-import { DealComboSection, getDishUnitPrice } from './deal-combo-section';
+import { DealComboSection } from './deal-combo-section';
 import { DealPricingSection } from './deal-pricing-section';
 import { DealPhotoField } from './deal-photo-field';
+import { getDishUnitPrice, parseDealComboRows, syncComboDescription } from '../utils';
 import type { DealBuilderDialogProps, ComboRow } from '../types';
 
 export function DealBuilderDialog({
@@ -77,28 +78,7 @@ export function DealBuilderDialog({
       setOriginalPrice(deal.originalPrice != null ? String(fromPaisa(deal.originalPrice)) : '');
       setImagePreview(deal.imageUrl || null);
       setImageFile(null);
-
-      if (deal.description) {
-        const parts = deal.description.split('+').map((p) => p.trim()).filter(Boolean);
-        const parsed: ComboRow[] = parts.map((part, idx) => {
-          const qtyMatch = part.match(/^(\d+)x?\s*(.+)$/i);
-          const qty = qtyMatch && qtyMatch[1] ? Number(qtyMatch[1]) : 1;
-          const cleanName = qtyMatch && qtyMatch[2] ? qtyMatch[2].trim() : part;
-          const matched = Array.isArray(menuItems)
-            ? menuItems.find((d) => d.name.toLowerCase() === cleanName.toLowerCase())
-            : undefined;
-          return {
-            id: `row-${idx}-${cleanName}`,
-            menuItemId: matched?.id,
-            name: matched?.name || cleanName,
-            quantity: isNaN(qty) ? 1 : qty,
-            unitPrice: matched ? getDishUnitPrice(matched) : 0
-          };
-        });
-        setComboRows(parsed);
-      } else {
-        setComboRows([]);
-      }
+      setComboRows(parseDealComboRows(deal.description, menuItems));
     } else {
       setName('');
       setDescription('');
@@ -120,11 +100,8 @@ export function DealBuilderDialog({
   }, [deal, menuItems, open]);
 
   const syncDescription = (rows: ComboRow[]) => {
-    const valid = rows.filter((r) => r.name.trim().length > 0);
-    if (valid.length > 0) {
-      const generated = valid
-        .map((r) => `${r.quantity > 1 ? `${r.quantity}x ` : '1x '}${r.name.trim()}`)
-        .join(' + ');
+    const generated = syncComboDescription(rows);
+    if (generated) {
       setDescription(generated);
     }
   };
@@ -151,13 +128,54 @@ export function DealBuilderDialog({
       const next = [...prev];
       const target = next[index];
       if (target) {
-        next[index] = {
-          ...target,
-          menuItemId: dish.id,
-          name: dish.name,
-          unitPrice: getDishUnitPrice(dish)
-        };
+        const activeVariants =
+          dish.variants?.filter((v) => v.isActive !== false) || dish.variants || [];
+        const firstVariant = activeVariants.length > 0 ? activeVariants[0] : undefined;
+
+        if (firstVariant) {
+          next[index] = {
+            ...target,
+            menuItemId: dish.id,
+            variantId: firstVariant.id,
+            variantName: firstVariant.name,
+            name: `${dish.name} (${firstVariant.name})`,
+            unitPrice: fromPaisa(firstVariant.price)
+          };
+        } else {
+          next[index] = {
+            ...target,
+            menuItemId: dish.id,
+            variantId: undefined,
+            variantName: undefined,
+            name: dish.name,
+            unitPrice: getDishUnitPrice(dish)
+          };
+        }
       }
+      syncDescription(next);
+      return next;
+    });
+  };
+
+  const handleVariantChange = (index: number, variantId: string) => {
+    setComboRows((prev) => {
+      const next = [...prev];
+      const target = next[index];
+      if (!target || !target.menuItemId) return prev;
+
+      const dish = availableDishes.find((d) => d.id === target.menuItemId);
+      if (!dish || !dish.variants) return prev;
+
+      const variant = dish.variants.find((v) => v.id === variantId);
+      if (!variant) return prev;
+
+      next[index] = {
+        ...target,
+        variantId: variant.id,
+        variantName: variant.name,
+        name: `${dish.name} (${variant.name})`,
+        unitPrice: fromPaisa(variant.price)
+      };
       syncDescription(next);
       return next;
     });
@@ -349,6 +367,7 @@ export function DealBuilderDialog({
             calculatedTotalValue={calculatedTotalValue}
             isPending={isPending}
             onSelectDish={handleSelectDish}
+            onVariantChange={handleVariantChange}
             onQtyChange={handleQtyChange}
             onRemoveRow={handleRemoveRow}
             onAddDish={handleAddDish}
