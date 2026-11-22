@@ -379,7 +379,7 @@ export function PlatformSettingsView() {
   });
 
   return (
-    <div className='flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
+    <div className='flex h-full max-h-full min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
       <div className='flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <div>
           <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>

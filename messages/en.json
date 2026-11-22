@@ -2796,7 +2796,7 @@
     "phoneInUse": "This phone number is already in use",
     "districtLabel": "District / City",
     "selectDistrictPlaceholder": "Select District (Default: Lower Dir)",
-    "searchDistrictPlaceholder": "Search district or city...",
+    "searchDistrictPlaceholder": "Search...",
     "cuisinesPlaceholder": "Desi, Karahi, BBQ",
     "invalidPhone": "Must be an 11-digit mobile number (e.g. 03029825213)",
     "metricActiveBreakdown": "{active} active · {pending} pending",

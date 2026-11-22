@@ -204,7 +204,7 @@ export function DeliveryAreasTab() {
   const currentDistrictName = profile?.city?.name ?? 'Lower Dir';
 
   return (
-    <div className='flex min-h-0 min-w-0 flex-1 flex-col rounded-xl border bg-card p-4 sm:p-5 shadow-xs overflow-hidden gap-3.5'>
+    <div className='flex h-full max-h-full min-h-0 min-w-0 flex-1 flex-col rounded-xl border bg-card p-4 sm:p-5 shadow-xs overflow-hidden gap-3.5'>
       <div className='shrink-0 flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/40 px-4 py-2.5 text-xs text-foreground shadow-2xs'>
         <div className='flex items-center gap-2'>
           <IconMapPin className='size-4 text-primary shrink-0' />

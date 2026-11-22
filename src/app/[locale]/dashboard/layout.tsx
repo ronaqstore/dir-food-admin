@@ -36,7 +36,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
           className='bg-background flex h-dvh max-h-dvh min-h-0 min-w-0 flex-col overflow-x-clip overflow-y-hidden scroll-mt-16'
         >
           <AppHeader />
-          <main className='flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto p-3 sm:p-4 md:p-6 pb-[max(1rem,calc(4.5rem+env(safe-area-inset-bottom)))] lg:pb-6'>
+          <main className='flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto p-3 sm:p-4 md:p-6 pb-[max(1rem,calc(4.5rem+env(safe-area-inset-bottom)))] lg:pb-6'>
             {children}
           </main>
           <MobileBottomNav />

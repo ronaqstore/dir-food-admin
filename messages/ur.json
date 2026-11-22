@@ -2796,7 +2796,7 @@
     "phoneInUse": "یہ فون نمبر پہلے سے زیر استعمال ہے",
     "districtLabel": "ضلع / شہر",
     "selectDistrictPlaceholder": "ضلع منتخب کریں (ڈیفالٹ: دیر پائیں)",
-    "searchDistrictPlaceholder": "ضلع یا شہر تلاش کریں...",
+    "searchDistrictPlaceholder": "تلاش کریں...",
     "cuisinesPlaceholder": "دیسی، کڑاہی، بی بی کیو",
     "invalidPhone": "11 ہندسوں کا موبائل نمبر درج کریں (مثلاً 03029825213)",
     "metricActiveBreakdown": "{active} فعال · {pending} زیر التواء",

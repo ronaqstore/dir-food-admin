@@ -41,7 +41,7 @@ export function SettingsView() {
   ];
 
   return (
-    <div className='flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
+    <div className='flex h-full max-h-full min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden'>
       <div className='shrink-0 space-y-1'>
         <h1 className='text-2xl font-bold tracking-tight text-foreground'>
           {t('restaurantSettings.title')}
@@ -70,7 +70,7 @@ export function SettingsView() {
         })}
       </div>
 
-      <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden'>
+      <div className='flex h-full max-h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden'>
         {activeTab === 'profile' ? (
           <div className='flex-1 min-h-0 overflow-y-auto overscroll-y-contain pe-1 pb-12 space-y-6'>
             <ProfileTab />
