@@ -57,7 +57,8 @@ export function OrdersList() {
     setIsDialogOpen(true);
   };
 
-  const getCleanPhone = (phone: string) => {
+  const getCleanPhone = (phone?: string | null) => {
+    if (!phone) return '';
     const digits = phone.replace(/[^0-9]/g, '');
     if (digits.startsWith('03')) {
       return `92${digits.slice(1)}`;
@@ -67,7 +68,9 @@ export function OrdersList() {
 
   const getWhatsAppLink = (order: OwnerOrderIntent) => {
     const clean = getCleanPhone(order.customerPhone);
-    const message = `Assalam-o-Alaikum ${order.customerName}, regarding your Dir Food order #${order.reference}:`;
+    if (!clean) return '';
+    const greeting = order.customerName ? `Assalam-o-Alaikum ${order.customerName}` : 'Assalam-o-Alaikum';
+    const message = `${greeting}, regarding your Dir Food order #${order.reference}:`;
     return `${WHATSAPP_BASE_URL}/${clean}?text=${encodeURIComponent(message)}`;
   };
 
@@ -233,9 +236,9 @@ export function OrdersList() {
                         #{order.reference}
                       </TableCell>
                       <TableCell>
-                        <div className='font-medium text-foreground'>{order.customerName}</div>
+                        <div className='font-medium text-foreground'>{order.customerName || '—'}</div>
                         <div className='text-xs text-muted-foreground font-mono'>
-                          {order.customerPhone}
+                          {order.customerPhone || '—'}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -292,18 +295,20 @@ export function OrdersList() {
                           >
                             <Icons.eye className='size-4' />
                           </Button>
-                          <Button
-                            type='button'
-                            size='sm'
-                            variant='outline'
-                            className='size-8 p-0 text-emerald-600 hover:text-emerald-700 border-emerald-500/30'
-                            title={t('chatOnWhatsapp')}
-                            render={
-                              <a href={whatsappLink} target='_blank' rel='noopener noreferrer' />
-                            }
-                          >
-                            <Icons.whatsapp className='size-4' />
-                          </Button>
+                          {whatsappLink ? (
+                            <Button
+                              type='button'
+                              size='sm'
+                              variant='outline'
+                              className='size-8 p-0 text-emerald-600 hover:text-emerald-700 border-emerald-500/30'
+                              title={t('chatOnWhatsapp')}
+                              render={
+                                <a href={whatsappLink} target='_blank' rel='noopener noreferrer' />
+                              }
+                            >
+                              <Icons.whatsapp className='size-4' />
+                            </Button>
+                          ) : null}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -331,10 +336,10 @@ export function OrdersList() {
                     <div>
                       <div className='font-mono font-bold text-primary'>#{order.reference}</div>
                       <div className='text-sm font-semibold text-foreground mt-0.5'>
-                        {order.customerName}
+                        {order.customerName || '—'}
                       </div>
                       <div className='font-mono text-xs text-muted-foreground'>
-                        {order.customerPhone}
+                        {order.customerPhone || '—'}
                       </div>
                     </div>
                     <div>
@@ -372,15 +377,17 @@ export function OrdersList() {
                       <Button type='button' size='sm' variant='outline' onClick={() => handleOpenDetail(order)}>
                         {t('viewDetails')}
                       </Button>
-                      <Button
-                        type='button'
-                        size='sm'
-                        className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1 px-2.5'
-                        render={<a href={whatsappLink} target='_blank' rel='noopener noreferrer' />}
-                      >
-                        <Icons.whatsapp className='size-3.5' />
-                        {t('chatOnWhatsapp')}
-                      </Button>
+                      {whatsappLink ? (
+                        <Button
+                          type='button'
+                          size='sm'
+                          className='bg-emerald-600 hover:bg-emerald-700 text-white gap-1 px-2.5'
+                          render={<a href={whatsappLink} target='_blank' rel='noopener noreferrer' />}
+                        >
+                          <Icons.whatsapp className='size-3.5' />
+                          {t('chatOnWhatsapp')}
+                        </Button>
+                      ) : null}
                     </div>
                   </div>
                 </Card>

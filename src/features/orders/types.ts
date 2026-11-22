@@ -20,8 +20,8 @@ export interface OwnerOrderIntent {
   id: string;
   reference: string;
   status: OrderIntentStatus;
-  customerName: string;
-  customerPhone: string;
+  customerName: string | null;
+  customerPhone: string | null;
   deliveryArea: string;
   landmark: string;
   directions: string | null;

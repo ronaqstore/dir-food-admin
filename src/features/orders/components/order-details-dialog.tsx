@@ -52,8 +52,9 @@ export function OrderDetailsDialog({
   }, [customerPhone]);
 
   const whatsappChatUrl = React.useMemo(() => {
-    if (!cleanPhone || !customerName || !reference) return '';
-    const message = `Assalam-o-Alaikum ${customerName}, regarding your Dir Food order #${reference}:`;
+    if (!cleanPhone || !reference) return '';
+    const greeting = customerName ? `Assalam-o-Alaikum ${customerName}` : 'Assalam-o-Alaikum';
+    const message = `${greeting}, regarding your Dir Food order #${reference}:`;
     return `${WHATSAPP_BASE_URL}/${cleanPhone}?text=${encodeURIComponent(message)}`;
   }, [cleanPhone, customerName, reference]);
 
@@ -121,12 +122,12 @@ export function OrderDetailsDialog({
                 <div className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
                   <div>
                     <span className='text-xs text-muted-foreground'>{t('customerName')}: </span>
-                    <span className='font-medium text-foreground'>{order.customerName}</span>
+                    <span className='font-medium text-foreground'>{order.customerName || '—'}</span>
                   </div>
                   <div>
                     <span className='text-xs text-muted-foreground'>{t('customerPhone')}: </span>
                     <span className='font-mono font-medium text-foreground'>
-                      {order.customerPhone}
+                      {order.customerPhone || '—'}
                     </span>
                   </div>
                 </div>
