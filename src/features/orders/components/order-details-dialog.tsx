@@ -170,11 +170,28 @@ export function OrderDetailsDialog({
                       {order.items.map((item, idx) => (
                         <TableRow key={`${item.name}-${idx}`}>
                           <TableCell className='font-medium'>
-                            {item.name}
-                            {item.variant && (
-                              <span className='ms-1 text-xs text-muted-foreground'>
-                                ({item.variant})
-                              </span>
+                            <div>
+                              <span>{item.name}</span>
+                              {item.variant && (
+                                <span className='ms-1 text-xs text-muted-foreground'>
+                                  ({item.variant})
+                                </span>
+                              )}
+                            </div>
+                            {item.addons && item.addons.length > 0 && (
+                              <div className='mt-1 flex flex-wrap gap-1'>
+                                {item.addons.map((addon, aIdx) => (
+                                  <span
+                                    key={`${addon.name}-${aIdx}`}
+                                    className='inline-flex items-center rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-normal text-muted-foreground'
+                                  >
+                                    +{addon.name}
+                                    {addon.price != null && Number(addon.price) > 0
+                                      ? ` (${formatPkr(Number(addon.price))})`
+                                      : ''}
+                                  </span>
+                                ))}
+                              </div>
                             )}
                           </TableCell>
                           <TableCell className='text-center font-mono'>{item.quantity}</TableCell>

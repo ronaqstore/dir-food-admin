@@ -252,6 +252,13 @@ export function MenuItemDialog({
               }))
             }
           });
+        } else if (item.variants && item.variants.length > 0) {
+          await replaceVariants.mutateAsync({
+            id: item.id,
+            input: {
+              variants: []
+            }
+          });
         }
 
         await replaceAddons.mutateAsync({

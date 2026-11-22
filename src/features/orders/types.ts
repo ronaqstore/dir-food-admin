@@ -1,9 +1,16 @@
 export type OrderIntentStatus = 'WHATSAPP_HANDOFF_READY' | 'WHATSAPP_OPENED';
 export type DeliveryFeeStatus = 'KNOWN' | 'TO_BE_CONFIRMED';
 
+export interface OwnerOrderItemAddon {
+  id?: string;
+  name: string;
+  price?: number | string;
+}
+
 export interface OwnerOrderItem {
   name: string;
   variant: string | null;
+  addons?: OwnerOrderItemAddon[] | null;
   quantity: number;
   unitPrice: number | string;
   lineTotal: number | string;
