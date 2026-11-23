@@ -24,7 +24,12 @@ export function IssuedSetupLinkDialog({
 
   const phone = data.ownerPhone;
   const digits = phone ? phone.replace(/[^0-9]/g, '') : '';
-  const cleanPhone = digits.startsWith('03') ? `92${digits.slice(1)}` : digits;
+  let cleanPhone = digits;
+  if (digits.startsWith('03')) {
+    cleanPhone = `92${digits.slice(1)}`;
+  } else if (digits.length === 10 && digits.startsWith('3')) {
+    cleanPhone = `92${digits}`;
+  }
   const ownerName = data.ownerName || 'Partner';
   const msg = `Assalam-o-Alaikum ${ownerName}, your password setup link for '${data.restaurantName}' on Dir Food is: ${data.setupUrl}`;
   const waUrl = cleanPhone

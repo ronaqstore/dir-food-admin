@@ -131,7 +131,11 @@ export function CreateRestaurantDialog({ open, onOpenChange }: CreateRestaurantD
   const cleanOwnerPhone = React.useMemo(() => {
     if (!userPhone) return '';
     const digits = userPhone.replace(/[^0-9]/g, '');
-    if (digits.startsWith('03')) return `92${digits.slice(1)}`;
+    if (digits.startsWith('03')) {
+      return `92${digits.slice(1)}`;
+    } else if (digits.length === 10 && digits.startsWith('3')) {
+      return `92${digits}`;
+    }
     return digits;
   }, [userPhone]);
 
