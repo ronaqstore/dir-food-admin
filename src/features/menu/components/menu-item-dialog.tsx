@@ -197,7 +197,9 @@ export function MenuItemDialog({
         newErrors.basePrice = t('validation.required');
       }
     } else {
-      if (variants.length === 0) {
+      if (isDeal) {
+        newErrors.variants = 'Deals must have a fixed price and cannot have variants';
+      } else if (variants.length === 0) {
         newErrors.variants = 'At least one variant is required';
       } else {
         const invalidVariant = variants.some(
@@ -230,18 +232,6 @@ export function MenuItemDialog({
       let savedItemId = item?.id;
 
       if (isEditing && item) {
-        await updateItem.mutateAsync({
-          id: item.id,
-          input: {
-            categoryId,
-            name: name.trim(),
-            description: description.trim() || undefined,
-            basePrice: pricingMode === 'fixed' ? toPaisa(Number(basePrice)) : null,
-            originalPrice: null,
-            isDeal
-          }
-        });
-
         if (pricingMode === 'variants') {
           await replaceVariants.mutateAsync({
             id: item.id,
@@ -252,13 +242,39 @@ export function MenuItemDialog({
               }))
             }
           });
-        } else if (item.variants && item.variants.length > 0) {
-          await replaceVariants.mutateAsync({
+
+          await updateItem.mutateAsync({
             id: item.id,
             input: {
-              variants: []
+              categoryId,
+              name: name.trim(),
+              description: description.trim() || undefined,
+              basePrice: null,
+              originalPrice: null,
+              isDeal
             }
           });
+        } else {
+          await updateItem.mutateAsync({
+            id: item.id,
+            input: {
+              categoryId,
+              name: name.trim(),
+              description: description.trim() || undefined,
+              basePrice: toPaisa(Number(basePrice)),
+              originalPrice: null,
+              isDeal
+            }
+          });
+
+          if (item.variants && item.variants.length > 0) {
+            await replaceVariants.mutateAsync({
+              id: item.id,
+              input: {
+                variants: []
+              }
+            });
+          }
         }
 
         await replaceAddons.mutateAsync({

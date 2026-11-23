@@ -235,11 +235,18 @@ export function OrderDetailsDialog({
                 </div>
                 <div className='border-t pt-1.5 flex items-center justify-between font-semibold text-foreground text-base'>
                   <span>{t('grandTotal')}</span>
-                  <span className='font-mono text-primary'>
-                    {formatPkr(
-                      Number(order.subtotal) + (order.deliveryFee ? Number(order.deliveryFee) : 0)
-                    )}
-                  </span>
+                  <div className='text-end'>
+                    <span className='font-mono text-primary'>
+                      {formatPkr(
+                        Number(order.subtotal) + (order.deliveryFee ? Number(order.deliveryFee) : 0)
+                      )}
+                    </span>
+                    {order.deliveryFeeStatus !== 'KNOWN' || order.deliveryFee === null ? (
+                      <p className='text-[11px] font-normal text-muted-foreground'>
+                        (+{t('toBeConfirmed')})
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
               </div>
 
