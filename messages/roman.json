@@ -2502,7 +2502,11 @@
     "addonNamePlaceholder": "e.g., Extra Cheese, Cold Drink",
     "removeAddon": "Extra hatayein",
     "noAddonsHint": "Koi extra configure nahi hai. 'Extra Add Karein' pe click karein.",
-    "photoHint": "JPG, PNG ya WebP up to 3MB"
+    "photoHint": "JPG, PNG ya WebP up to 3MB",
+    "dealsNoVariants": "Deals ki single price honi chahiye aur variants nahi ho sakte",
+    "variantRequired": "Kam az kam aik variant lazmi hai",
+    "variantInvalid": "Tamam variants ka naam aur durust qeemat darj karein",
+    "addonInvalid": "Tamam addons ka naam aur durust qeemat darj karein"
   },
   "restaurantSettings": {
     "title": "Restaurant Settings",
@@ -2992,7 +2996,14 @@
     "selectDishPlaceholder": "Menu se aik dish chunein...",
     "searchDishesPlaceholder": "Search...",
     "noDishesFound": "“{query}” ke mutabiq koi dish nahi mili",
-    "selectVariant": "Size ya variant muntakhib karein"
+    "selectVariant": "Size ya variant muntakhib karein",
+    "itemsCount": "{count, plural, =1 {1 item} other {# items}}",
+    "active": "Active",
+    "inactive": "Inactive",
+    "titleMinLength": "Deal ka naam kam az kam 2 characters ka hona chahiye",
+    "enterValidPrice": "Barahe karam durust deal price darj karein",
+    "invalidOriginalPrice": "Asal qeemat durust nahi hai",
+    "originalPriceGreater": "Asal qeemat deal price se zyada honi chahiye"
   },
   "platformCuisines": {
     "title": "Food Types & Specialties",

@@ -2502,7 +2502,11 @@
     "addonNamePlaceholder": "e.g., Extra Cheese, Cold Drink",
     "removeAddon": "Remove extra",
     "noAddonsHint": "No add-ons configured. Click Add Extra to offer optional customizations.",
-    "photoHint": "JPG, PNG or WebP up to 3MB"
+    "photoHint": "JPG, PNG or WebP up to 3MB",
+    "dealsNoVariants": "Deals must have a single price and cannot have variants",
+    "variantRequired": "At least one variant is required",
+    "variantInvalid": "All variants must have a name and valid price",
+    "addonInvalid": "All add-ons must have a name and valid price"
   },
   "restaurantSettings": {
     "title": "Restaurant Settings",
@@ -2992,7 +2996,14 @@
     "selectDishPlaceholder": "Select a dish from menu...",
     "searchDishesPlaceholder": "Search...",
     "noDishesFound": "No dishes found matching “{query}”",
-    "selectVariant": "Select size/variant"
+    "selectVariant": "Select size/variant",
+    "itemsCount": "{count, plural, =1 {1 item} other {# items}}",
+    "active": "Active",
+    "inactive": "Inactive",
+    "titleMinLength": "Deal title must be at least 2 characters",
+    "enterValidPrice": "Please enter a valid deal price",
+    "invalidOriginalPrice": "Invalid original price",
+    "originalPriceGreater": "Original price must be greater than the deal price"
   },
   "platformCuisines": {
     "title": "Food Types & Specialties",

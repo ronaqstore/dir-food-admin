@@ -2502,7 +2502,11 @@
     "addonNamePlaceholder": "مثلاً اضافی چیز، کولڈ ڈرنک",
     "removeAddon": "اضافی کو ہٹائیں",
     "noAddonsHint": "ابھی تک کوئی اضافی چیز شامل نہیں ہے۔ 'اضافی شامل کریں' پر کلک کریں تاکہ کسٹمرز مزید چیزیں منتخب کر سکیں۔",
-    "photoHint": "JPG، PNG یا WebP زیادہ سے زیادہ 3MB"
+    "photoHint": "JPG، PNG یا WebP زیادہ سے زیادہ 3MB",
+    "dealsNoVariants": "ڈیلز کے لیے ایک ہی قیمت ہونی چاہیے، سائز/ویریئنٹس نہیں ہو سکتے",
+    "variantRequired": "کم از کم ایک سائز/ویریئنٹ لازمی ہے",
+    "variantInvalid": "تمام سائزز کا نام اور درست قیمت درج کریں",
+    "addonInvalid": "تمام اضافی اشیاء کا نام اور درست قیمت درج کریں"
   },
   "restaurantSettings": {
     "title": "ریسٹورنٹ کی ترتیبات",
@@ -2992,7 +2996,14 @@
     "selectDishPlaceholder": "مینو سے ایک ڈش منتخب کریں...",
     "searchDishesPlaceholder": "تلاش کریں...",
     "noDishesFound": "“{query}” سے مماثل کوئی ڈش نہیں ملی",
-    "selectVariant": "سائز یا ویرینٹ منتخب کریں"
+    "selectVariant": "سائز یا ویرینٹ منتخب کریں",
+    "itemsCount": "{count, plural, =1 {1 آئٹم} other {# آئٹمز}}",
+    "active": "فعال",
+    "inactive": "غیر فعال",
+    "titleMinLength": "ڈیل کا نام کم از کم 2 حروف پر مشتمل ہونا چاہیے",
+    "enterValidPrice": "براہ کرم ڈیل کی درست قیمت درج کریں",
+    "invalidOriginalPrice": "اصل قیمت درست نہیں ہے",
+    "originalPriceGreater": "اصل قیمت ڈیل کی قیمت سے زیادہ ہونی چاہیے"
   },
   "platformCuisines": {
     "title": "بنیادی کھانوں کی اقسام",

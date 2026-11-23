@@ -223,20 +223,20 @@ export function DealBuilderDialog({
     const newErrors: Record<string, string> = {};
 
     if (!name.trim() || name.trim().length < 2) {
-      newErrors.name = 'Deal title must be at least 2 characters';
+      newErrors.name = t('deals.titleMinLength');
     }
 
     const priceNum = Number(basePrice);
     if (!basePrice || isNaN(priceNum) || priceNum <= 0) {
-      newErrors.basePrice = 'Please enter a valid deal price';
+      newErrors.basePrice = t('deals.enterValidPrice');
     }
 
     if (originalPrice) {
       const origNum = Number(originalPrice);
       if (isNaN(origNum) || origNum <= 0) {
-        newErrors.originalPrice = 'Invalid original price';
+        newErrors.originalPrice = t('deals.invalidOriginalPrice');
       } else if (!isNaN(priceNum) && origNum <= priceNum) {
-        newErrors.originalPrice = 'Original price must be greater than the deal price';
+        newErrors.originalPrice = t('deals.originalPriceGreater');
       }
     }
 

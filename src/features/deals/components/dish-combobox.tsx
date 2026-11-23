@@ -241,7 +241,7 @@ export function DishCombobox({
                     <div className='px-2 py-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center justify-between'>
                       <span>{group.categoryName}</span>
                       <span className='text-[10px] font-normal lowercase opacity-70'>
-                        {group.items.length} {group.items.length === 1 ? 'item' : 'items'}
+                        {t('itemsCount', { count: group.items.length })}
                       </span>
                     </div>
 

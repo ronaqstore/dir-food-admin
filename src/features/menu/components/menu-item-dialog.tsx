@@ -198,15 +198,15 @@ export function MenuItemDialog({
       }
     } else {
       if (isDeal) {
-        newErrors.variants = 'Deals must have a fixed price and cannot have variants';
+        newErrors.variants = t('menuItems.dealsNoVariants');
       } else if (variants.length === 0) {
-        newErrors.variants = 'At least one variant is required';
+        newErrors.variants = t('menuItems.variantRequired');
       } else {
         const invalidVariant = variants.some(
           (v) => !v.name.trim() || isNaN(Number(v.price)) || Number(v.price) < 0
         );
         if (invalidVariant) {
-          newErrors.variants = 'All variants must have a name and non-negative price';
+          newErrors.variants = t('menuItems.variantInvalid');
         }
       }
     }
@@ -216,7 +216,7 @@ export function MenuItemDialog({
         (a) => !a.name.trim() || isNaN(Number(a.price)) || Number(a.price) < 0
       );
       if (invalidAddon) {
-        newErrors.addons = 'All extras must have a name and non-negative price';
+        newErrors.addons = t('menuItems.addonInvalid');
       }
     }
 

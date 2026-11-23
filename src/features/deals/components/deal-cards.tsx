@@ -133,7 +133,7 @@ export function DealCard({
             disabled={isPending}
           />
           <span className='text-xs text-muted-foreground'>
-            {deal.isAvailable !== false ? 'ACTIVE' : 'INACTIVE'}
+            {deal.isAvailable !== false ? t('active') : t('inactive')}
           </span>
         </div>
 

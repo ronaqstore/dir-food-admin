@@ -2502,7 +2502,11 @@
     "addonNamePlaceholder": "لکه اضافي پنیر، کولډ ډرنک",
     "removeAddon": "اضافي لرې کړئ",
     "noAddonsHint": "تر اوسه هیڅ اضافي توکي نشته. د اضافي غوراوي لپاره 'اضافي اضافه کړئ' وټاکئ.",
-    "photoHint": "JPG، PNG یا WebP تر ۳ ایم بي پورې"
+    "photoHint": "JPG، PNG یا WebP تر ۳ ایم بي پورې",
+    "dealsNoVariants": "ډیلونه باید یو قیمت ولري او ډولونه نشي درلودلی",
+    "variantRequired": "لږترلږه یو ډول/اندازه اړینه ده",
+    "variantInvalid": "ټول ډولونه باید نوم او باوري قیمت ولري",
+    "addonInvalid": "ټول اضافه شوي توکي باید نوم او باوري قیمت ولري"
   },
   "restaurantSettings": {
     "title": "د هوټل تنظیمات",
@@ -2992,7 +2996,14 @@
     "selectDishPlaceholder": "له مینو څخه خواړه وټاکئ...",
     "searchDishesPlaceholder": "وپلټئ...",
     "noDishesFound": "د “{query}” سره سمون لرونکي خواړه ونه موندل شول",
-    "selectVariant": "اندازه یا بڼه وټاکئ"
+    "selectVariant": "اندازه یا بڼه وټاکئ",
+    "itemsCount": "{count, plural, =1 {1 توکی} other {# توکي}}",
+    "active": "فعال",
+    "inactive": "غیر فعال",
+    "titleMinLength": "د ډیل نوم باید لږترلږه ۲ توري وي",
+    "enterValidPrice": "مهرباني وکړئ د ډیل باوري قیمت داخل کړئ",
+    "invalidOriginalPrice": "اصلي قیمت ناسم دی",
+    "originalPriceGreater": "اصلي قیمت باید د ډیل له قیمت څخه ډیر وي"
   },
   "platformCuisines": {
     "title": "اصلي خواړه",

@@ -7,6 +7,7 @@ export function fromPaisa(paisa: number): number {
 }
 
 export function formatPkr(paisa: number): string {
-  const rupees = fromPaisa(paisa);
+  const safePaisa = Number.isFinite(paisa) ? paisa : 0;
+  const rupees = fromPaisa(safePaisa);
   return `Rs ${rupees.toLocaleString('en-PK', { maximumFractionDigits: 0 })}`;
 }
