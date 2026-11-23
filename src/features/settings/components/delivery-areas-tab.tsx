@@ -40,8 +40,8 @@ export function DeliveryAreasTab() {
   const [pageSize, setPageSize] = React.useState(20);
   const [isAddOpen, setIsAddOpen] = React.useState(false);
   const [newAreaName, setNewAreaName] = React.useState('');
-  const [newAreaFee, setNewAreaFee] = React.useState('0');
-  const [newAreaMinOrder, setNewAreaMinOrder] = React.useState('0');
+  const [newAreaFee, setNewAreaFee] = React.useState('');
+  const [newAreaMinOrder, setNewAreaMinOrder] = React.useState('');
 
   const handleCreateArea = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,8 +90,8 @@ export function DeliveryAreasTab() {
       });
       setIsAddOpen(false);
       setNewAreaName('');
-      setNewAreaFee('0');
-      setNewAreaMinOrder('0');
+      setNewAreaFee('');
+      setNewAreaMinOrder('');
       toast.success(t('restaurantSettings.areaAddedSuccess', { name: trimmedName }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t('common.unexpectedError');
@@ -126,8 +126,8 @@ export function DeliveryAreasTab() {
           name: a.name,
           slug: a.slug,
           isServed: a.isServed,
-          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '0',
-          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : '0',
+          feeInput: a.deliveryFee != null ? String(fromPaisa(a.deliveryFee)) : '',
+          minOrderInput: a.minOrderAmount != null ? String(fromPaisa(a.minOrderAmount)) : '',
           isVerified: a.isVerified !== false
         }))
       );
@@ -141,8 +141,8 @@ export function DeliveryAreasTab() {
         return {
           ...r,
           isServed,
-          feeInput: r.feeInput.trim() !== '' ? r.feeInput : '0',
-          minOrderInput: r.minOrderInput.trim() !== '' ? r.minOrderInput : '0'
+          feeInput: r.feeInput,
+          minOrderInput: r.minOrderInput
         };
       })
     );
