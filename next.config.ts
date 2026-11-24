@@ -11,16 +11,22 @@ const baseConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**'
+        hostname: '**.r2.dev'
       },
       {
-        protocol: 'http',
-        hostname: 'localhost'
+        protocol: 'https',
+        hostname: '**.cloudflarestorage.com'
       },
       {
-        protocol: 'http',
-        hostname: '127.0.0.1'
-      }
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
+      },
+      ...(process.env.NODE_ENV !== 'production'
+        ? [
+            { protocol: 'http' as const, hostname: 'localhost' },
+            { protocol: 'http' as const, hostname: '127.0.0.1' }
+          ]
+        : [])
     ]
   },
   transpilePackages: ['geist'],
