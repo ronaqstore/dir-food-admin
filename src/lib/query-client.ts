@@ -24,7 +24,14 @@ function makeQueryClient() {
     }),
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000
+        staleTime: 60 * 1000,
+        refetchOnWindowFocus: false,
+        retry: (failureCount, error) => {
+          if (error instanceof ApiError && error.status >= 400 && error.status < 500) {
+            return false;
+          }
+          return failureCount < 2;
+        }
       },
       dehydrate: {
         shouldDehydrateQuery: defaultShouldDehydrateQuery

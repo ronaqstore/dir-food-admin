@@ -293,7 +293,6 @@ export function DealBuilderDialog({
       }
 
       await queryClient.invalidateQueries({ queryKey: ['menu-items'] });
-      await queryClient.refetchQueries({ queryKey: ['menu-items'] });
       onOpenChange(false);
       onSuccess?.();
       toast.success(isEditing ? t('deals.dealUpdated') : t('deals.dealCreated'));

@@ -48,7 +48,6 @@ export function useUpdateProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
-      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -91,7 +90,6 @@ export function useUploadRestaurantImage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
-      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -121,7 +119,6 @@ export function usePublishRestaurant() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESTAURANT_PROFILE_KEY });
       queryClient.invalidateQueries({ queryKey: RESTAURANT_READINESS_KEY });
-      queryClient.invalidateQueries({ queryKey: RESTAURANT_AREAS_KEY });
     }
   });
 }
@@ -196,6 +193,8 @@ export function useCities() {
     queryFn: () =>
       appFetch<MasterCityOption[]>(
         '/api/public/cities'
-      )
+      ),
+    staleTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 }
