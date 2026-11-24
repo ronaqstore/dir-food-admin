@@ -229,6 +229,8 @@ export function SearchableSelect({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={searchPlaceholder}
+                  autoComplete='off'
+                  suppressHydrationWarning
                   className='h-8 w-full rounded-lg border border-input/60 bg-muted/40 ps-8 pe-7 text-xs text-foreground placeholder:text-muted-foreground focus:border-ring focus:bg-background focus:outline-none focus:ring-1 focus:ring-ring'
                 />
                 {search && (
@@ -362,6 +364,7 @@ export function SearchableSelect({
         <input
           tabIndex={-1}
           autoComplete='off'
+          suppressHydrationWarning
           style={{
             opacity: 0,
             position: 'absolute',

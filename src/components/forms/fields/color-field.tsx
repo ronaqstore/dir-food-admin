@@ -15,6 +15,7 @@ export function ColorField({ label, description }: Omit<BaseFieldProps, 'require
           id={field.name}
           aria-label={label}
           type='color'
+          suppressHydrationWarning
           value={field.state.value}
           onChange={(e) => field.handleChange(e.target.value)}
           className='h-9 w-12 cursor-pointer rounded-md border p-1'

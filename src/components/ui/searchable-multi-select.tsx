@@ -220,7 +220,6 @@ export function SearchableMultiSelect({
                 'animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-150'
               )}
             >
-              {/* Search bar inside popover */}
               <div className='flex items-center border-b border-border/80 px-3 py-2'>
                 <IconSearch className='size-4 shrink-0 text-muted-foreground me-2' />
                 <input
@@ -229,6 +228,8 @@ export function SearchableMultiSelect({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={searchPlaceholder}
+                  autoComplete='off'
+                  suppressHydrationWarning
                   className='h-7 w-full bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none'
                 />
                 {search && (
@@ -300,7 +301,6 @@ export function SearchableMultiSelect({
                 )}
               </div>
 
-              {/* Popover footer */}
               <div className='flex items-center justify-between border-t border-border/80 px-3 py-2 bg-muted/30 rounded-b-xl text-xs'>
                 <span className='text-muted-foreground font-mono'>
                   {safeValue.length} selected

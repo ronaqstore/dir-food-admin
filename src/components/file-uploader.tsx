@@ -124,7 +124,7 @@ export function FileUploader(props: FileUploaderProps) {
             )}
             {...dropzoneProps}
           >
-            <input {...getInputProps()} aria-label={t('fileUploader.uploadAria')} />
+            <input {...getInputProps()} suppressHydrationWarning aria-label={t('fileUploader.uploadAria')} />
             {isDragActive ? (
               <div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
                 <div className='rounded-full border border-dashed p-3'>
