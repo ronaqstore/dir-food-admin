@@ -38,6 +38,7 @@ export function ThemeSelector() {
       >
         <SelectTrigger
           id='theme-selector'
+          suppressHydrationWarning
           className='justify-start *:data-[slot=select-value]:w-24'
         >
           <span className='text-muted-foreground hidden sm:block'>

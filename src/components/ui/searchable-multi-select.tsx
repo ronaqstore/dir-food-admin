@@ -143,6 +143,7 @@ export function SearchableMultiSelect({
               name={name}
               type='button'
               disabled={disabled}
+              suppressHydrationWarning
               className={cn(
                 'group flex min-h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-1.5 text-sm shadow-xs transition-colors',
                 'hover:border-ring/80 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
