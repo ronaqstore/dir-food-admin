@@ -10,6 +10,7 @@ import { handleUnauthorizedLogout } from '@/lib/auth/session-utils';
 
 function onQueryOrMutationError(error: unknown) {
   if (error instanceof ApiError && error.status === 401) {
+    browserQueryClient?.clear();
     handleUnauthorizedLogout();
   }
 }

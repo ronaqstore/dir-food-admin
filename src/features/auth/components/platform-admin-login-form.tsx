@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn, getSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { PLATFORM_ADMIN_DEFAULT_REDIRECT } from '@/lib/auth/routes';
@@ -10,6 +11,7 @@ import { BaseLoginForm } from './base-login-form';
 export function PlatformAdminLoginForm() {
   const t = useTranslations();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogin = async (values: LoginValues): Promise<string | null> => {
     const result = await signIn('credentials', {
@@ -24,6 +26,7 @@ export function PlatformAdminLoginForm() {
       return t('auth.platformAdminError');
     }
 
+    queryClient.clear();
     await getSession();
     router.replace(PLATFORM_ADMIN_DEFAULT_REDIRECT);
     router.refresh();

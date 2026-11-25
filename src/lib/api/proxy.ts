@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { API_BASE_URL } from '@/constants/api';
+import { invalidateVerificationCache } from '@/lib/auth/verify-session';
 import type { ProxyOptions } from './types';
 
 const NO_CACHE_HEADERS: Record<string, string> = {
@@ -97,6 +98,9 @@ export async function proxyToBackend(
   const responseBody = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (token && (response.status === 401 || response.status === 403)) {
+      invalidateVerificationCache(token);
+    }
     if (options?.transformError) {
       const transformed = options.transformError(responseBody, response.status);
       if (transformed?.handled) {

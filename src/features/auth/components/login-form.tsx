@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn, getSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
@@ -17,6 +18,7 @@ import { BaseLoginForm } from './base-login-form';
 export function LoginForm() {
   const t = useTranslations();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
 
@@ -33,6 +35,7 @@ export function LoginForm() {
       return t('auth.invalidCredentials');
     }
 
+    queryClient.clear();
     const session = await getSession();
     const role = session?.user?.role;
     const home =

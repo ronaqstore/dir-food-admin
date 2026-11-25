@@ -1,4 +1,5 @@
 import { signOut } from 'next-auth/react';
+import { clearPwaCaches } from '@/lib/pwa';
 
 let isLoggingOut = false;
 
@@ -25,15 +26,17 @@ export function handleUnauthorizedLogout() {
     ? `/${locale}/platform-admin/login?expired=1`
     : `/${locale}/login?expired=1`;
 
+  void clearPwaCaches();
+
   const timer = setTimeout(() => {
-    window.location.href = targetLogin;
+    window.location.replace(targetLogin);
   }, 600);
 
   signOut({ redirect: false })
     .catch(() => {})
     .finally(() => {
       clearTimeout(timer);
-      window.location.href = targetLogin;
+      window.location.replace(targetLogin);
     });
 }
 

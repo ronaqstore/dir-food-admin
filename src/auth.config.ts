@@ -8,7 +8,49 @@ import type {
   SessionUserShape
 } from '@/types/auth';
 import { apiRequest } from '@/lib/api/client';
+import {
+  invalidateVerificationCache,
+  verifyAccessTokenWithBackend,
+  type BackendMeProfile
+} from '@/lib/auth/verify-session';
 import type { AuthLoginResponse, PlatformAdminLoginResponse } from '@/lib/api/types';
+
+function computeSubscriptionStatus(
+  subscriptionEndsAt?: string | null
+): 'VALID' | 'EXPIRED' | null {
+  if (!subscriptionEndsAt) return 'EXPIRED';
+  const endsAtMs = new Date(subscriptionEndsAt).getTime();
+  if (!Number.isFinite(endsAtMs)) return 'EXPIRED';
+  return endsAtMs > Date.now() ? 'VALID' : 'EXPIRED';
+}
+
+function applyProfileToToken(typedToken: JwtTokenShape, profile: BackendMeProfile): void {
+  typedToken.sub = profile.id;
+  typedToken.name = profile.name;
+  typedToken.phoneNumber = profile.phone;
+  typedToken.role = profile.role;
+
+  if (profile.role === 'PLATFORM_ADMIN') {
+    typedToken.restaurantId = null;
+    typedToken.restaurantName = 'Dir Food Platform';
+    typedToken.restaurantSlug = null;
+    typedToken.restaurantStatus = null;
+    typedToken.subscriptionStatus = null;
+    typedToken.subscriptionEndsAt = null;
+    return;
+  }
+
+  if (profile.restaurant) {
+    typedToken.restaurantId = profile.restaurant.id;
+    typedToken.restaurantName = profile.restaurant.name;
+    typedToken.restaurantSlug = profile.restaurant.slug;
+    typedToken.restaurantStatus = profile.restaurant.status;
+    typedToken.subscriptionEndsAt = profile.restaurant.subscriptionEndsAt ?? null;
+    typedToken.subscriptionStatus = computeSubscriptionStatus(
+      profile.restaurant.subscriptionEndsAt
+    );
+  }
+}
 
 function decodeJwtExp(token: string): number | undefined {
   try {
@@ -133,7 +175,7 @@ export const authConfig = {
     maxAge: 30 * 24 * 60 * 60
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       const typedToken = token as JwtTokenShape;
 
       if (user) {
@@ -154,12 +196,33 @@ export const authConfig = {
         if (authenticatedUser.accessToken) {
           typedToken.accessToken = authenticatedUser.accessToken;
           typedToken.accessTokenExpiresAt = decodeJwtExp(authenticatedUser.accessToken);
+          invalidateVerificationCache(authenticatedUser.accessToken);
         }
+        return typedToken;
       }
 
-      if (typedToken.accessTokenExpiresAt && Date.now() >= typedToken.accessTokenExpiresAt) {
-        delete typedToken.accessToken;
-        delete typedToken.sub;
+      if (
+        !typedToken.accessToken ||
+        !typedToken.sub ||
+        (typedToken.accessTokenExpiresAt && Date.now() >= typedToken.accessTokenExpiresAt)
+      ) {
+        if (typedToken.accessToken) {
+          invalidateVerificationCache(typedToken.accessToken);
+        }
+        return null;
+      }
+
+      const verification = await verifyAccessTokenWithBackend(
+        typedToken.accessToken,
+        trigger === 'update'
+      );
+
+      if (verification.status === 'invalid') {
+        return null;
+      }
+
+      if (verification.status === 'valid') {
+        applyProfileToToken(typedToken, verification.profile);
       }
 
       return typedToken;

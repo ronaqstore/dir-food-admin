@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
+import { DashboardSessionGuard } from '@/components/layout/dashboard-session-guard';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
@@ -22,6 +23,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
   return (
     <KBar>
+      <DashboardSessionGuard />
       <SidebarProvider defaultOpen={defaultOpen}>
         <a
           href='#main-content'

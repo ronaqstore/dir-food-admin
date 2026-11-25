@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ import type { SessionUserShape } from '@/types/auth';
 
 export function UserNav() {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
   const t = useTranslations();
   const [signingOut, setSigningOut] = React.useState(false);
   const user = session?.user as SessionUserShape | undefined;
@@ -50,6 +52,7 @@ export function UserNav() {
     setSigningOut(true);
     void (async () => {
       try {
+        queryClient.clear();
         await clearPwaCaches();
         await signOut({ callbackUrl: isPlatformAdmin ? '/platform-admin/login' : '/login' });
       } catch {
