@@ -84,3 +84,30 @@ export interface SetupPasswordValues {
   password: string;
   confirmPassword: string;
 }
+
+export interface BackendMeRestaurant {
+  id: string;
+  name: string;
+  slug: string;
+  status: RestaurantStatus;
+  subscriptionEndsAt?: string | null;
+}
+
+export interface BackendMeProfile {
+  id: string;
+  name: string;
+  phone: string;
+  role: UserRole;
+  status: string;
+  restaurant?: BackendMeRestaurant | null;
+}
+
+export type SessionVerificationResult =
+  | { status: 'valid'; profile: BackendMeProfile }
+  | { status: 'invalid' }
+  | { status: 'transient_error' };
+
+export interface CachedVerification {
+  expiresAt: number;
+  result: SessionVerificationResult;
+}

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { clearPwaCaches } from '@/lib/pwa';
 
 export function DashboardSessionGuard() {

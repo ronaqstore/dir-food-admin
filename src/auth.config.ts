@@ -4,14 +4,14 @@ import { normalizePhone, isValidPkMobile } from '@/lib/auth/phone';
 import type {
   AuthorizeCredentials,
   AuthenticatedUser,
+  BackendMeProfile,
   JwtTokenShape,
   SessionUserShape
 } from '@/types/auth';
 import { apiRequest } from '@/lib/api/client';
 import {
   invalidateVerificationCache,
-  verifyAccessTokenWithBackend,
-  type BackendMeProfile
+  verifyAccessTokenWithBackend
 } from '@/lib/auth/verify-session';
 import type { AuthLoginResponse, PlatformAdminLoginResponse } from '@/lib/api/types';
 

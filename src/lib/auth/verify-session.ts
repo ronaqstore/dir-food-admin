@@ -1,32 +1,11 @@
 import { API_BASE_URL } from '@/constants/api';
-import type { RestaurantStatus, UserRole } from '@/lib/api/types';
-
-export interface BackendMeRestaurant {
-  id: string;
-  name: string;
-  slug: string;
-  status: RestaurantStatus;
-  subscriptionEndsAt?: string | null;
-}
-
-export interface BackendMeProfile {
-  id: string;
-  name: string;
-  phone: string;
-  role: UserRole;
-  status: string;
-  restaurant?: BackendMeRestaurant | null;
-}
-
-export type SessionVerificationResult =
-  | { status: 'valid'; profile: BackendMeProfile }
-  | { status: 'invalid' }
-  | { status: 'transient_error' };
-
-interface CachedVerification {
-  expiresAt: number;
-  result: SessionVerificationResult;
-}
+import type { RestaurantStatus } from '@/lib/api/types';
+import type {
+  BackendMeProfile,
+  BackendMeRestaurant,
+  CachedVerification,
+  SessionVerificationResult
+} from '@/types/auth';
 
 const VERIFICATION_CACHE_TTL_MS = 2000;
 const VERIFICATION_TIMEOUT_MS = 4000;
